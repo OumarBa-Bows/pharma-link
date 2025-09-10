@@ -140,7 +140,7 @@ export const NavigationItems: NavigationItem[] = [
             title: 'Sign up',
             type: 'item',
             url: '/register',
-            target: true,
+            target: false,
             breadcrumbs: false
           },
           {
@@ -148,7 +148,7 @@ export const NavigationItems: NavigationItem[] = [
             title: 'Sign in',
             type: 'item',
             url: '/login',
-            target: true,
+            target: false,
             breadcrumbs: false
           }
         ]

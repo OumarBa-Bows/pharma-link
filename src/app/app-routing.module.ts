@@ -4,11 +4,12 @@ import { Routes, RouterModule } from '@angular/router';
 // project import
 import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
-
+import { AuthGuard } from './services/auth-guard';
 const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
+    //canActivate: [AuthGuard],
     children: [
       {
         path: '',
@@ -17,27 +18,27 @@ const routes: Routes = [
       },
       {
         path: 'dashboard',
-        loadComponent: () => import('./demo/dashboard/dashboard.component').then((c) => c.DashboardComponent)
+        loadComponent: () => import('./admin-panel/dashboard/dashboard.component').then((c) => c.DashboardComponent)
       },
       {
         path: 'basic',
-        loadChildren: () => import('./demo/ui-elements/ui-basic/ui-basic.module').then((m) => m.UiBasicModule)
+        loadChildren: () => import('./admin-panel/ui-elements/ui-basic/ui-basic.module').then((m) => m.UiBasicModule)
       },
       {
         path: 'forms',
-        loadComponent: () => import('./demo/pages/form-element/form-element').then((c) => c.FormElement)
+        loadComponent: () => import('./admin-panel/pages/form-element/form-element').then((c) => c.FormElement)
       },
       {
         path: 'tables',
-        loadComponent: () => import('./demo/pages/tables/tbl-bootstrap/tbl-bootstrap.component').then((c) => c.TblBootstrapComponent)
+        loadComponent: () => import('./admin-panel/pages/tables/tbl-bootstrap/tbl-bootstrap.component').then((c) => c.TblBootstrapComponent)
       },
       {
         path: 'apexchart',
-        loadComponent: () => import('./demo/pages/core-chart/apex-chart/apex-chart.component').then((c) => c.ApexChartComponent)
+        loadComponent: () => import('./admin-panel/pages/core-chart/apex-chart/apex-chart.component').then((c) => c.ApexChartComponent)
       },
       {
         path: 'sample-page',
-        loadComponent: () => import('./demo/extra/sample-page/sample-page.component').then((c) => c.SamplePageComponent)
+        loadComponent: () => import('./admin-panel/extra/sample-page/sample-page.component').then((c) => c.SamplePageComponent)
       }
     ]
   },
@@ -47,11 +48,13 @@ const routes: Routes = [
     children: [
       {
         path: 'login',
-        loadComponent: () => import('./demo/pages/authentication/auth-signin/auth-signin.component').then((c) => c.AuthSigninComponent)
+        loadComponent: () =>
+          import('./admin-panel/pages/authentication/auth-signin/auth-signin.component').then((c) => c.AuthSigninComponent)
       },
       {
         path: 'register',
-        loadComponent: () => import('./demo/pages/authentication/auth-signup/auth-signup.component').then((c) => c.AuthSignupComponent)
+        loadComponent: () =>
+          import('./admin-panel/pages/authentication/auth-signup/auth-signup.component').then((c) => c.AuthSignupComponent)
       }
     ]
   }
