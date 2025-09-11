@@ -1,6 +1,7 @@
 // angular import
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ApiService } from 'src/app/services/apis/api-service';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -233,6 +234,8 @@ export class DashboardComponent implements OnInit {
       });
     }, 500);
   }
+
+  constructor(private apiService: ApiService) {}
 
   // public method
   sales = [

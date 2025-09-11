@@ -1,0 +1,19 @@
+Utilisateur (Angular)             Navigateur                  Serveur (Node.js + Express)
+       |                              |                               |
+1️⃣     | --- login(email, password) --> |                               |
+       |                              |                               |
+2️⃣     |                              | --- POST /login -------------->|
+       |                              |                               |
+3️⃣     |                              | Génère JWT {id,email,...}     |
+       |                              | Stocke JWT dans cookie HTTP-only
+       |                              | <- Set-Cookie: token=JWT ------|
+4️⃣     | <- Login success message ---- |                               |
+       |                              |                               |
+5️⃣     | --- getProfile() ----------> |                               |
+       | withCredentials: true         |                               |
+6️⃣     |                              | <- Cookie envoyé automatiquement |
+       |                              | token = req.cookies.token      |
+7️⃣     |                              | jwt.verify(token, SECRET_KEY) |
+       |                              | Récupère id/email de l’utilisateur
+8️⃣     |                              | Renvoie les données JSON ------|
+9️⃣     | <- profile {email,role,...}--|                               |
