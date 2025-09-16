@@ -24,7 +24,8 @@
       "es2020", // // this will auto target to latest by angular cli
       "dom"
     ],
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": ["node_modules/@types"],
+    //"types": ["node", "@angular/localize"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

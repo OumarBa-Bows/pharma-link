@@ -25,6 +25,8 @@ export class AuthSigninComponent {
   }
 
   signIn() {
+
+    console.log('=== Sign-in form submitted ===');
     if (this.loginForm.invalid) {
       return;
     }

@@ -18,7 +18,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": ["apexcharts"],
-            "outputPath": "dist",
+            "outputPath": "dist/datta-able-free-angular-admin-template/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -26,7 +26,12 @@
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets", "src/fake-data"],
             "styles": ["node_modules/bootstrap/scss/bootstrap.scss", "src/styles.scss"],
-            "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"]
+            "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"],
+            "stylePreprocessorOptions": {
+      "includePaths": [
+        "src"
+      ]
+    }
           },
           "configurations": {
             "production": {
@@ -84,6 +89,67 @@
           "options": {
             "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/datta-able-free-angular-admin-template/server",
+            "main": "src/server.ts",
+            "tsConfig": "tsconfig.server.json",
+            "inlineStyleLanguage": "scss"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false,
+              "vendorChunk": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve-ssr": {
+          "builder": "@angular-devkit/build-angular:ssr-dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "datta-able-free-angular-admin-template:build:development",
+              "serverTarget": "datta-able-free-angular-admin-template:server:development"
+            },
+            "production": {
+              "browserTarget": "datta-able-free-angular-admin-template:build:production",
+              "serverTarget": "datta-able-free-angular-admin-template:server:production"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "prerender": {
+          "builder": "@angular-devkit/build-angular:prerender",
+          "options": {
+            "routes": [
+              "/"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "datta-able-free-angular-admin-template:build:production",
+              "serverTarget": "datta-able-free-angular-admin-template:server:production"
+            },
+            "development": {
+              "browserTarget": "datta-able-free-angular-admin-template:build:development",
+              "serverTarget": "datta-able-free-angular-admin-template:server:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }
