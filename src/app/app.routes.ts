@@ -3,11 +3,11 @@ import { AuthGuard } from './services/guards/auth/auth-guard';
 import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
 
-export const routes: Routes = [ 
+export const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
-    canActivate: [AuthGuard],
+    //canActivate: [AuthGuard],
     children: [
       {
         path: '',
@@ -46,7 +46,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'login',
-        
+
         loadComponent: () =>
           import('./admin-panel/pages/authentication/auth-signin/auth-signin.component').then((c) => c.AuthSigninComponent)
       },
