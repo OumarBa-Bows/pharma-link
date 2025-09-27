@@ -32,6 +32,22 @@ export const NavigationItems: NavigationItem[] = [
     ]
   },
   {
+    id: 'administration',
+    title: 'Administration',
+    type: 'group',
+    icon: 'icon-user',
+    children: [
+      {
+        id: 'users',
+        title: 'Users',
+        type: 'item',
+        url: '/users',
+        icon: 'feather icon-user',
+        classes: 'nav-item'
+      }
+    ]
+  },
+  {
     id: 'ui-element',
     title: 'UI ELEMENT',
     type: 'group',

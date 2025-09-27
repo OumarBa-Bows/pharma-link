@@ -15,6 +15,10 @@ export const routes: Routes = [
         pathMatch: 'full'
       },
       {
+        path: 'users',
+        loadComponent: () => import('./components/users/users.component').then((c) => c.UsersComponent)
+      },
+      {
         path: 'dashboard',
         loadComponent: () => import('./admin-panel/dashboard/dashboard.component').then((c) => c.DashboardComponent)
       },
