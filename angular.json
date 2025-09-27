@@ -28,10 +28,8 @@
             "styles": ["node_modules/bootstrap/scss/bootstrap.scss", "src/styles.scss"],
             "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"],
             "stylePreprocessorOptions": {
-      "includePaths": [
-        "src"
-      ]
-    }
+              "includePaths": ["src"]
+            }
           },
           "configurations": {
             "production": {
@@ -135,9 +133,7 @@
         "prerender": {
           "builder": "@angular-devkit/build-angular:prerender",
           "options": {
-            "routes": [
-              "/"
-            ]
+            "routes": ["/"]
           },
           "configurations": {
             "production": {

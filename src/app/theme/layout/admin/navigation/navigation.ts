@@ -32,6 +32,23 @@ export const NavigationItems: NavigationItem[] = [
     ]
   },
   {
+    id: 'gestions',
+    title: 'Gestions',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'articles',
+        title: 'Articles',
+        type: 'item',
+        url: '/articles/index',
+        icon: 'feather icon-file-text',
+        classes: 'nav-item'
+      }
+    ]
+  },
+
+  {
     id: 'ui-element',
     title: 'UI ELEMENT',
     type: 'group',

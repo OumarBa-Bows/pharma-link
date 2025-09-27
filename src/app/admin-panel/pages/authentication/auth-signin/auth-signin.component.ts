@@ -25,7 +25,6 @@ export class AuthSigninComponent {
   }
 
   signIn() {
-
     console.log('=== Sign-in form submitted ===');
     if (this.loginForm.invalid) {
       return;
@@ -37,8 +36,8 @@ export class AuthSigninComponent {
     this.apiService.postData('auth/login', { email, password }).subscribe({
       next: (response: any) => {
         console.log('Sign-in response:', response);
-        if (response?.accessToken) {
-          localStorage.setItem('accessToken', response.accessToken);
+        if (response?.user) {
+          localStorage.setItem('user', JSON.stringify(response.user));
           this.router.navigate(['/dashboard']);
         }
       },
