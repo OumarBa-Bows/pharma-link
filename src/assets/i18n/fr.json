@@ -1,3 +1,16 @@
 {
-  "app-name": "PharmaLink"
+  "app-name": "PharmaLink",
+  "buttons-action": {
+    "add" : "Ajouter",
+    "edit": "Modifier",
+    "delete": "Supprimer"
+  },
+  "users": {
+    "user-list": {
+      "title": "Liste des utilisateurs"
+    }
+  },
+  "table": {
+    "selectAll": "Tout Sélectionner"
+  }
 }
