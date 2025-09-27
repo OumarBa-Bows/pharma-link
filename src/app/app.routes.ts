@@ -7,7 +7,7 @@ export const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
-    //canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     children: [
       {
         path: '',
@@ -25,6 +25,10 @@ export const routes: Routes = [
       {
         path: 'basic',
         loadChildren: () => import('./admin-panel/ui-elements/ui-basic/ui-basic.module').then((m) => m.UiBasicModule)
+      },
+      {
+        path: 'articles',
+        loadChildren: () => import('./admin-panel/articles/articles-routing-module').then((m) => m.ArticlesRoutingModule)
       },
       {
         path: 'forms',
