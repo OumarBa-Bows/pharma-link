@@ -4,11 +4,12 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 
 // project import
 import { SpinnerComponent } from './theme/shared/components/spinner/spinner.component';
-import {TranslateModule, TranslateService} from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { NotificationComponent } from './components/notification/notification.component';
 
 @Component({
   selector: 'app-root',
-  imports: [SpinnerComponent, RouterModule, TranslateModule],
+  imports: [SpinnerComponent, RouterModule, TranslateModule, NotificationComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

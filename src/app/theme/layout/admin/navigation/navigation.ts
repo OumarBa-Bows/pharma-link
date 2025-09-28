@@ -42,8 +42,18 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Articles',
         type: 'item',
         url: '/articles/index',
-        icon: 'feather icon-file-text',
+        icon: 'feather icon-package',
         classes: 'nav-item'
+      },
+      {
+        id: 'articles-create',
+        title: 'Créer un article',
+        type: 'item',
+        url: '/articles/create',
+        icon: 'feather icon-plus',
+        classes: 'nav-item',
+        breadcrumbs: true,
+        hidden: true
       }
     ]
   },

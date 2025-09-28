@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {CardComponent} from "../card/card.component";
-import {SharedModule} from "../../shared.module";
-import {TranslatePipe} from "@ngx-translate/core";
-import {start} from "@popperjs/core";
-import {p} from "@angular/cdk/overlay-module.d-C2CxnwqT";
-import {Event} from "@angular/router";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CardComponent } from '../card/card.component';
+import { SharedModule } from '../../shared.module';
+import { TranslatePipe } from '@ngx-translate/core';
+import { start } from '@popperjs/core';
+import { p } from '@angular/cdk/overlay-module.d-C2CxnwqT';
+import { Event } from '@angular/router';
 
 @Component({
   selector: 'app-table',
@@ -13,11 +13,19 @@ import {Event} from "@angular/router";
   standalone: true,
   styleUrl: './table.component.scss'
 })
-export class TableComponent implements OnInit{
-
+export class TableComponent implements OnInit {
   @Input() title = '';
   @Input() columns: { header: string; field: string }[] = [];
   @Input() data: any[] = [];
+
+  // Contrôle d'affichage des boutons d'action
+  @Input() showEdit = false;
+  @Input() showDelete = false;
+  @Input() showSelected = false;
+
+  // Ajout d'outputs pour les actions
+  @Output() edit = new EventEmitter<any>();
+  @Output() delete = new EventEmitter<any>();
 
   @Output() selectionChange = new EventEmitter<any[]>();
 
@@ -65,8 +73,7 @@ export class TableComponent implements OnInit{
     this.emitSelection();
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
@@ -74,9 +81,17 @@ export class TableComponent implements OnInit{
 
   private emitSelection() {
     const rows = Array.from(this.selectedRows)
-      .filter(i => i >= 0 && i < this.data.length)
-      .map(i => this.data[i]);
+      .filter((i) => i >= 0 && i < this.data.length)
+      .map((i) => this.data[i]);
     this.selectionChange.emit(rows);
   }
 
+  // Méthodes pour les actions
+  onEdit(row: any) {
+    this.edit.emit(row);
+  }
+
+  onDelete(row: any) {
+    this.delete.emit(row);
+  }
 }

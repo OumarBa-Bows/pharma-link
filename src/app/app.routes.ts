@@ -28,7 +28,7 @@ export const routes: Routes = [
       },
       {
         path: 'articles',
-        loadChildren: () => import('./admin-panel/articles/articles-routing-module').then((m) => m.ArticlesRoutingModule)
+        loadChildren: () => import('./components/articles/articles-routing-module').then((m) => m.ArticlesRoutingModule)
       },
       {
         path: 'forms',

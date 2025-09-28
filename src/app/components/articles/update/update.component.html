@@ -1,0 +1,60 @@
+<div class="row">
+  @if (isLoading) {
+    <app-spinner></app-spinner>
+  }
+  <div class="col-xl-12">
+    <button style="float: right" [routerLink]="['/articles/index']" class="btn btn-danger mb-4">
+      <i class="fa fa-arrow-left"></i>
+      {{ 'buttons-action.back' | translate }}
+    </button>
+  </div>
+  <div class="col-xl-12">
+    <app-card cardTitle="{{ 'articles.article-update.title' | translate }}" [options]="false" blockClass="table-border-style">
+      <form [formGroup]="articleForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="code" class="form-label">Code</label>
+            <input type="text" class="form-control" id="code" formControlName="code" placeholder="Code de l'article" />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="name" class="form-label">Nom</label>
+            <input type="text" class="form-control" id="name" formControlName="name" placeholder="Nom de l'article" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="price" class="form-label">Prix</label>
+            <input type="number" class="form-control" id="price" formControlName="price" placeholder="Prix de l'article" />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="expiryDate" class="form-label">Date d'expiration</label>
+            <input type="date" class="form-control" id="expiryDate" formControlName="expiryDate" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="image" class="form-label">Image</label>
+            <input type="file" class="form-control" aria-label="file example" id="image" formControlName="image" />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="barcode" class="form-label">Code-barres</label>
+            <input type="text" class="form-control" id="barcode" formControlName="barcode" placeholder="Code-barres" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea
+              class="form-control"
+              id="description"
+              formControlName="description"
+              rows="3"
+              placeholder="Description de l'article"
+            ></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="articleForm.invalid">Enregistrer</button>
+      </form>
+    </app-card>
+  </div>
+</div>

@@ -1,10 +1,19 @@
 // services/apis/interceptor.ts
-import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpEvent, HttpHandlerFn, HttpRequest, HttpErrorResponse } from '@angular/common/http';
+import { Observable, catchError, throwError } from 'rxjs';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 export function Interceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
-  console.log('Request made with ', req);
+  const router = inject(Router);
   const cloned = req.clone({ withCredentials: true });
-  console.log('Request made with ', cloned);
-  return next(cloned);
+  return next(cloned).pipe(
+    catchError((error: any) => {
+      if (error instanceof HttpErrorResponse && error.status === 401) {
+        localStorage.removeItem('user');
+        router.navigate(['/login']);
+      }
+      return throwError(() => error);
+    })
+  );
 }

@@ -1,13 +1,29 @@
 {
   "app-name": "PharmaLink",
   "buttons-action": {
-    "add" : "Ajouter",
+    "add": "Ajouter",
     "edit": "Modifier",
-    "delete": "Supprimer"
+    "delete": "Supprimer",
+    "view": "Voir",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "back": "Retour"
   },
   "users": {
     "user-list": {
       "title": "Liste des utilisateurs"
+    }
+  },
+  "articles": {
+    "article-list": {
+      "title": "Liste des articles",
+      "create-new-article": "Créer un nouvel article"
+    },
+    "article-create": {
+      "title": "Créer un article"
+    },
+    "article-update": {
+      "title": "Modifier un article"
     }
   },
   "table": {

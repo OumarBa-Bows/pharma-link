@@ -12,6 +12,10 @@ const routes: Routes = [
       {
         path: 'create',
         loadComponent: () => import('./create/create.component').then((c) => c.CreateComponent)
+      },
+      {
+        path: 'edit/:id',
+        loadComponent: () => import('./update/update.component').then((c) => c.UpdateComponent)
       }
     ]
   }

@@ -4,31 +4,48 @@
       <div class="table-responsive">
         <table class="table table-hover">
           <thead>
-          <tr>
-            <th>
-              <div class="table-selection">
-                <input type="checkbox" [checked]="allSelected" (change)="toggleAll($event)" />
-                <span>{{ 'table.selectAll' | translate }}</span>
-              </div>
-            </th>
-            @for (col of columns; track $index) {
-              <th>{{ col.header }}</th>
-            }
-          </tr>
+            <tr>
+              @if (showSelected) {
+                <th>
+                  <div class="table-selection">
+                    <input type="checkbox" [checked]="allSelected" (change)="toggleAll($event)" />
+                    <span>{{ 'table.selectAll' | translate }}</span>
+                  </div>
+                </th>
+              }
+              @for (col of columns; track $index) {
+                <th>{{ col.header }}</th>
+              }
+              @if (showEdit || showDelete) {
+                <th>{{ 'Actions' | translate }}</th>
+              }
+            </tr>
           </thead>
           <tbody>
             @for (row of pagedData; track $index; let i = $index) {
               <tr>
-                <td>
-                  <!-- offset + i = index global dans data -->
-                  <input
-                    type="checkbox"
-                    [checked]="selectedRows.has(offset + i)"
-                    (change)="toggleRow(offset + i)"
-                  />
-                </td>
+                @if (showSelected) {
+                  <td>
+                    <!-- offset + i = index global dans data -->
+                    <input type="checkbox" [checked]="selectedRows.has(offset + i)" (change)="toggleRow(offset + i)" />
+                  </td>
+                }
                 @for (col of columns; track $index) {
                   <td>{{ row[col.field] }}</td>
+                }
+                @if (showEdit || showDelete) {
+                  <td>
+                    @if (showEdit) {
+                      <button type="button" class="btn btn-sm btn-primary me-1" (click)="onEdit(row)" title="Modifier">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                    }
+                    @if (showDelete) {
+                      <button type="button" class="btn btn-sm btn-danger" (click)="onDelete(row)" title="Supprimer">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    }
+                  </td>
                 }
               </tr>
             }
@@ -41,9 +58,7 @@
       @if (totalPages > 1) {
         <ul class="pagination justify-content-end">
           <li class="page-item" [class.disabled]="currentPage === 1">
-            <button type="button" class="page-link" (click)="goToPage(currentPage - 1)">
-              &laquo;
-            </button>
+            <button type="button" class="page-link" (click)="goToPage(currentPage - 1)">&laquo;</button>
           </li>
           @for (p of pages; track p) {
             <li class="page-item" [class.active]="currentPage === p">
@@ -53,13 +68,10 @@
             </li>
           }
           <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <button type="button" class="page-link" (click)="goToPage(currentPage + 1)">
-              &raquo;
-            </button>
+            <button type="button" class="page-link" (click)="goToPage(currentPage + 1)">&raquo;</button>
           </li>
         </ul>
       }
     </nav>
-
   </div>
 </div>
