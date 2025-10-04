@@ -1,0 +1,35 @@
+<div class="modal-header">
+  <h5 class="modal-title">{{ title }}</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="cancel()"></button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="form" class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Name</label>
+      <input class="form-control" formControlName="name" placeholder="Pharmacy name" />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">City</label>
+      <input class="form-control" formControlName="city" placeholder="City" />
+    </div>
+    <div class="col-md-8">
+      <label class="form-label">Address</label>
+      <input class="form-control" formControlName="address" placeholder="Street, number" />
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Phone</label>
+      <input class="form-control" formControlName="phoneNumber" placeholder="Phone" />
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Status</label>
+      <select class="form-select" formControlName="status">
+        <option>Active</option>
+        <option>Inactive</option>
+      </select>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-outline-secondary" (click)="cancel()">Cancel</button>
+  <button class="btn btn-success" [disabled]="form.invalid" (click)="submit()">Save</button>
+</div>
