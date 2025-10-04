@@ -32,6 +32,22 @@ export const NavigationItems: NavigationItem[] = [
     ]
   },
   {
+    id: 'management',
+    title: 'Management',
+    type: 'group',
+    icon: 'icon-pages',
+    children: [
+      {
+        id: 'pharmacies',
+        title: 'Pharmacies',
+        type: 'item',
+        url: '/pharmacies',
+        classes: 'nav-item',
+        icon: 'feather icon-briefcase'
+      }
+    ]
+  },
+  {
     id: 'ui-element',
     title: 'UI ELEMENT',
     type: 'group',

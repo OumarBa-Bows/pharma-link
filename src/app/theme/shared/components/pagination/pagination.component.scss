@@ -1,0 +1,7 @@
+.pagination .page-item .page-link {
+  cursor: pointer;
+}
+
+.pagination .page-item.disabled .page-link {
+  cursor: not-allowed;
+}

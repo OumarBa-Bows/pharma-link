@@ -19,6 +19,10 @@ export const routes: Routes = [
         loadComponent: () => import('./admin-panel/dashboard/dashboard.component').then((c) => c.DashboardComponent)
       },
       {
+        path: 'pharmacies',
+        loadComponent: () => import('./admin-panel/pages/pharmacies/component/pharmacies.component').then((c) => c.PharmaciesComponent)
+      },
+      {
         path: 'basic',
         loadChildren: () => import('./admin-panel/ui-elements/ui-basic/ui-basic.module').then((m) => m.UiBasicModule)
       },

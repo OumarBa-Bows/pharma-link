@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
   constructor(private http: HttpClient) {}
-  private api = 'http://localhost:8080/api/'; // Replace with your API base URL
+  private api = environment.apiUrl;
 
-  // Example method to get data from an endpoint
-  getData(endpoint: string): Observable<any> {
-    return this.http.get(`${this.api}${endpoint}`, { withCredentials: true });
+  getData<T>(endpoint: string, options: object = {}): Observable<T> {
+    return this.http.get<T>(`${this.api}/${endpoint}`, { withCredentials: true, ...options });
   }
 
-  postData(endpoint: string, data: any): Observable<any> {
-    return this.http.post(`${this.api}${endpoint}`, data, { withCredentials: true });
+  postData<T>(endpoint: string, data: any, options: object = {}): Observable<T> {
+    return this.http.post<T>(`${this.api}/${endpoint}`, data, { withCredentials: true, ...options });
   }
 }
