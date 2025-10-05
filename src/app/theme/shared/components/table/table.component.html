@@ -55,7 +55,6 @@
     </app-card>
 
     <nav aria-label="Page navigation">
-      @if (totalPages > 1) {
         <ul class="pagination justify-content-end">
           <li class="page-item" [class.disabled]="currentPage === 1">
             <button type="button" class="page-link" (click)="goToPage(currentPage - 1)">&laquo;</button>
@@ -71,7 +70,6 @@
             <button type="button" class="page-link" (click)="goToPage(currentPage + 1)">&raquo;</button>
           </li>
         </ul>
-      }
     </nav>
   </div>
 </div>

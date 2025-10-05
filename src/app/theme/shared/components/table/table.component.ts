@@ -18,18 +18,16 @@ export class TableComponent implements OnInit {
   @Input() columns: { header: string; field: string }[] = [];
   @Input() data: any[] = [];
 
-  // Contrôle d'affichage des boutons d'action
   @Input() showEdit = false;
   @Input() showDelete = false;
   @Input() showSelected = false;
 
-  // Ajout d'outputs pour les actions
   @Output() edit = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
 
   @Output() selectionChange = new EventEmitter<any[]>();
 
-  pageSize = 5;
+  pageSize = 10;
   currentPage = 1;
 
   selectedRows = new Set<number>();
@@ -40,7 +38,7 @@ export class TableComponent implements OnInit {
 
   get pagedData() {
     const start = (this.currentPage - 1) * this.pageSize;
-    return this.data.slice(start, start + this.pageSize);
+    return this.data?.slice(start, start + this.pageSize);
   }
 
   get offset() {
@@ -86,7 +84,6 @@ export class TableComponent implements OnInit {
     this.selectionChange.emit(rows);
   }
 
-  // Méthodes pour les actions
   onEdit(row: any) {
     this.edit.emit(row);
   }
