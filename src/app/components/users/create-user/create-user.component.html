@@ -1,0 +1,72 @@
+<app-card cardTitle="Basic Component" [options]="false">
+  <h5>Formulaire Utilisateur</h5>
+  <hr />
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group mb-3">
+          <label for="nom">Nom</label>
+          <input
+            type="text"
+            class="form-control"
+            id="nom"
+            placeholder="Entrez votre nom"
+            formControlName="name"
+          />
+          <div *ngIf="userForm.get('name')?.touched && userForm.get('name')?.invalid" class="text-danger small">
+            Le nom est requis.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group mb-3">
+          <label for="email">Adresse Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            placeholder="exemple@email.com"
+            formControlName="email"
+          />
+          <div *ngIf="userForm.get('email')?.touched && userForm.get('email')?.invalid" class="text-danger small">
+            <span *ngIf="userForm.get('email')?.errors?.['required']">L'email est requis.</span>
+            <span *ngIf="userForm.get('email')?.errors?.['email']">Format email invalide.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group mb-3">
+          <label for="password">Mot de passe</label>
+          <input
+            type="text"
+            class="form-control"
+            id="password"
+            formControlName="password"
+          />
+          <div *ngIf="userForm.get('password')?.touched && userForm.get('password')?.invalid" class="text-danger small">
+            <span *ngIf="userForm.get('password')?.errors?.['required']">Mot de passe requis.</span>
+            <span *ngIf="userForm.get('password')?.errors?.['minlength']">Min. 6 caractères.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group mb-3">
+          <label for="role">Rôle</label>
+          <select class="form-control" id="role" formControlName="role">
+            <option value="" disabled>Choisir un rôle</option>
+            <option value="user">Utilisateur</option>
+            <option value="admin">Administrateur</option>
+            <option value="guest">Invité</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-end">
+      <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Valider</button>
+    </div>
+  </form>
+</app-card>
