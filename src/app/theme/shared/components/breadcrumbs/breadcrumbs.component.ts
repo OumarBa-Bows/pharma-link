@@ -54,16 +54,23 @@ export class BreadcrumbsComponent {
   }
 
   filterNavigation(navItems: NavigationItem[], activeLink: string): titleType[] {
+    // Remove query parameters and hash from activeLink
+    const pathOnly = activeLink.split('?')[0].split('#')[0];
+    
     for (const navItem of navItems) {
-      if (navItem.type === 'item' && 'url' in navItem && navItem.url === activeLink) {
-        return [
-          {
-            url: 'url' in navItem ? navItem.url : false,
-            title: navItem.title,
-            breadcrumbs: 'breadcrumbs' in navItem ? navItem.breadcrumbs : true,
-            type: navItem.type
-          }
-        ];
+      if (navItem.type === 'item' && 'url' in navItem) {
+        // Compare only the path part of the URL
+        const navUrl = navItem.url?.split('?')[0];
+        if (navUrl === pathOnly) {
+          return [
+            {
+              url: 'url' in navItem ? navItem.url : false,
+              title: navItem.title,
+              breadcrumbs: 'breadcrumbs' in navItem ? navItem.breadcrumbs : true,
+              type: navItem.type
+            }
+          ];
+        }
       }
       if ((navItem.type === 'group' || navItem.type === 'collapse') && 'children' in navItem) {
         const breadcrumbList = this.filterNavigation(navItem.children!, activeLink);

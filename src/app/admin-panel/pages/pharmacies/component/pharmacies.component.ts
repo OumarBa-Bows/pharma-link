@@ -6,12 +6,25 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { PharmaciesStore } from 'src/app/services/stores/pharmacies.store';
 import { PaginationComponent } from 'src/app/theme/shared/components/pagination/pagination.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { PharmaciesFormModalComponent } from '../form/pharmacies.form-modal';
+import { TableColumn } from 'src/app/models/table-column.model';
+import { TranslateModule } from '@ngx-translate/core';
+import { TableComponent } from 'src/app/theme/shared/components/table/table.component';
+import { PageHeaderComponent } from 'src/app/theme/shared/components/page-header/page-header.component';
+import { PharmaciesFakeService } from 'src/app/services/fakes/pharmacies.fake.service';
 
 @Component({
   selector: 'app-pharmacies',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, SharedModule, PaginationComponent],
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule, 
+    RouterModule, 
+    SharedModule, 
+    PaginationComponent,
+    TableComponent,
+    TranslateModule,
+    PageHeaderComponent
+  ],
   templateUrl: './pharmacies.component.html',
   styleUrls: ['./pharmacies.component.scss']
 })
@@ -19,13 +32,25 @@ export class PharmaciesComponent {
   showForm = signal(false);
   editingId = signal<string | null>(null);
   form: FormGroup;
+  isLoading = false;
+  
+  columns: TableColumn[] = [
+    { header: 'name', field: 'name', sortable: true },
+    { header: 'code', field: 'code', sortable: true },
+    { header: 'type', field: 'type', sortable: true },
+    { header: 'phoneNumber', field: 'phoneNumber', sortable: false },
+    { header: 'managerName', field: 'managerName', sortable: true },
+    { header: 'doctorName', field: 'doctorName', sortable: true }
+  ];
+  selectedItems: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     public store: PharmaciesStore,
-    private modal: NgbModal
+    private modal: NgbModal,
+    private pharmacyService: PharmaciesFakeService
   ) {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(80)]],
@@ -36,16 +61,12 @@ export class PharmaciesComponent {
       managerName: ['', [Validators.maxLength(80)]],
       doctorName: ['', [Validators.maxLength(80)]]
     });
-    // Initialize state from query params
-    const qp = this.route.snapshot.queryParamMap;
-    const search = qp.get('q') ?? '';
-    const page = +(qp.get('page') ?? '1');
-    this.store.setQuery(search, isNaN(page) ? 1 : page);
 
-    // Keep URL in sync when search/page change
-    effect(() => {
-      const q = this.store.search();
-      const p = this.store.page();
+    // Handle query parameters for search and pagination
+    this.route.queryParams.subscribe(params => {
+      const q = params['q'] || '';
+      const p = +params['page'] || 1;
+      
       this.router.navigate([], {
         relativeTo: this.route,
         queryParams: { q: q || null, page: p !== 1 ? p : null },
@@ -57,27 +78,17 @@ export class PharmaciesComponent {
   get isEditing() { return this.editingId() !== null; }
 
   onAddNew() {
-    const ref = this.modal.open(PharmaciesFormModalComponent, { centered: true, size: 'lg' });
-    ref.componentInstance.title = 'Add Pharmacy';
-    ref.componentInstance.value = null;
-    ref.closed.subscribe((payload: any) => {
-      if (payload) {
-        this.store.create(payload);
-      }
-    });
+    this.router.navigate(['/pharmacies/create']);
   }
 
-  onEdit(id: string) {
-    const item = this.store.items().find(p => p.id === id);
-    if (!item) return;
-    const ref = this.modal.open(PharmaciesFormModalComponent, { centered: true, size: 'lg' });
-    ref.componentInstance.title = 'Edit Pharmacy';
-    ref.componentInstance.value = item;
-    ref.closed.subscribe((payload: any) => {
-      if (payload) {
-        this.store.update(item.id, payload);
-      }
-    });
+  onEdit(pharmacy: any) {
+    if (!pharmacy || !pharmacy.id) {
+      console.error('Invalid pharmacy object:', pharmacy);
+      return;
+    }
+    
+    this.pharmacyService.selectedItem.set(pharmacy);
+    this.router.navigate(['/pharmacies/edit', pharmacy.id]);
   }
 
   onCancel() {
@@ -95,6 +106,10 @@ export class PharmaciesComponent {
 
   onDelete(id: string) {
     this.store.delete(id);
+  }
+
+  onSelectionChange(selectedItems: any[]) {
+    this.selectedItems = selectedItems;
   }
 
   onSearch(term: string) {

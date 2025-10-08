@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { delay, map, Observable, of } from 'rxjs';
 import { Page, Pharmacy } from 'src/app/models/pharmacy.model';
 
 @Injectable({ providedIn: 'root' })
 export class PharmaciesFakeService {
+  public selectedItem = signal<Pharmacy | null>(null);
   // Seed fake data
   private data: Pharmacy[] = [
     { id: crypto.randomUUID(), name: 'Green Leaf Pharmacy', phoneNumber: '(408) 555-0132', code: 'GLP-001', type: 'Retail', address: '123 Health St, San Jose', managerName: 'Alice Green', doctorName: 'Dr. Hart' },
@@ -28,6 +29,11 @@ export class PharmaciesFakeService {
     const start = (page - 1) * pageSize;
     const items = filtered.slice(start, start + pageSize);
     return of({ items, total: filtered.length, page, pageSize }).pipe(delay(250));
+  }
+
+  getById$(id: string): Observable<Pharmacy | undefined> {
+    const pharmacy = this.data.find(p => p.id === id);
+    return of(pharmacy).pipe(delay(100));
   }
 
   create$(payload: Omit<Pharmacy, 'id'>): Observable<Pharmacy> {

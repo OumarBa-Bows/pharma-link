@@ -9,7 +9,7 @@
           </button>
         </div>
         <div class="d-flex align-items-center gap-2">
-          <input class="form-control" style="width: 320px" placeholder="this.serchPlaceholder" (input)="search.emit($any($event.target).value)" />
+          <input class="form-control" style="width: 320px" [placeholder]="searchPlaceholder" (input)="search.emit($any($event.target).value)" />
           <div class="text-muted small">Total: {{ this.total }}</div>
         </div>
       </div>
