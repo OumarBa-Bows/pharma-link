@@ -13,6 +13,31 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
   styleUrl: './index.component.scss'
 })
 export class IndexComponent {
+  search = '';
+  page = 1;
+  pageSize = 20;
+
+  onAddNew() {
+   this.router.navigateByUrl('/articles/create');
+  }
+
+  onSearch(c: any) {
+    if(c  == '' || c.length == 0) {
+      this.search = '';
+      this.page = 1;
+      this.pageSize = 20;
+      this.getArticles();
+      return;
+    }
+
+    if(c.length < 2 || c == this.search) return;
+
+    this.search = c;
+    this.page = 1;
+    this.pageSize = 20;
+    this.getArticles();
+  }
+
   isLoading: boolean = false;
   articles: any[] = [];
   columns = [
@@ -39,7 +64,7 @@ export class IndexComponent {
 
   getArticles() {
     this.isLoading = true;
-    this.newSubscription = this.apiService.getData('articles').subscribe({
+    this.newSubscription = this.apiService.getData(`articles?search=${this.search}&page=${this.page}&pageSize=${this.pageSize}`).subscribe({
       next: (response: any) => {
         console.log('Articles fetched successfully:', response);
         this.articles = response.data.articles;

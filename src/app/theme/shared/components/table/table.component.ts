@@ -30,6 +30,10 @@ export class TableComponent implements OnInit {
   pageSize = 10;
   currentPage = 1;
 
+  @Output() addNew = new EventEmitter<any>();
+  @Output() search = new EventEmitter<string>();
+  @Input() total = 0;
+  @Input() searchPlaceholder = '';
   selectedRows = new Set<number>();
 
   get totalPages(): number {

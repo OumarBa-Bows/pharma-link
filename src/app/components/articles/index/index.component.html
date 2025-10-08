@@ -24,4 +24,8 @@
   (delete)="onDelete($event)"
   [showEdit]="true"
   [showDelete]="true"
+  [total]="articles.length"
+  (addNew)="onAddNew()"
+  (search)="onSearch($event)"
+  [searchPlaceholder]="'articles.article-list.search-placeholder' | translate"
 ></app-table>
