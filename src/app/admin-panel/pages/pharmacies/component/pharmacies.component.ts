@@ -1,4 +1,4 @@
-import { Component, effect, signal } from '@angular/core';
+import { Component, effect, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -10,7 +10,8 @@ import { TableColumn } from 'src/app/models/table-column.model';
 import { TranslateModule } from '@ngx-translate/core';
 import { TableComponent } from 'src/app/theme/shared/components/table/table.component';
 import { PageHeaderComponent } from 'src/app/theme/shared/components/page-header/page-header.component';
-import { PharmaciesFakeService } from 'src/app/services/fakes/pharmacies.fake.service';
+import { Pharmacy } from 'src/app/models/pharmacy.model';
+import { PharmacyService } from 'src/app/services/api/pharmacy.service';
 
 @Component({
   selector: 'app-pharmacies',
@@ -34,39 +35,66 @@ export class PharmaciesComponent {
   form: FormGroup;
   isLoading = false;
   
-  columns: TableColumn[] = [
-    { header: 'name', field: 'name', sortable: true },
-    { header: 'code', field: 'code', sortable: true },
-    { header: 'type', field: 'type', sortable: true },
-    { header: 'phoneNumber', field: 'phoneNumber', sortable: false },
-    { header: 'managerName', field: 'managerName', sortable: true },
-    { header: 'doctorName', field: 'doctorName', sortable: true }
+  columns: TableColumn<Pharmacy>[] = [
+    { 
+      header: 'Name', 
+      field: 'name', 
+      sortable: true 
+    },
+    { 
+      header: 'City', 
+      field: 'city', 
+      sortable: true 
+    },
+    { 
+      header: 'State', 
+      field: 'state', 
+      sortable: true 
+    },
+    { 
+      header: 'Phone', 
+      field: 'phone', 
+      sortable: false 
+    },
+    { 
+      header: 'Email', 
+      field: 'email', 
+      sortable: true 
+    },
+    { 
+      header: 'Status', 
+      field: 'isActive',
+      cellRenderer: (value: boolean) => 
+        `<span class="status-badge ${value ? 'active' : 'inactive'}">
+          <i class="fas ${value ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+        </span>`,
+      align: 'center',
+      headerAlign: 'center'
+    }
   ];
   selectedItems: any[] = [];
 
-  constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    public store: PharmaciesStore,
-    private modal: NgbModal,
-    private pharmacyService: PharmaciesFakeService
-  ) {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private fb = inject(FormBuilder);
+  private modal = inject(NgbModal);
+  
+  constructor(public store: PharmaciesStore, public pharmacyService: PharmacyService) {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(80)]],
-      phoneNumber: ['', [Validators.required, Validators.maxLength(20)]],
-      code: ['', [Validators.required, Validators.maxLength(20)]],
-      type: ['', [Validators.required, Validators.maxLength(40)]],
       address: ['', [Validators.required, Validators.maxLength(160)]],
-      managerName: ['', [Validators.maxLength(80)]],
-      doctorName: ['', [Validators.maxLength(80)]]
+      city: ['', [Validators.required, Validators.maxLength(80)]],
+      state: ['', [Validators.required, Validators.maxLength(2)]],
+      zipCode: ['', [Validators.required, Validators.pattern(/^\d{5}(-\d{4})?$/)]],
+      phone: ['', [Validators.required, Validators.pattern(/^\+?[\d\s-]{10,}$/)]],
+      email: ['', [Validators.email]],
+      isActive: [true]
     });
 
     // Handle query parameters for search and pagination
     this.route.queryParams.subscribe(params => {
       const q = params['q'] || '';
       const p = +params['page'] || 1;
-      
       this.router.navigate([], {
         relativeTo: this.route,
         queryParams: { q: q || null, page: p !== 1 ? p : null },
@@ -81,12 +109,11 @@ export class PharmaciesComponent {
     this.router.navigate(['/pharmacies/create']);
   }
 
-  onEdit(pharmacy: any) {
-    if (!pharmacy || !pharmacy.id) {
+  onEdit(pharmacy: Pharmacy) {
+    if (!pharmacy?.id) {
       console.error('Invalid pharmacy object:', pharmacy);
       return;
     }
-    
     this.pharmacyService.selectedItem.set(pharmacy);
     this.router.navigate(['/pharmacies/edit', pharmacy.id]);
   }
