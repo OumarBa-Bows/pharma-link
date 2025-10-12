@@ -1,9 +1,11 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, Input} from '@angular/core';
 import {CardComponent} from "../../../theme/shared/components/card/card.component";
 import {FormBuilder, FormGroup, FormsModule, Validators} from "@angular/forms";
 import {SharedModule} from "../../../theme/shared/shared.module";
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {UserService} from "../../../services/apis/user-service";
+import {User} from "../../../model/user";
+import {Role} from "../../../model/role";
 
 @Component({
   selector: 'app-create-user',
@@ -23,30 +25,46 @@ export class CreateUserComponent {
 
   userService = inject(UserService);
 
+  @Input() user?: User;
+  public roles: Role[];
+
   constructor(private fb: FormBuilder, private modal: NgbActiveModal) {}
 
   ngOnInit(): void {
     this.userForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      role: ['']
+      name: [this.user?.name || '', Validators.required],
+      email: [this.user?.email || '', [Validators.required, Validators.email]],
+      password: ['', this.user ? [] : [Validators.required, Validators.minLength(6)]],
+      roles: [this.user?.roles || '']
     });
+
+    this.userService.getAllRoles().subscribe(roles=> {
+      this.roles = roles.data
+    })
   }
 
   onSubmit(): void {
     if (this.userForm.valid) {
-      console.log('✅ Formulaire soumis :', this.userForm.value);
-      this.userService.createUser(this.userForm.value).subscribe(res =>{
-        if(res){
-          this.modal.close(true)
-        }
-      })
-
+      const userData = { ...this.userForm.value };
+      userData.roles = [userData.roles];
+      if (this.user) {
+        this.userService.update(this.user.id, userData).subscribe({
+          next: () => this.modal.close(true),
+          error: (err) => console.error("Erreur update", err)
+        });
+      } else {
+        this.userService.createUser(userData).subscribe({
+          next: () => this.modal.close(true),
+          error: (err) => console.error("Erreur create", err)
+        });
+      }
     } else {
-      console.log('❌ Formulaire invalide');
       this.userForm.markAllAsTouched();
     }
+  }
+
+  closeModal(){
+    this.modal.close()
   }
 
 

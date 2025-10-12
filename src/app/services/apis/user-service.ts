@@ -22,4 +22,16 @@ export class UserService{
   createUser(data: User){
     return this.httpClient.post(`${this.resource}`+"users/", data)
   }
+
+  findById(id: number){
+    return this.httpClient.get(`${this.resource}`+"users/"+id)
+  }
+
+  getAllRoles(): Observable<any>{
+    return this.httpClient.get<any>(`${this.resource}`+"users/roles/all")
+  }
+
+  delete(id: number){
+    return  this.httpClient.get<any>(`${this.resource}`+"users/delete/"+ id)
+  }
 }
