@@ -1,6 +1,7 @@
 import { Injectable, effect, signal } from '@angular/core';
 import { PharmacyService } from '../api/pharmacy.service';
 import { Pharmacy, Page } from 'src/app/models/pharmacy.model';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PharmaciesStore {
@@ -89,5 +90,9 @@ export class PharmaciesStore {
         this.loading.set(false);
       }
     });
+  }
+
+  refresh() {
+    this.fetch(this.search(), this.page(), this.pageSize());
   }
 }

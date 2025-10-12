@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Page, Pharmacy } from 'src/app/models/pharmacy.model';
+import { Page, Pharmacy, PharmacyState } from 'src/app/models/pharmacy.model';
 
 @Injectable({
   providedIn: 'root'
@@ -35,5 +35,18 @@ export class PharmacyService {
 
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  updateStatus(id: string, state: PharmacyState, reason?: string): Observable<Pharmacy> {
+    return this.http.patch<Pharmacy>(`${this.apiUrl}/${id}/status`, { state, reason });
+  }
+
+  search(query: string, page: number = 1, limit: number = 10): Observable<Page<Pharmacy>> {
+    const params = new HttpParams()
+      .set('q', query)
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+      
+    return this.http.get<Page<Pharmacy>>(`${this.apiUrl}/search`, { params });
   }
 }

@@ -20,6 +20,7 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() showDelete = false;
   @Input() showImport = false;
   @Input() showSelected = false;
+  @Input() showStatus = false;
 
   @Output() edit = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
