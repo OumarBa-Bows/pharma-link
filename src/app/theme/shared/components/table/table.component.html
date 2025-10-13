@@ -49,12 +49,12 @@
                 @if (showEdit || showDelete) {
                   <td>
                     @if (showEdit) {
-                      <button type="button" class="btn btn-sm btn-primary me-1" (click)="onEdit(row)" title="Modifier">
-                        <i class="fa fa-edit"></i>
+                      <button type="button" class="btn btn-sm btn-outline-primary me-2" (click)="onEdit(row)" title="Modifier">
+                        <i class="feather icon-edit-2"></i>
                       </button>
                     }
                     @if (showDelete) {
-                      <button type="button" class="btn btn-sm btn-danger" (click)="onDelete(row)" title="Supprimer">
+                      <button type="button" class="btn btn-sm btn-outline-danger" (click)="onDelete(row)" title="Supprimer">
                         <i class="fa fa-trash"></i>
                       </button>
                     }
