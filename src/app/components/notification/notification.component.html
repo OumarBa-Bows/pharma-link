@@ -1,0 +1,10 @@
+<div class="notification-container">
+  <div *ngFor="let notif of notifications" [ngClass]="'notification ' + notif.type">
+    <span>{{ notif.message }}</span>
+    <ng-container *ngIf="notif.confirm">
+      <button (click)="confirm(notif, true)">{{ notif.confirmText || 'Confirmer' }}</button>
+      <button (click)="confirm(notif, false)">{{ notif.cancelText || 'Annuler' }}</button>
+    </ng-container>
+    <button *ngIf="!notif.confirm" (click)="close(notif)">×</button>
+  </div>
+</div>

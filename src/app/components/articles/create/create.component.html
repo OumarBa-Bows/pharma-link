@@ -34,15 +34,20 @@
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="image" class="form-label">Image</label>
-            <input type="file" class="form-control" aria-label="file example" id="image" formControlName="image" />
+            <input type="file" class="form-control" aria-label="file example" id="image" accept="image/*" (change)="onFileChange($event)" />
           </div>
+          @if (imagePath) {
+            <div class="col-md-6 mb-3">
+              <img [src]="imagePath" alt="Preview" class="img-thumbnail" style="max-height: 120px; max-width: 100%" />
+            </div>
+          }
+        </div>
+        <div class="row">
           <div class="col-md-6 mb-3">
             <label for="barcode" class="form-label">Code-barres</label>
             <input type="text" class="form-control" id="barcode" formControlName="barcode" placeholder="Code-barres" />
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12 mb-3">
+          <div class="col-md-6 mb-3">
             <label for="description" class="form-label">Description</label>
             <textarea
               class="form-control"

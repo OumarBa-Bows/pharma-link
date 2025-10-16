@@ -24,7 +24,20 @@ export const routes: Routes = [
       },
       {
         path: 'pharmacies',
-        loadComponent: () => import('./admin-panel/pages/pharmacies/component/pharmacies.component').then((c) => c.PharmaciesComponent)
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./admin-panel/pages/pharmacies/component/pharmacies.component').then((c) => c.PharmaciesComponent)
+          },
+          {
+            path: 'create',
+            loadComponent: () => import('./admin-panel/pages/pharmacies/create/create.component').then((c) => c.CreatePharmacyComponent)
+          },
+          {
+            path: 'edit/:id',
+            loadComponent: () => import('./admin-panel/pages/pharmacies/edit/edit.component').then((c) => c.EditPharmacyComponent)
+          }
+        ]
       },
       {
         path: 'basic',

@@ -2,18 +2,6 @@
   @if (isLoading) {
     <app-spinner></app-spinner>
   }
-  <button [routerLink]="['/articles/create']" class="btn btn-success mb-4">
-    <i class="fa fa-plus"></i>
-    {{ 'buttons-action.add' | translate }}
-  </button>
-  <!-- <button type="submit" class="btn btn-primary mb-4">
-    <i class="fa fa-edit"></i>
-    {{ 'buttons-action.edit' | translate }}
-  </button>
-  <button type="submit" class="btn btn-danger mb-4 margin-right">
-    <i class="fa fa-trash"></i>
-    {{ 'buttons-action.delete' | translate }}
-  </button> -->
 </div>
 <app-table
   title="{{ 'articles.article-list.title' | translate }}"
@@ -21,7 +9,11 @@
   [data]="articles"
   (selectionChange)="onSelectionChange($event)"
   (edit)="onEdit($event)"
-  (delete)="onDelete($event)"
+  (delete)="deleteArticle($event)"
   [showEdit]="true"
   [showDelete]="true"
+  [total]="articles.length"
+  (addNew)="onAddNew()"
+  (search)="onSearch($event)"
+  [searchPlaceholder]="'articles.article-list.search-placeholder' | translate"
 ></app-table>

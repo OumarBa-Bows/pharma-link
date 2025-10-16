@@ -1,78 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NotificationService, Notification } from 'src/app/services/notifications/notification.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-notification',
   standalone: true,
-  template: `
-    <div class="notification-container">
-      <div *ngFor="let notif of notifications" [ngClass]="'notification ' + notif.type">
-        <span>{{ notif.message }}</span>
-        <ng-container *ngIf="notif.confirm">
-          <button (click)="confirm(notif, true)">{{ notif.confirmText || 'Confirmer' }}</button>
-          <button (click)="confirm(notif, false)">{{ notif.cancelText || 'Annuler' }}</button>
-        </ng-container>
-        <button *ngIf="!notif.confirm" (click)="close(notif)">×</button>
-      </div>
-    </div>
-  `,
-  styles: [
-    `
-      .notification-container {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 9999;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      .notification {
-        min-width: 250px;
-        padding: 16px 24px;
-        border-radius: 4px;
-        color: #fff;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 16px;
-        animation: fadeIn 0.3s;
-      }
-      .notification.success {
-        background: #43a047;
-      }
-      .notification.error {
-        background: #e53935;
-      }
-      .notification.warning {
-        background: #fbc02d;
-        color: #222;
-      }
-      .notification.info {
-        background: #1e88e5;
-      }
-      .notification button {
-        margin-left: 12px;
-        background: transparent;
-        border: none;
-        color: inherit;
-        font-weight: bold;
-        cursor: pointer;
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(-10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-    `
-  ]
+  imports: [CommonModule],
+  templateUrl: './notification.component.html',
+  styleUrl: './notification.component.scss'
 })
 export class NotificationComponent implements OnInit, OnDestroy {
   notifications: Notification[] = [];

@@ -1,11 +1,11 @@
-import {Component, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { SharedModule } from '../../theme/shared/shared.module';
-import {UserService} from "../../services/apis/user-service";
-import {User} from "../../model/user";
-import {NgbModal, NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {CreateUserComponent} from "./create-user/create-user.component";
-import {ToastService} from "../../services/apis/toast.service";
-
+import { UserService } from '../../services/apis/user-service';
+import { User } from '../../model/user';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CreateUserComponent } from './create-user/create-user.component';
+import { ToastService } from '../../services/apis/toast.service';
+import { ConfirmationModalComponent } from '../../theme/shared/components/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-users',
@@ -15,10 +15,10 @@ import {ToastService} from "../../services/apis/toast.service";
   styleUrl: './users.component.scss',
   providers: [UserService]
 })
-export class UsersComponent implements OnInit{
-
+export class UsersComponent implements OnInit {
   userService = inject(UserService);
-  private modalService =  inject(NgbModal)
+  private modalService = inject(NgbModal);
+  private userdata: User[];
 
   constructor(private toastService: ToastService) {}
 
@@ -27,58 +27,69 @@ export class UsersComponent implements OnInit{
     { header: 'Last Name', field: 'name' },
     { header: 'Email', field: 'email' },
     { header: 'CreatedAt', field: 'createdAt' },
-    { header: 'UpdatedAt', field: 'updatedAt' }
+    { header: 'UpdatedAt', field: 'updatedAt' },
+    { header: 'UpdatedAt', field: 'updatedAt' },
+    { header: 'Role', field: 'roles' }
   ];
 
+  public users: User[];
 
-  data = [
-    { firstName: 'Mark', lastName: 'Otto', username: '@mdo' },
-    { firstName: 'Jacob', lastName: 'Thornton', username: '@fat' },
-    { firstName: 'maex', lastName: 'Thornton', username: '@fat' },
-    { firstName: 'test', lastName: 'Thornton', username: '@fat' },
-    { firstName: 'ops', lastName: 'Thornton', username: '@fat' },
-    { firstName: 'ras', lastName: 'Thornton', username: '@fat' }
-  ];
+  editUser(user: User) {
+    this.openCreationModal(user);
+  }
 
-  public users: User;
+  private openCreationModal(user?: User) {
+    const modalRef = this.modalService.open(CreateUserComponent, {
+      size: 'xl',
+      centered: true,
+      backdrop: 'static',
+      windowClass: 'createDeclaration-popup'
+    });
 
-
-  editUser(row: any) {
-    // Logique de modification de l'utilisateur
-    console.log('Modifier utilisateur :', row);
+    if (user) modalRef.componentInstance.user = user;
+    modalRef.closed.subscribe((res) => {
+      this.getAllUsers();
+    });
   }
 
   deleteUser(row: any) {
-    // Logique de suppression de l'utilisateur
-    console.log('Supprimer utilisateur :', row);
+    const modalRef = this.modalService.open(ConfirmationModalComponent, {
+      size: 'md',
+      centered: true,
+      backdrop: 'static'
+    });
+    modalRef.componentInstance.msg = 'Are you sure you want to delete this user ?';
+    modalRef.result.then((result) => {
+      if (result) {
+        this.delete(row.id);
+      }
+    });
   }
 
   onSelectionChange(rows: any[]) {
     console.log('Lignes sélectionnées :', rows);
   }
 
-  getAllUsers(){
-    this.userService.getAll().subscribe(result =>{
+  getAllUsers() {
+    this.userService.getAll().subscribe((result) => {
       this.users = result.data.users;
-    })
+      this.users.forEach((user) => {
+        user.roles = user.roles.map((r) => r.name).join(',');
+      });
+    });
   }
 
   ngOnInit(): void {
     this.getAllUsers();
   }
 
+  addUser() {
+    this.openCreationModal();
+  }
 
-  addUser(){
-    const modalRef = this.modalService.open(CreateUserComponent, {
-      size: 'xl',
-      centered: true,
-      backdrop: true,
-      windowClass: 'createDeclaration-popup'
-    })
-    modalRef.result.then(res =>{
-      if(res){
-        this.getAllUsers();
-      }
-    })
+  delete(id: number) {
+    this.userService.delete(id).subscribe((res) => {
+      this.getAllUsers();
+    });
   }
 }

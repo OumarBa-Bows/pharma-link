@@ -47,6 +47,10 @@ export class PharmaciesStore {
     this.pageSize.set(size);
   }
 
+  getById(id: string) {
+    return this.api.getById$(id).toPromise();
+  }
+
   create(payload: Omit<Pharmacy, 'id'>) {
     this.loading.set(true);
     this.api.create$(payload).subscribe({

@@ -3,14 +3,6 @@
     <i class="fa fa-plus"></i>
     {{ 'buttons-action.add' | translate }}
   </button>
-  <button type="submit" class="btn btn-primary mb-4">
-    <i class="fa fa-edit"></i>
-    {{ 'buttons-action.edit' | translate }}
-  </button>
-  <button type="submit" class="btn btn-danger mb-4 margin-right">
-    <i class="fa fa-trash"></i>
-    {{ 'buttons-action.delete' | translate }}
-  </button>
 </div>
 <app-table
   title="{{ 'users.user-list.title' | translate }}"
@@ -19,11 +11,8 @@
   (selectionChange)="onSelectionChange($event)"
   (edit)="editUser($event)"
   (delete)="deleteUser($event)"
-  [showEdit]="false"
-  [showDelete]="false"
-  [showSelected]="true"
+  [showEdit]="true"
+  [showDelete]="true"
+  [showSelected]="false"
 ></app-table>
 
-<ng-template #userSuccessTpl>
-  <div>👤 Utilisateur sauvegardé avec succès !</div>
-</ng-template>

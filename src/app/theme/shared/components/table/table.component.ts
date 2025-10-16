@@ -1,10 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CardComponent } from '../card/card.component';
 import { SharedModule } from '../../shared.module';
 import { TranslatePipe } from '@ngx-translate/core';
-import { start } from '@popperjs/core';
-import { p } from '@angular/cdk/overlay-module.d-C2CxnwqT';
-import { Event } from '@angular/router';
 
 @Component({
   selector: 'app-table',
@@ -13,9 +10,9 @@ import { Event } from '@angular/router';
   standalone: true,
   styleUrl: './table.component.scss'
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, OnChanges {
   @Input() title = '';
-  @Input() columns: { header: string; field: string }[] = [];
+  @Input() columns: { header: string; field: string; img: boolean }[] = [];
   @Input() data: any[] = [];
 
   @Input() showEdit = false;
@@ -24,19 +21,30 @@ export class TableComponent implements OnInit {
 
   @Output() edit = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
-
   @Output() selectionChange = new EventEmitter<any[]>();
 
-  pageSize = 10;
-  currentPage = 1;
+  @Input() page = 1;
+  @Input() pageSize = 10;
+  @Output() pageChange = new EventEmitter<number>();
 
+  @Output() addNew = new EventEmitter<any>();
+  @Output() search = new EventEmitter<string>();
+  @Input() total = 0;
+  @Input() searchPlaceholder = 'Search...';
+
+  currentPage = 1;
   selectedRows = new Set<number>();
 
   get totalPages(): number {
-    return Math.ceil(this.data.length / this.pageSize);
+    return Math.ceil(this.total / this.pageSize);
   }
 
   get pagedData() {
+    // If data is paginated on the server, just return the data as is
+    if (this.total > this.data.length) {
+      return this.data;
+    }
+    // If paginating on the client side
     const start = (this.currentPage - 1) * this.pageSize;
     return this.data?.slice(start, start + this.pageSize);
   }
@@ -46,7 +54,10 @@ export class TableComponent implements OnInit {
   }
 
   goToPage(p: number) {
-    if (p >= 1 && p <= this.totalPages) this.currentPage = p;
+    if (p >= 1 && p <= this.totalPages) {
+      this.currentPage = p;
+      this.pageChange.emit(p);
+    }
   }
 
   toggleRow(globalIndex: number) {
@@ -71,7 +82,17 @@ export class TableComponent implements OnInit {
     this.emitSelection();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.warn('list cols: ', this.columns);
+    console.warn('list rows: ', this.data);
+    this.currentPage = this.page;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['page']) {
+      this.currentPage = this.page;
+    }
+  }
 
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
