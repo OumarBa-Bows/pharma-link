@@ -18,6 +18,7 @@ export class UpdateComponent {
   article: any = null;
   articleForm: FormGroup;
   isLoading = false;
+  imagePath: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -102,6 +103,7 @@ export class UpdateComponent {
   }
 
   articleFormPatchValue() {
+    this.imagePath = this.article.imageLink??'';
     this.articleForm.patchValue({
       code: this.article.code,
       name: this.article.name,
@@ -110,5 +112,37 @@ export class UpdateComponent {
       expiryDate: this.article.expiryDate,
       barcode: this.article.barcode
     });
+  }
+
+    onFileChange(event: any) {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+
+      // Validation taille
+      if (file.size > 1 * 1024 * 1024) {
+        alert('Le fichier ne doit pas dépasser 1MB');
+
+        // ❌ Réinitialiser le input
+        input.value = '';
+        this.imagePath = null; // supprimer le preview si déjà défini
+        this.articleForm.patchValue({
+          image: null
+        });
+        return;
+      }
+
+      this.articleForm.patchValue({
+        image: file
+      });
+
+      // Créer le preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePath = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
   }
 }

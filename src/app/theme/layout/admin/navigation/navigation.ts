@@ -62,6 +62,14 @@ export const NavigationItems: NavigationItem[] = [
         url: '/pharmacies',
         classes: 'nav-item',
         icon: 'feather icon-briefcase'
+      },
+      {
+        id: 'listings',
+        title: 'Listings',
+        type: 'item',
+        url: '/listings/index',
+        classes: 'nav-item',
+        icon: 'feather icon-list'
       }
     ]
   },

@@ -1,0 +1,70 @@
+<div class="row">
+  @if (isLoading) {
+    <app-spinner></app-spinner>
+  }
+  <div class="col-xl-12">
+    <button style="float: right" [routerLink]="['/listings/index']" class="btn btn-danger mb-4">
+      <i class="fa fa-arrow-left"></i>
+      {{ 'buttons-action.back' | translate }}
+    </button>
+  </div>
+  <div class="col-xl-12">
+    <app-card cardTitle="{{ 'listings.listing-update.title' | translate }}" [options]="false" blockClass="table-border-style">
+      <form [formGroup]="listingForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <label for="name" class="form-label">Nom</label>
+            <input type="text" class="form-control" id="name" formControlName="name" placeholder="Nom de l'listing" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea
+              class="form-control"
+              id="description"
+              formControlName="description"
+              rows="3"
+              placeholder="Description de l'listing"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <label for="articleIds" class="form-label">Articles</label>
+            <div class="mb-2" *ngIf="isArticlesLoading">
+              <small>Chargement des articles...</small>
+            </div>
+            <div class="input-group input-group-sm mb-2">
+              <span class="input-group-text"><i class="fa fa-search"></i></span>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Rechercher par nom ou code..."
+                [value]="articleSearch"
+                (input)="articleSearch = $any($event.target).value"
+              />
+            </div>
+            <div style="max-height: 300px; overflow-y: auto; border: 1px solid #e9ecef; border-radius: 4px; padding: 8px;">
+              <div class="form-check" *ngFor="let a of filteredArticles">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [id]="'article-'+a.id"
+                  [checked]="isArticleSelected(a.id)"
+                  (change)="onArticleToggle(a.id, $event.target.checked)"
+                />
+                <label class="form-check-label" [for]="'article-'+a.id">
+                  {{ a.name }} ({{ a.code }})
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="listingForm.invalid">Enregistrer</button>
+      </form>
+    </app-card>
+  </div>
+</div>

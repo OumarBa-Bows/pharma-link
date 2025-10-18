@@ -6,6 +6,11 @@
           <button class="btn btn-success" (click)="addNew.emit()">
             <i class="feather icon-plus me-1"></i>
           </button>
+          @if (showImport) {
+            <button class="btn btn-primary" (click)="import.emit()">
+              <i class="feather icon-upload me-1"></i>
+            </button>
+          }
         </div>
         <div class="d-flex align-items-center gap-2">
           <input

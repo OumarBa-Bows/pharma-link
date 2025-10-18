@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <h5 class="modal-title">Importer des articles (Excel)</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()"></button>
+</div>
+<div class="modal-body">
+  <p class="mb-2">Sélectionnez un fichier Excel (.xls, .xlsx) contenant les articles à importer.</p>
+  <input
+    type="file"
+    class="form-control"
+    (change)="onFileChange($event)"
+    accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  />
+  <div class="mt-2" *ngIf="file">
+    <small>Fichier sélectionné: <strong>{{ file.name }}</strong></small>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="onCancel()">Annuler</button>
+  <button type="button" class="btn btn-primary" [disabled]="!file" (click)="onImport()">Importer</button>
+</div>

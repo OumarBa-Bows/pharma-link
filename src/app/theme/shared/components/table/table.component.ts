@@ -17,6 +17,7 @@ export class TableComponent implements OnInit, OnChanges {
 
   @Input() showEdit = false;
   @Input() showDelete = false;
+  @Input() showImport = false;
   @Input() showSelected = false;
 
   @Output() edit = new EventEmitter<any>();
@@ -28,6 +29,7 @@ export class TableComponent implements OnInit, OnChanges {
   @Output() pageChange = new EventEmitter<number>();
 
   @Output() addNew = new EventEmitter<any>();
+  @Output() import = new EventEmitter<any>();
   @Output() search = new EventEmitter<string>();
   @Input() total = 0;
   @Input() searchPlaceholder = 'Search...';

@@ -47,6 +47,10 @@ export const routes: Routes = [
         path: 'articles',
         loadChildren: () => import('./components/articles/articles-routing-module').then((m) => m.ArticlesRoutingModule)
       },
+       {
+        path: 'listings',
+        loadChildren: () => import('./components/listings/listings-routing-module').then((m) => m.ListingsRoutingModule)
+      },
       {
         path: 'forms',
         loadComponent: () => import('./admin-panel/pages/form-element/form-element').then((c) => c.FormElement)

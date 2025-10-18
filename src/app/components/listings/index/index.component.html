@@ -4,18 +4,16 @@
   }
 </div>
 <app-table
-  title="{{ 'articles.article-list.title' | translate }}"
+  title="{{ 'listings.listing-list.title' | translate }}"
   [columns]="columns"
-  [data]="articles"
+  [data]="listings"
   (selectionChange)="onSelectionChange($event)"
   (edit)="onEdit($event)"
-  (delete)="deleteArticle($event)"
-  (import)="importArticle($event)"
+  (delete)="deleteListing($event)"
   [showEdit]="true"
   [showDelete]="true"
-  [showImport]="true"
-  [total]="articles.length"
+  [total]="listings.length"
   (addNew)="onAddNew()"
   (search)="onSearch($event)"
-  [searchPlaceholder]="'articles.article-list.search-placeholder' | translate"
+  [searchPlaceholder]="'listings.listing-list.search-placeholder' | translate"
 ></app-table>

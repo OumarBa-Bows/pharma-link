@@ -26,6 +26,18 @@
       "title": "Modifier un article"
     }
   },
+  "listings": {
+    "listing-list": {
+      "title": "Liste des listings",
+      "create-new-listing": "Créer un nouvel listing"
+    },
+    "listing-create": {
+      "title": "Créer un listing"
+    },
+    "listing-update": {
+      "title": "Modifier un listing"
+    }
+  },
   "table": {
     "selectAll": "Tout Sélectionner"
   }

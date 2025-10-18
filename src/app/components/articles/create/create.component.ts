@@ -47,7 +47,9 @@ export class CreateComponent {
             formData.append('image', file);
           }
         } else {
-          formData.append(key, this.articleForm.get(key)?.value);
+          if (this.articleForm.get(key)?.value !== null && this.articleForm.get(key)?.value !== undefined && this.articleForm.get(key)?.value !== '') {
+            formData.append(key, this.articleForm.get(key)?.value);
+          }
         }
       });
       this.apiService.postData('articles', formData).subscribe({
