@@ -52,6 +52,10 @@ export const routes: Routes = [
         loadChildren: () => import('./components/listings/listings-routing-module').then((m) => m.ListingsRoutingModule)
       },
       {
+        path: 'commandes',
+        loadComponent: () => import('./components/commandes/commandes.component').then((m) => m.CommandesComponent)
+      },
+      {
         path: 'forms',
         loadComponent: () => import('./admin-panel/pages/form-element/form-element').then((c) => c.FormElement)
       },

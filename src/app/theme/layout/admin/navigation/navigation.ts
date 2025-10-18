@@ -64,6 +64,14 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'feather icon-briefcase'
       },
       {
+        id: 'commandes',
+        title: 'Commandes',
+        type: 'item',
+        url: '/commandes',
+        classes: 'nav-item',
+        icon: 'feather icon-activity'
+      },
+      {
         id: 'listings',
         title: 'Listings',
         type: 'item',

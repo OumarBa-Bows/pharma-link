@@ -1,0 +1,13 @@
+<div class="actions">
+</div>
+<app-table
+  title="{{ 'commandesList' | translate }}"
+  [columns]="columns"
+  [data]="[]"
+  (selectionChange)="onSelectionChange($event)"
+  (edit)="editCommand($event)"
+  (delete)="deleteCommand($event)"
+  [showEdit]="true"
+  [showDelete]="true"
+  [showSelected]="false"
+></app-table>
