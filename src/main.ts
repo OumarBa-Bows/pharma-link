@@ -9,6 +9,7 @@ import { appConfig } from './app/app-config';
 import {provideTranslateService, TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {provideTranslateHttpLoader, TranslateHttpLoader} from "@ngx-translate/http-loader";
+import {provideToastr} from "ngx-toastr";
 
 if (environment.production) {
   enableProdMode();
@@ -16,11 +17,21 @@ if (environment.production) {
 
 
 bootstrapApplication(AppComponent, {
-  providers: [importProvidersFrom(BrowserModule),   provideTranslateService({
-    defaultLanguage: 'fr', // langue par défaut
-    loader: provideTranslateHttpLoader({
-      prefix: './assets/i18n/',
-      suffix: '.json'
-    })
-  }),provideAnimations(), ...appConfig.providers, provideClientHydration(withEventReplay())]
-}).catch((err) => console.error(err));
+  providers: [
+    provideTranslateService({
+      defaultLanguage: 'fr',
+      loader: provideTranslateHttpLoader({
+        prefix: './assets/i18n/',
+        suffix: '.json',
+      }),
+    }),
+    provideAnimations(), // obligatoire
+    ...appConfig.providers,
+    provideClientHydration(withEventReplay()),
+    provideToastr({
+      timeOut: 10000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    }),
+  ],
+});

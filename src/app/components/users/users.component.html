@@ -1,8 +1,4 @@
 <div class="actions">
-  <button type="submit" class="btn btn-success mb-4" (click)="addUser()">
-    <i class="fa fa-plus"></i>
-    {{ 'buttons-action.add' | translate }}
-  </button>
 </div>
 <app-table
   title="{{ 'users.user-list.title' | translate }}"
@@ -13,6 +9,7 @@
   (delete)="deleteUser($event)"
   [showEdit]="true"
   [showDelete]="true"
+  (addNew)="addUser()"
   [showSelected]="false"
 ></app-table>
 

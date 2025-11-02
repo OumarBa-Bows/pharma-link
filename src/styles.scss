@@ -21,3 +21,23 @@
 @import 'scss/plugins/plugins';
 
 @import 'scss/custom';
+
+
+.toast-success {
+  background-color: #28a745 !important;
+  color: white !important;
+}
+
+.toast-error {
+  background-color: #dc3545 !important;
+  color: white !important;
+}
+
+#toast-container > .ngx-toastr {
+  white-space: nowrap;
+  max-width: none !important;
+  width: auto !important;
+  display: inline-flex !important;
+  align-items: center;
+}
+

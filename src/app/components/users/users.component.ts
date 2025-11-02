@@ -6,6 +6,8 @@ import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { ToastService } from '../../services/apis/toast.service';
 import { ConfirmationModalComponent } from '../../theme/shared/components/confirmation-modal/confirmation-modal.component';
+import {ToastrService} from "ngx-toastr";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-users',
@@ -20,16 +22,15 @@ export class UsersComponent implements OnInit {
   private modalService = inject(NgbModal);
   private userdata: User[];
 
-  constructor(private toastService: ToastService) {}
+  constructor(    private toastr: ToastrService, private translateService: TranslateService ) {}
 
   columns = [
-    { header: 'Id', field: 'id' },
-    { header: 'Last Name', field: 'name' },
-    { header: 'Email', field: 'email' },
-    { header: 'CreatedAt', field: 'createdAt' },
-    { header: 'UpdatedAt', field: 'updatedAt' },
-    { header: 'UpdatedAt', field: 'updatedAt' },
-    { header: 'Role', field: 'roles' }
+    { header:  this.translateService.instant('users.columns.id') , field: 'id' },
+    { header: this.translateService.instant( 'users.columns.name'), field: 'name' },
+    { header: this.translateService.instant( 'users.columns.email'), field: 'email' },
+    { header: this.translateService.instant( 'users.columns.createdAt'), field: 'createdAt' },
+    { header: this.translateService.instant( 'users.columns.updatedAt'), field: 'updatedAt' },
+    { header: this.translateService.instant( 'users.columns.role'), field: 'roles' }
   ];
 
   public users: User[];
@@ -47,8 +48,16 @@ export class UsersComponent implements OnInit {
     });
 
     if (user) modalRef.componentInstance.user = user;
+    const toastSuccess = user  ? 'Utilisateur mis à jour avec succès ✅' : 'Utilisateur créé avec succès ✅';
+    const toastError = user ? 'Erreur lors de la mise à jour ❌' : 'Erreur lors de la création ❌';
     modalRef.closed.subscribe((res) => {
-      this.getAllUsers();
+      if(res){
+        debugger
+        this.toastr.success(toastSuccess);
+        this.getAllUsers();
+      }else {
+        this.toastr.error(toastError);
+      }
     });
   }
 
@@ -90,6 +99,17 @@ export class UsersComponent implements OnInit {
   delete(id: number) {
     this.userService.delete(id).subscribe((res) => {
       this.getAllUsers();
+    });
+
+    this.userService.delete(id).subscribe({
+      next: () => {
+        this.toastr.success('Utilisateur supprimé avec succès ✅');
+        this.getAllUsers();
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('Erreur lors de la suppression ❌');
+      },
     });
   }
 }

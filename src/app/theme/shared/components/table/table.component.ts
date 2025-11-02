@@ -23,6 +23,8 @@ export class TableComponent implements OnInit, OnChanges {
   @Output() edit = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
   @Output() selectionChange = new EventEmitter<any[]>();
+  @Output() showDetatail = new EventEmitter<any>();
+
 
   @Input() page = 1;
   @Input() pageSize = 10;
@@ -36,6 +38,10 @@ export class TableComponent implements OnInit, OnChanges {
 
   currentPage = 1;
   selectedRows = new Set<number>();
+  @Input()
+  showAddButton = true;
+  @Input()
+  showDetails=  false;
 
   get totalPages(): number {
     return Math.ceil(this.total / this.pageSize);
@@ -113,5 +119,9 @@ export class TableComponent implements OnInit, OnChanges {
 
   onDelete(row: any) {
     this.delete.emit(row);
+  }
+
+  onShowDetails(row: any) {
+    this.showDetatail.emit(row)
   }
 }

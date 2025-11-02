@@ -3,11 +3,14 @@
 <app-table
   title="{{ 'commandesList' | translate }}"
   [columns]="columns"
-  [data]="[]"
+  [data]="commandData"
   (selectionChange)="onSelectionChange($event)"
   (edit)="editCommand($event)"
   (delete)="deleteCommand($event)"
   [showEdit]="true"
   [showDelete]="true"
-  [showSelected]="false"
+  [showSelected]="true"
+  [showAddButton]="false"
+  [showDetails]="true"
+  (showDetatail)="showDetail($event)"
 ></app-table>
