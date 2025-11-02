@@ -1,0 +1,39 @@
+.command-detail-container {
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  max-width: 700px;
+  margin: 2rem auto;
+
+  h2 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+  }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem 1.5rem;
+    font-size: 0.95rem;
+
+    div {
+      padding: 0.3rem 0;
+    }
+  }
+
+  .btn-back {
+    margin-top: 2rem;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+}

@@ -1,0 +1,30 @@
+<header class="page-header">
+  <h1>📦 Détail de la commande</h1>
+</header>
+
+<main class="page-content">
+  @if (command) {
+    <div class="command-detail-container">
+      <h2>Commande #{{ command.id }}</h2>
+
+      <div class="detail-grid">
+        <div><strong>Code :</strong> {{ command.code }}</div>
+        <div><strong>Status :</strong> {{ command.status }}</div>
+        <div><strong>Référence commande :</strong> {{ command.commandreference }}</div>
+        <div><strong>Référence facture :</strong> {{ command.invoicereference }}</div>
+        <div><strong>Prix total :</strong> {{ command.totalprice | currency:'EUR' }}</div>
+        <div><strong>Pharmacie :</strong> {{ command.pharmacy }}</div>
+        <div><strong>Distributeur :</strong> {{ command.distributor }}</div>
+        <div><strong>Distributeur principal :</strong> {{ command.mainDistributor }}</div>
+        <div><strong>Date :</strong> {{ command.date | date:'short' }}</div>
+      </div>
+
+      <button class="btn-back" (click)="goBack()">← Retour</button>
+    </div>
+  } @else {
+    <div class="command-detail-container">
+      <p>Aucune donnée de commande disponible.</p>
+      <button class="btn-back" (click)="goBack()">Retour</button>
+    </div>
+  }
+</main>

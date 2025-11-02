@@ -1,8 +1,10 @@
 {
   "app-name": "PharmaLink",
   "buttons-action": {
+    "title": "Actions",
     "add": "Ajouter",
     "edit": "Modifier",
+    "showDetails": "Afficher les détails",
     "delete": "Supprimer",
     "view": "Voir",
     "save": "Enregistrer",
@@ -12,6 +14,14 @@
   "users": {
     "user-list": {
       "title": "Liste des utilisateurs"
+    },
+    "columns": {
+        "id": "ID",
+        "name":  "Nom",
+        "email":  "Email",
+        "createdAt": "Créé le",
+        "updatedAt": "Mis à jour le",
+        "role": "Rôle"
     }
   },
   "articles": {
