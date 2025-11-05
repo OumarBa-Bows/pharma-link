@@ -13,8 +13,8 @@
       <form [formGroup]="articleForm" (ngSubmit)="onSubmit()">
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="code" class="form-label">Code</label>
-            <input type="text" class="form-control" id="code" formControlName="code" placeholder="Code de l'article" />
+            <label for="reference" class="form-label">Référence</label>
+            <input type="text" class="form-control" id="reference" formControlName="reference" placeholder="Référence de l'article" />
           </div>
           <div class="col-md-6 mb-3">
             <label for="name" class="form-label">Nom</label>
@@ -36,15 +36,14 @@
             <label for="image" class="form-label">Image</label>
             <input type="file" class="form-control" aria-label="file example" id="image" (change)="onFileChange($event)" />
           </div>
-           @if (imagePath) {
+          @if (imagePath) {
             <div class="col-md-6 mb-3">
               <img [src]="imagePath" alt="Preview" class="img-thumbnail" style="max-height: 120px; max-width: 100%" />
             </div>
           }
-
         </div>
         <div class="row">
-            <div class="col-md-6 mb-3">
+          <div class="col-md-6 mb-3">
             <label for="barcode" class="form-label">Code-barres</label>
             <input type="text" class="form-control" id="barcode" formControlName="barcode" placeholder="Code-barres" />
           </div>

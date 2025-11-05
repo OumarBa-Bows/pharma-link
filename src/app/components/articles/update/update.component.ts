@@ -28,7 +28,7 @@ export class UpdateComponent {
     private notificationService: NotificationService
   ) {
     this.articleForm = this.fb.group({
-      code: ['', Validators.required],
+      reference: ['', Validators.required],
       name: ['', Validators.required],
       price: [null, [Validators.required, Validators.min(0)]],
       image: [null],
@@ -103,7 +103,7 @@ export class UpdateComponent {
   }
 
   articleFormPatchValue() {
-    this.imagePath = this.article.imageLink??'';
+    this.imagePath = this.article.imageLink ?? '';
     this.articleForm.patchValue({
       code: this.article.code,
       name: this.article.name,
@@ -114,7 +114,7 @@ export class UpdateComponent {
     });
   }
 
-    onFileChange(event: any) {
+  onFileChange(event: any) {
     const input = event.target as HTMLInputElement;
 
     if (input.files && input.files.length > 0) {

@@ -25,7 +25,7 @@ export class CreateComponent {
     private notificationService: NotificationService
   ) {
     this.articleForm = this.fb.group({
-      code: ['', Validators.required],
+      reference: ['', Validators.required],
       name: ['', Validators.required],
       price: [null, [Validators.required, Validators.min(0)]],
       image: [null],
@@ -47,7 +47,11 @@ export class CreateComponent {
             formData.append('image', file);
           }
         } else {
-          if (this.articleForm.get(key)?.value !== null && this.articleForm.get(key)?.value !== undefined && this.articleForm.get(key)?.value !== '') {
+          if (
+            this.articleForm.get(key)?.value !== null &&
+            this.articleForm.get(key)?.value !== undefined &&
+            this.articleForm.get(key)?.value !== ''
+          ) {
             formData.append(key, this.articleForm.get(key)?.value);
           }
         }
