@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {CurrencyPipe, DatePipe} from "@angular/common";
+import {CommandService} from "../../../services/apis/CommandService";
 
 @Component({
   selector: 'app-command-detail',
@@ -10,9 +11,10 @@ import {CurrencyPipe, DatePipe} from "@angular/common";
   ],
   templateUrl: './command-detail.html',
   standalone: true,
-  styleUrl: './command-detail.scss'
+  styleUrl: './command-detail.scss',
+  providers: [CommandService]
 })
-export class CommandDetail {
+export class CommandDetail{
 
   command: any;
 

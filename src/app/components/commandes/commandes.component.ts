@@ -2,6 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import {SharedModule} from "../../theme/shared/shared.module";
 import {CommandService} from "../../services/apis/CommandService";
 import {Router} from "@angular/router";
+import {Command} from "../../model/command";
 
 @Component({
   selector: 'app-commandes',
@@ -29,7 +30,7 @@ export class CommandesComponent implements OnInit{
     { header: 'Date', field: 'date' }
 
   ];
-  protected commandData: any;
+  protected commandData: Command[] = [];
 
   onSelectionChange($event: any[]) {
 

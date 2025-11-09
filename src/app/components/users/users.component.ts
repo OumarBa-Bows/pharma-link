@@ -8,6 +8,7 @@ import { ToastService } from '../../services/apis/toast.service';
 import { ConfirmationModalComponent } from '../../theme/shared/components/confirmation-modal/confirmation-modal.component';
 import {ToastrService} from "ngx-toastr";
 import {TranslateService} from "@ngx-translate/core";
+import {NotificationService} from "../../services/notifications/notification.service";
 
 @Component({
   selector: 'app-users',
@@ -21,8 +22,10 @@ export class UsersComponent implements OnInit {
   userService = inject(UserService);
   private modalService = inject(NgbModal);
   private userdata: User[];
+  private notificationService = inject(NotificationService);
 
-  constructor(    private toastr: ToastrService, private translateService: TranslateService ) {}
+
+  constructor(private translateService: TranslateService ) {}
 
   columns = [
     { header:  this.translateService.instant('users.columns.id') , field: 'id' },
@@ -53,10 +56,10 @@ export class UsersComponent implements OnInit {
     modalRef.closed.subscribe((res) => {
       if(res){
         debugger
-        this.toastr.success(toastSuccess);
+        this.notificationService.showSuccess(toastSuccess);
         this.getAllUsers();
       }else {
-        this.toastr.error(toastError);
+        this.notificationService.showError(toastError);
       }
     });
   }
@@ -103,12 +106,12 @@ export class UsersComponent implements OnInit {
 
     this.userService.delete(id).subscribe({
       next: () => {
-        this.toastr.success('Utilisateur supprimé avec succès ✅');
+        this.notificationService.showSuccess('Utilisateur supprimé avec succès ✅');
         this.getAllUsers();
       },
       error: (err) => {
         console.error(err);
-        this.toastr.error('Erreur lors de la suppression ❌');
+        this.notificationService.showError('Erreur lors de la suppression ❌');
       },
     });
   }
