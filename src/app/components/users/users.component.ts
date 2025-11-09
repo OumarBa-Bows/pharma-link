@@ -6,9 +6,10 @@ import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { ToastService } from '../../services/apis/toast.service';
 import { ConfirmationModalComponent } from '../../theme/shared/components/confirmation-modal/confirmation-modal.component';
-import {ToastrService} from "ngx-toastr";
-import {TranslateService} from "@ngx-translate/core";
-import {NotificationService} from "../../services/notifications/notification.service";
+
+
+import { NotificationService } from 'src/app/services/notifications/notification.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-users',
@@ -20,6 +21,7 @@ import {NotificationService} from "../../services/notifications/notification.ser
 })
 export class UsersComponent implements OnInit {
   userService = inject(UserService);
+  notify = inject(NotificationService);
   private modalService = inject(NgbModal);
   private userdata: User[];
   private notificationService = inject(NotificationService);
@@ -28,12 +30,12 @@ export class UsersComponent implements OnInit {
   constructor(private translateService: TranslateService ) {}
 
   columns = [
-    { header:  this.translateService.instant('users.columns.id') , field: 'id' },
-    { header: this.translateService.instant( 'users.columns.name'), field: 'name' },
-    { header: this.translateService.instant( 'users.columns.email'), field: 'email' },
-    { header: this.translateService.instant( 'users.columns.createdAt'), field: 'createdAt' },
-    { header: this.translateService.instant( 'users.columns.updatedAt'), field: 'updatedAt' },
-    { header: this.translateService.instant( 'users.columns.role'), field: 'roles' }
+    { header: this.translateService.instant('users.columns.id'), field: 'id' },
+    { header: this.translateService.instant('users.columns.name'), field: 'name' },
+    { header: this.translateService.instant('users.columns.email'), field: 'email' },
+    { header: this.translateService.instant('users.columns.createdAt'), field: 'createdAt' },
+    { header: this.translateService.instant('users.columns.updatedAt'), field: 'updatedAt' },
+    { header: this.translateService.instant('users.columns.role'), field: 'roles' }
   ];
 
   public users: User[];
@@ -51,11 +53,10 @@ export class UsersComponent implements OnInit {
     });
 
     if (user) modalRef.componentInstance.user = user;
-    const toastSuccess = user  ? 'Utilisateur mis à jour avec succès ✅' : 'Utilisateur créé avec succès ✅';
+    const toastSuccess = user ? 'Utilisateur mis à jour avec succès ✅' : 'Utilisateur créé avec succès ✅';
     const toastError = user ? 'Erreur lors de la mise à jour ❌' : 'Erreur lors de la création ❌';
     modalRef.closed.subscribe((res) => {
       if(res){
-        debugger
         this.notificationService.showSuccess(toastSuccess);
         this.getAllUsers();
       }else {
