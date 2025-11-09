@@ -19,6 +19,10 @@ export const routes: Routes = [
         loadComponent: () => import('./components/users/users.component').then((c) => c.UsersComponent)
       },
       {
+        path: 'profile',
+        loadComponent: () => import('./components/profile/profile.component').then((c) => c.ProfileComponent)
+      },
+      {
         path: 'dashboard',
         loadComponent: () => import('./admin-panel/dashboard/dashboard.component').then((c) => c.DashboardComponent)
       },

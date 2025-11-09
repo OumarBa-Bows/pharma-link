@@ -6,7 +6,8 @@ import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { ToastService } from '../../services/apis/toast.service';
 import { ConfirmationModalComponent } from '../../theme/shared/components/confirmation-modal/confirmation-modal.component';
-//import {ToastrService} from "ngx-toastr";
+
+
 import { NotificationService } from 'src/app/services/notifications/notification.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -23,11 +24,10 @@ export class UsersComponent implements OnInit {
   notify = inject(NotificationService);
   private modalService = inject(NgbModal);
   private userdata: User[];
+  private notificationService = inject(NotificationService);
 
-  constructor(
-    //  private toastr: ToastrService,
-    private translateService: TranslateService
-  ) {}
+
+  constructor(private translateService: TranslateService ) {}
 
   columns = [
     { header: this.translateService.instant('users.columns.id'), field: 'id' },
@@ -56,14 +56,11 @@ export class UsersComponent implements OnInit {
     const toastSuccess = user ? 'Utilisateur mis à jour avec succès ✅' : 'Utilisateur créé avec succès ✅';
     const toastError = user ? 'Erreur lors de la mise à jour ❌' : 'Erreur lors de la création ❌';
     modalRef.closed.subscribe((res) => {
-      if (res) {
-        debugger;
-        //this.toastr.success(toastSuccess);
-        this.notify.showSuccess(toastSuccess);
+      if(res){
+        this.notificationService.showSuccess(toastSuccess);
         this.getAllUsers();
-      } else {
-        //this.toastr.error(toastError);
-        this.notify.showError(toastError);
+      }else {
+        this.notificationService.showError(toastError);
       }
     });
   }
@@ -110,14 +107,13 @@ export class UsersComponent implements OnInit {
 
     this.userService.delete(id).subscribe({
       next: () => {
-        //this.toastr.success('Utilisateur supprimé avec succès ✅');
-        this.notify.showSuccess('Utilisateur supprimé avec succès ✅');
+        this.notificationService.showSuccess('Utilisateur supprimé avec succès ✅');
         this.getAllUsers();
       },
       error: (err) => {
         console.error(err);
-        this.notify.showError('Erreur lors de la suppression ❌');
-      }
+        this.notificationService.showError('Erreur lors de la suppression ❌');
+      },
     });
   }
 }

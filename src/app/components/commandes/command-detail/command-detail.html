@@ -10,14 +10,47 @@
       <div class="detail-grid">
         <div><strong>Code :</strong> {{ command.code }}</div>
         <div><strong>Status :</strong> {{ command.status }}</div>
-        <div><strong>Référence commande :</strong> {{ command.commandreference }}</div>
-        <div><strong>Référence facture :</strong> {{ command.invoicereference }}</div>
-        <div><strong>Prix total :</strong> {{ command.totalprice | currency:'EUR' }}</div>
-        <div><strong>Pharmacie :</strong> {{ command.pharmacy }}</div>
-        <div><strong>Distributeur :</strong> {{ command.distributor }}</div>
-        <div><strong>Distributeur principal :</strong> {{ command.mainDistributor }}</div>
+        <div><strong>Référence commande :</strong> {{ command.commandReference }}</div>
+        <div><strong>Référence facture :</strong> {{ command.invoiceReference }}</div>
+        <div><strong>Prix total :</strong> {{ command.totalPrice | currency:'EUR' }}</div>
+        <div><strong>Pharmacie :</strong> {{ command.pharmacy?.name }}</div>
+        <div><strong>Distributeur :</strong> {{ command.distributor?.name }}</div>
+        <div><strong>Distributeur principal :</strong> {{ command.mainDistributor?.name }}</div>
         <div><strong>Date :</strong> {{ command.date | date:'short' }}</div>
       </div>
+
+      <h3 class="mt-4">🧾 Détails des articles</h3>
+
+      @if (command.details?.length > 0) {
+        <table class="table">
+          <thead>
+          <tr>
+            <th>Article</th>
+            <th>Code</th>
+            <th>Date d'expiration</th>
+            <th>Numéro de lot</th>
+            <th>Quantité</th>
+            <th>Prix unitaire</th>
+            <th>Total</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (detail of command.details; track detail.id) {
+              <tr>
+                <td>{{ detail.article?.name }}</td>
+                <td>{{ detail.article?.reference }}</td>
+                <td>{{ detail.expirationDate | date:'shortDate' }}</td>
+                <td>{{ detail.batchNumber }}</td>
+                <td>{{ detail.quantity }}</td>
+                <td>{{ detail.article?.price | currency:'EUR' }}</td>
+                <td>{{ (detail.article?.price ?? 0) * detail.quantity | currency:'EUR' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <p>Aucun article dans cette commande.</p>
+      }
 
       <button class="btn-back" (click)="goBack()">← Retour</button>
     </div>

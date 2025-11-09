@@ -34,4 +34,12 @@ export class UserService{
   delete(id: number){
     return  this.httpClient.get<any>(`${this.resource}`+"users/delete/"+ id)
   }
+
+  getConnectedUser(): Observable<any>{
+    return  this.httpClient.get<any>(`${this.resource}`+"users/connected/user")
+  }
+
+    changePassword(id: number, newPassword: string){
+    return this.httpClient.post(`${this.resource}`+"users/update/password/"+id, {newPassword: newPassword})
+  }
 }

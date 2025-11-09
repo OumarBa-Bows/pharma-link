@@ -1,0 +1,35 @@
+.container {
+  max-width: 600px;
+}
+
+.card {
+  border-radius: 12px;
+  background: #fff;
+}
+
+.table th {
+  width: 40%;
+  color: #555;
+}
+
+@media (max-width: 576px) {
+  th {
+    width: 40%;
+  }
+
+  td {
+    word-break: break-word;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+label {
+  font-weight: 500;
+}
+
+.alert {
+  font-size: 0.9rem;
+}
