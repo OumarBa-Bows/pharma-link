@@ -28,6 +28,8 @@ export class CreateUserComponent {
   @Input() user?: User;
   public roles: Role[];
 
+  @Input() title: string = 'Créer un utilisateur';
+
   constructor(private fb: FormBuilder, private modal: NgbActiveModal) {}
 
   ngOnInit(): void {

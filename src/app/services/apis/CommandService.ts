@@ -18,10 +18,20 @@ export class CommandService{
    }
 
    getById(id: number): Observable<any>{
-     return this.httpClient.post<any>(`${this.ressource}`+"commands/get/by-id", id)
+     return this.httpClient.post<any>(`${this.ressource}`+"commands/get/by-id", {id: id})
    }
 
    delete(id: number):Observable<any>{
      return this.httpClient.post<any>(`${this.ressource}`+"commands/get/delete", id)
+   }
+
+   updateStatus(id: number, status: string):Observable<any>{
+     const data = {id: id, status: status}
+     return this.httpClient.post<any>(`${this.ressource}`+"commands/status-update", data)
+   }
+
+   updateCommand(command: any):Observable<any>{
+     const data = {command: command}
+     return this.httpClient.post<any>(`${this.ressource}`+"commands/update/command", data)
    }
 }

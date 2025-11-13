@@ -9,7 +9,7 @@
 
       <div class="detail-grid">
         <div><strong>Code :</strong> {{ command.code }}</div>
-        <div><strong>Status :</strong> {{ command.status }}</div>
+        <div  class="status-badge" [ngClass]="command.status.toLowerCase()" ><strong>Status :</strong> {{ command.status }}</div>
         <div><strong>Référence commande :</strong> {{ command.commandReference }}</div>
         <div><strong>Référence facture :</strong> {{ command.invoiceReference }}</div>
         <div><strong>Prix total :</strong> {{ command.totalPrice | currency:'EUR' }}</div>
@@ -22,7 +22,8 @@
       <h3 class="mt-4">🧾 Détails des articles</h3>
 
       @if (command.details?.length > 0) {
-        <table class="table">
+        <div class="table-responsive">
+         <table class="table">
           <thead>
           <tr>
             <th>Article</th>
@@ -48,11 +49,14 @@
             }
           </tbody>
         </table>
+        </div>
       } @else {
         <p>Aucun article dans cette commande.</p>
       }
-
-      <button class="btn-back" (click)="goBack()">← Retour</button>
+      <div class="details-buttons">
+        <button class="btn-back" (click)="goBack()">← Retour</button>
+        <button class="chang-status-button" (click)="openModal()">Change Status</button>
+      </div>
     </div>
   } @else {
     <div class="command-detail-container">

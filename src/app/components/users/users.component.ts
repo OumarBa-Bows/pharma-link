@@ -33,8 +33,8 @@ export class UsersComponent implements OnInit {
     { header: this.translateService.instant('users.columns.id'), field: 'id' },
     { header: this.translateService.instant('users.columns.name'), field: 'name' },
     { header: this.translateService.instant('users.columns.email'), field: 'email' },
-    { header: this.translateService.instant('users.columns.createdAt'), field: 'createdAt' },
-    { header: this.translateService.instant('users.columns.updatedAt'), field: 'updatedAt' },
+    { header: this.translateService.instant('users.columns.createdAt'), field: 'createdAt', type: 'date', format: 'dd/MM/yyyy HH:mm' },
+    { header: this.translateService.instant('users.columns.updatedAt'), field: 'updatedAt', type: 'date', format: 'dd/MM/yyyy HH:mm' },
     { header: this.translateService.instant('users.columns.role'), field: 'roles' }
   ];
 
