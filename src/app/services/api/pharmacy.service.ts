@@ -13,10 +13,13 @@ export class PharmacyService {
   constructor(private http: HttpClient) {}
 
   list(search: string = '', page: number = 1, pageSize: number = 10): Observable<Page<Pharmacy>> {
-    const params = new HttpParams()
-      .set('search', search)
+    let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', pageSize.toString());
+
+    if (search && search.trim().length > 0) {
+      params = params.set('search', search.trim());
+    }
 
     return this.http.get<Page<Pharmacy>>(this.apiUrl, { params });
   }

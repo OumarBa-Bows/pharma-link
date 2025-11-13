@@ -39,11 +39,6 @@ export interface Pharmacy {
   user?: User;
   createdAt?: Date;
   updatedAt?: Date;
-  // Legacy fields (keep for backward compatibility)
-  city?: string; // Deprecated, use zone.wilayaId instead
-  isActive?: boolean; // Deprecated, use state === PharmacyState.ACTIVE
-  phoneNumber?: string; // Deprecated
-  type?: string; // Deprecated, use customerType instead
 }
 
 export interface PharmacyFormData extends Omit<Pharmacy, 'id' | 'createdAt' | 'updatedAt' | 'zone' | 'user'> {
