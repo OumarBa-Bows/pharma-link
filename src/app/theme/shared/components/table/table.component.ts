@@ -2,17 +2,18 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { CardComponent } from '../card/card.component';
 import { SharedModule } from '../../shared.module';
 import { TranslatePipe } from '@ngx-translate/core';
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-table',
-  imports: [CardComponent, TranslatePipe],
+  imports: [CardComponent, TranslatePipe, DatePipe],
   templateUrl: './table.component.html',
   standalone: true,
   styleUrl: './table.component.scss'
 })
 export class TableComponent implements OnInit, OnChanges {
   @Input() title = '';
-  @Input() columns: { header: string; field: string; img: boolean }[] = [];
+  @Input() columns: { header: string; field: string; img: boolean; type?: any; format?: string }[] = [];
   @Input() data: any[] = [];
 
   @Input() showEdit = false;
@@ -41,7 +42,7 @@ export class TableComponent implements OnInit, OnChanges {
   @Input()
   showAddButton = true;
   @Input()
-  showDetails=  false;
+  showDetails=  true;
 
   get totalPages(): number {
     return Math.ceil(this.total / this.pageSize);

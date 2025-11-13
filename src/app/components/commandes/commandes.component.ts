@@ -3,6 +3,9 @@ import {SharedModule} from "../../theme/shared/shared.module";
 import {CommandService} from "../../services/apis/CommandService";
 import {Router} from "@angular/router";
 import {Command} from "../../model/command";
+import {CreateUserComponent} from "../users/create-user/create-user.component";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {CreateCommand} from "./create-command/create-command";
 
 @Component({
   selector: 'app-commandes',
@@ -16,6 +19,7 @@ export class CommandesComponent implements OnInit{
 
   private commandService = inject(CommandService)
   private router= inject(Router)
+  private modalService = inject(NgbModal);
 
   columns = [
     { header: 'Id', field: 'id' },
@@ -36,10 +40,18 @@ export class CommandesComponent implements OnInit{
 
   }
 
-  editCommand($event: any) {
-
+  editCommand(command: Command) {
+    this.openCreateCommandModal(command)
   }
 
+  openCreateCommandModal(command?: Command) {
+    const modalRef = this.modalService.open(CreateCommand, {
+      size: 'xl',
+      centered: true,
+      backdrop: 'static',
+      windowClass: 'createDeclaration-popup'
+    });
+  }
   deleteCommand($event: any) {
 
   }

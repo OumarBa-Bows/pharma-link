@@ -63,11 +63,16 @@
                       <img src="assets/images/image-not.png" class="img-thumbnail mt-2" style="max-height: 50px" />
                     }
                   }
-                  @if (col.img != true) {
+               <!--   @if (col.img != true) {
+                    <td>{{ row[col.field] }}</td>
+                  } -->
+                  @if (col.type === 'date') {
+                    <td>{{ row[col.field] | date: col.format ?? 'shortDate' }}</td>
+                  } @else {
                     <td>{{ row[col.field] }}</td>
                   }
                 }
-                @if (showEdit || showDelete) {
+                @if (showEdit || showDelete || showDetails) {
                   <td>
                     @if (showEdit) {
                         <button type="button" class="btn btn-sm btn-outline-primary me-2" (click)="onEdit(row)" title="{{'buttons-action.edit'| translate}}">
@@ -80,7 +85,7 @@
                       </button>
                     }
                     @if (showDetails){
-                      <button type="button" class="btn btn-sm btn-outline-success" (click)="onShowDetails(row)" title="{{ 'buttons-action.details' | translate }}">
+                      <button type="button" class="btn btn-sm btn-outline-info" (click)="onShowDetails(row)" title="{{ 'buttons-action.showDetails' | translate }}">
                         <i class="fa fa-eye"></i>
                       </button>
                     }

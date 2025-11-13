@@ -3,6 +3,9 @@ import {SharedModule} from "../../theme/shared/shared.module";
 import {map, Observable} from "rxjs";
 import {User} from "../../model/user";
 import {UserService} from "../../services/apis/user-service";
+import {CreateUserComponent} from "../users/create-user/create-user.component";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NotificationService} from "../../services/notifications/notification.service";
 
   @Component({
     selector: 'app-profile',
@@ -15,6 +18,8 @@ import {UserService} from "../../services/apis/user-service";
   export class ProfileComponent implements OnInit{
 
     private userService = inject(UserService)
+    private modalService = inject(NgbModal);
+    private notificationService = inject(NotificationService);
 
     user: User;
 
@@ -31,12 +36,13 @@ import {UserService} from "../../services/apis/user-service";
 
     }
 
+    currentPassword = '';
     newPassword = '';
     confirmPassword = '';
     passwordChanged = false;
 
     changePassword() {
-      if (!this.newPassword || !this.confirmPassword) {
+      if (!this.newPassword || !this.confirmPassword || !this.currentPassword) {
         alert('Tous les champs sont obligatoires.');
         return;
       }
@@ -46,17 +52,32 @@ import {UserService} from "../../services/apis/user-service";
         return;
       }
 
-      // backend request
-      console.log("this.newpass ", this.newPassword)
-      this.userService.changePassword(this.user.id, this.newPassword).subscribe(res =>{
+      this.userService.changePassword(this.newPassword, this.currentPassword, this.confirmPassword).subscribe(res =>{
         if(res){
-          console.log('Mot de passe changé avec succès ');
           this.passwordChanged = true;
-
+          this.currentPassword = '';
           this.newPassword = '';
           this.confirmPassword = '';
         }
       })
     }
 
+    public openCreationModal(user?: User) {
+      const modalRef = this.modalService.open(CreateUserComponent, {
+        size: 'xl',
+        centered: true,
+        backdrop: 'static',
+        windowClass: 'createDeclaration-popup'
+      });
+
+      if (this.user) modalRef.componentInstance.user = this.user;
+      modalRef.componentInstance.title = 'Mettre à jour le profil';
+      const toastSuccess = 'Utilisateur mis à jour avec succès ✅';
+      const toastError =  'Erreur lors de la mise à jour ❌' ;
+      modalRef.closed.subscribe((res) => {
+        if(res){
+          this.notificationService.showSuccess(toastSuccess);
+        }
+      });
+    }
   }

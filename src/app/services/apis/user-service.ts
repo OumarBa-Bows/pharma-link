@@ -39,7 +39,7 @@ export class UserService{
     return  this.httpClient.get<any>(`${this.resource}`+"users/connected/user")
   }
 
-    changePassword(id: number, newPassword: string){
-    return this.httpClient.post(`${this.resource}`+"users/update/password/"+id, {newPassword: newPassword})
+  changePassword(newPassword: string, currentPassword: string, confirmPassword: string): Observable<any>{
+    return this.httpClient.post(`${this.resource}`+"users/reset/password", {currentPassword: currentPassword, newPassword: newPassword,confirmPassword: confirmPassword})
   }
 }
