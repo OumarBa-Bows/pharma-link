@@ -1,122 +1,173 @@
-import { Component, effect, signal } from '@angular/core';
+import { Component, signal, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { PharmaciesStore } from 'src/app/services/stores/pharmacies.store';
-import { PaginationComponent } from 'src/app/theme/shared/components/pagination/pagination.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TableColumn } from 'src/app/models/table-column.model';
-import { TranslateModule } from '@ngx-translate/core';
-import { TableComponent } from 'src/app/theme/shared/components/table/table.component';
+import { Pharmacy, PharmacyState, CustomerType, Zone } from 'src/app/models/pharmacy.model';
+import { PharmacyService } from 'src/app/services/api/pharmacy.service';
+import { ZoneService } from '../../../../services/api/zone.service';
+import { PharmacyFormComponent } from '../components/pharmacy-form/pharmacy-form.component';
+import Swal from 'sweetalert2';
 import { PageHeaderComponent } from 'src/app/theme/shared/components/page-header/page-header.component';
-import { PharmaciesFakeService } from 'src/app/services/fakes/pharmacies.fake.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-pharmacies',
   standalone: true,
   imports: [
-    CommonModule, 
-    ReactiveFormsModule, 
-    RouterModule, 
-    SharedModule, 
-    PaginationComponent,
-    TableComponent,
-    TranslateModule,
+    CommonModule,
+    RouterModule,
+    SharedModule,
+    PharmacyFormComponent,
     PageHeaderComponent
   ],
   templateUrl: './pharmacies.component.html',
   styleUrls: ['./pharmacies.component.scss']
 })
-export class PharmaciesComponent {
+export class PharmaciesComponent implements OnInit {
+  // Component state
   showForm = signal(false);
-  editingId = signal<string | null>(null);
-  form: FormGroup;
-  isLoading = false;
+  isEditing = signal(false);
+  loading = false;
   
-  columns: TableColumn[] = [
-    { header: 'name', field: 'name', sortable: true },
-    { header: 'code', field: 'code', sortable: true },
-    { header: 'type', field: 'type', sortable: true },
-    { header: 'phoneNumber', field: 'phoneNumber', sortable: false },
-    { header: 'managerName', field: 'managerName', sortable: true },
-    { header: 'doctorName', field: 'doctorName', sortable: true }
-  ];
-  selectedItems: any[] = [];
+  // Data
+  pharmacies: Pharmacy[] = [];
+  zones: Zone[] = [];
+  selectedPharmacy: Partial<Pharmacy> | null = null;
+  
+  // Enums for template
+  PharmacyState = PharmacyState;
+  CustomerType = CustomerType;
+  
+  // Services
+  private pharmacyService = inject(PharmacyService);
+  private zoneService = inject(ZoneService);
 
-  constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    public store: PharmaciesStore,
-    private modal: NgbModal,
-    private pharmacyService: PharmaciesFakeService
-  ) {
-    this.form = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(80)]],
-      phoneNumber: ['', [Validators.required, Validators.maxLength(20)]],
-      code: ['', [Validators.required, Validators.maxLength(20)]],
-      type: ['', [Validators.required, Validators.maxLength(40)]],
-      address: ['', [Validators.required, Validators.maxLength(160)]],
-      managerName: ['', [Validators.maxLength(80)]],
-      doctorName: ['', [Validators.maxLength(80)]]
-    });
+  // Data collections
+  customerTypes = Object.values(CustomerType);
+  pharmacyStates = Object.values(PharmacyState);
 
-    // Handle query parameters for search and pagination
-    this.route.queryParams.subscribe(params => {
-      const q = params['q'] || '';
-      const p = +params['page'] || 1;
-      
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { q: q || null, page: p !== 1 ? p : null },
-        queryParamsHandling: 'merge'
-      });
+  ngOnInit(): void {
+    this.loadPharmacies();
+    //this.loadZones();
+  }
+
+  // Load pharmacies from the API
+  loadPharmacies(): void {
+    this.loading = true;
+    this.pharmacyService.list('', 1, 50).subscribe({
+      next: (page) => {
+        this.pharmacies = page.items;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading pharmacies:', error);
+        this.loading = false;
+        Swal.fire('Error', 'Failed to load pharmacies', 'error');
+      }
     });
   }
 
-  get isEditing() { return this.editingId() !== null; }
-
-  onAddNew() {
-    this.router.navigate(['/pharmacies/create']);
+  // Load zones from the API
+  loadZones(): void {
+    this.zoneService.getAll().subscribe({
+      next: (zones) => {
+        this.zones = zones;
+      },
+      error: (error) => {
+        console.error('Error loading zones:', error);
+        Swal.fire('Error', 'Failed to load zones', 'error');
+      }
+    });
   }
 
-  onEdit(pharmacy: any) {
-    if (!pharmacy || !pharmacy.id) {
-      console.error('Invalid pharmacy object:', pharmacy);
+  // Handle add new pharmacy
+  onAddNew(): void {
+    this.selectedPharmacy = {};
+    this.isEditing.set(false);
+    this.showForm.set(true);
+  }
+
+  // Handle edit pharmacy
+  onEdit(pharmacy: Pharmacy): void {
+    this.selectedPharmacy = { ...pharmacy };
+    this.isEditing.set(true);
+    this.showForm.set(true);
+  }
+
+  // Handle delete pharmacy
+  onDelete(pharmacy: Pharmacy): void {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Delete ${pharmacy.name}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.loading = true;
+        this.pharmacyService.delete(pharmacy.id).subscribe({
+          next: () => {
+            this.loadPharmacies();
+            Swal.fire('Deleted!', 'Pharmacy has been deleted.', 'success');
+          },
+          error: (error) => {
+            console.error('Error deleting pharmacy:', error);
+            this.loading = false;
+            Swal.fire('Error', 'Failed to delete pharmacy', 'error');
+          }
+        });
+      }
+    });
+  }
+
+  // Handle save pharmacy
+  onSave(pharmacyData: Partial<Pharmacy>): void {
+    if (!pharmacyData) {
+      console.error('No pharmacy data provided');
       return;
     }
-    
-    this.pharmacyService.selectedItem.set(pharmacy);
-    this.router.navigate(['/pharmacies/edit', pharmacy.id]);
+
+    this.loading = true;
+    const saveOperation = this.isEditing() && this.selectedPharmacy?.id
+      ? this.pharmacyService.update(this.selectedPharmacy.id, pharmacyData as any)
+      : this.pharmacyService.create(pharmacyData as any);
+
+    saveOperation.pipe(
+      finalize(() => this.loading = false)
+    ).subscribe({
+      next: () => {
+        this.loadPharmacies();
+        this.showForm.set(false);
+        this.selectedPharmacy = null;
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: `Pharmacy ${this.isEditing() ? 'updated' : 'created'} successfully`,
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000
+        });
+      },
+      error: (error) => {
+        console.error(`Error ${this.isEditing() ? 'updating' : 'creating'} pharmacy:`, error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: `Failed to ${this.isEditing() ? 'update' : 'create'} pharmacy`,
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000
+        });
+      }
+    });
   }
 
-  onCancel() {
+  // Handle cancel form
+  onCancel(): void {
     this.showForm.set(false);
-    this.editingId.set(null);
-  }
-
-  onSubmit() { 
-    if (this.form.invalid) return;
-    const value = this.form.value as any;
-    if (this.isEditing) this.store.update(this.editingId()!, value);
-    else this.store.create(value);
-    this.onCancel();
-  }
-
-  onDelete(id: string) {
-    this.store.delete(id);
-  }
-
-  onSelectionChange(selectedItems: any[]) {
-    this.selectedItems = selectedItems;
-  }
-
-  onSearch(term: string) {
-    this.store.setQuery(term, 1);
-  }
-
-  onPageChange(p: number) {
-    this.store.setPage(p);
+    this.selectedPharmacy = null;
   }
 }

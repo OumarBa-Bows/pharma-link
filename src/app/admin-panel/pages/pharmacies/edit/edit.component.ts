@@ -8,7 +8,7 @@ import { PharmaciesStore } from 'src/app/services/stores/pharmacies.store';
 import { NotificationService } from 'src/app/services/notifications/notification.service';
 import { Subscription } from 'rxjs';
 import { Pharmacy } from 'src/app/models/pharmacy.model';
-import { PharmaciesFakeService } from 'src/app/services/fakes/pharmacies.fake.service';
+import { PharmacyService } from 'src/app/services/api/pharmacy.service';
 
 @Component({
   selector: 'app-pharmacy-edit',
@@ -30,8 +30,9 @@ export class EditPharmacyComponent implements OnInit, OnDestroy {
     private router: Router,
     private notification: NotificationService,
     private store: PharmaciesStore,
-    private pharmacyService: PharmaciesFakeService
+    private pharmacyService: PharmacyService
   ) {
+    console.log(this.pharmacyService.selectedItem());
     if(this.pharmacyService.selectedItem() == null) {
       this.router.navigate(['/pharmacies']);
       return;

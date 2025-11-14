@@ -1,12 +1,20 @@
 <div class="row">
+
+  <div class="col-xl-12">
+    <button style="float: right" [routerLink]="['/pharmacies']" class="btn btn-primary mb-4">
+      <i class="fa fa-arrow-left"></i>
+      {{ 'buttons-action.back' | translate }}
+    </button>
+  </div>
+
   <div class="col-12">
     <div class="card">
       <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
           <div>
-            <button type="button" class="btn btn-sm btn-outline-secondary me-2" (click)="goBack()">
+            <!-- <button type="button" class="btn btn-sm btn-outline-secondary me-2" (click)="goBack()">
               <i class="fa fa-arrow-left me-1"></i> Back
-            </button>
+            </button> -->
             <h4 class="d-inline-block mb-0">Edit Pharmacy</h4>
           </div>
         </div>

@@ -1,7 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Zone, PharmacyState, CustomerType } from 'src/app/models/pharmacy.model';
+import { ZoneService } from 'src/app/services/api/zone.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-pharmacies-form-modal',
@@ -10,13 +13,17 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './pharmacies.form-modal.html',
   styleUrls: ['./pharmacies.form-modal.scss']
 })
-export class PharmaciesFormModalComponent {
+export class PharmaciesFormModalComponent implements OnInit {
   @Input() title = 'Pharmacy';
   @Input() value: any = null;
 
   form: FormGroup;
+  zones: Zone[] = [];
+  PharmacyState = PharmacyState;
+  CustomerType = CustomerType;
+  isLoading = false;
 
-  constructor(private fb: FormBuilder, public activeModal: NgbActiveModal) {
+  constructor(private fb: FormBuilder, public activeModal: NgbActiveModal, private zoneService: ZoneService) {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(80)]],
       phoneNumber: ['', [Validators.required, Validators.maxLength(20)]],
@@ -29,6 +36,7 @@ export class PharmaciesFormModalComponent {
   }
 
   ngOnInit() {
+    this.loadZones();
     if (this.value) {
       this.form.patchValue({
         name: this.value.name,
@@ -40,6 +48,16 @@ export class PharmaciesFormModalComponent {
         doctorName: this.value.doctorName
       });
     }
+  }
+
+  private loadZones() {
+    this.isLoading = true;
+    this.zoneService.getAll()
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe({
+        next: (zones) => this.zones = zones,
+        error: (err) => console.error('Failed to load zones', err)
+      });
   }
 
   submit() {
