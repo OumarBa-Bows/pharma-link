@@ -2,11 +2,13 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {User} from "../../model/user";
+import { environment } from "src/environments/environment";
 
 @Injectable()
 export class RoleService{
 
-  private resource = 'http://localhost:8080/api/';
+  env = environment;
+  private resource = `${this.env.apiUrl}/`;
 
   constructor(private httpClient : HttpClient) {
   }

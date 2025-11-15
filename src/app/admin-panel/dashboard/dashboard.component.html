@@ -10,9 +10,9 @@
               {{ sale.amount }}
             </h3>
           </div>
-          <div class="col-3 text-end">
+          <!-- <div class="col-3 text-end">
             <p class="m-b-0">{{ sale.percentage }}</p>
-          </div>
+          </div> -->
         </div>
         <div class="m-t-30">
           <ngb-progressbar type="progress-bar {{ sale.progress_bg }}" height="7px" [value]="sale.progress"></ngb-progressbar>
@@ -20,6 +20,83 @@
       </app-card>
     </div>
   }
+
+  <div class="col-xl-6 col-md-12">
+    <app-card cardTitle="Recent Orders" cardClass="Recent-Orders table-card" blockClass="p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Pharmacy</th>
+              <!-- <th>Distributor</th> -->
+              <th>Status</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of recentOrders; track order) {
+              <tr>
+                <td>{{ order.code }}</td>
+                <td>{{ order.pharmacy }}</td>
+                <!-- <td>{{ order.distributor }}</td> -->
+                <td>
+                  <span class="badge f-12" [ngClass]="{
+                    'theme-bg2 text-white': order.status === 'PENDING',
+                    'bg-success text-white': order.status === 'CONFIRMED' || order.status === 'SHIPPED',
+                    'bg-danger text-white': order.status === 'CANCELLED'
+                  }">{{ order.status }}</span>
+                </td>
+                <td>{{ order.date }}</td>
+                <td class="text-end">
+                  <a [routerLink]="['/commands/details', order.id]" class="badge theme-bg text-white f-12">View</a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+  </div>
+
+  <div class="col-xl-6 col-md-12">
+    <app-card cardTitle="Recent Pharmacies" cardClass="Recent-Pharmacies table-card" blockClass="p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Zone</th>
+              <!-- <th>State</th> -->
+              <th>Created</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of recentPharmacies; track p) {
+              <tr>
+                <td>{{ p.name }}</td>
+                <td>{{ p.zone }}</td>
+                <!-- <td>
+                  <span class="badge f-12" [ngClass]="{
+                    'bg-success text-white': p.state === 'ACTIVE',
+                    'theme-bg2 text-white': p.state === 'PENDING',
+                    'bg-secondary text-white': p.state === 'BLOCKED'
+                  }">{{ p.state }}</span>
+                </td> -->
+                <td>{{ p.createdAt }}</td>
+                <td class="text-end">
+                  <a [routerLink]="['/pharmacies']" class="badge theme-bg text-white f-12">Open</a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+  </div>
+
   <!-- <div class="col-xl-8 col-md-6">
     <app-card cardTitle="Users From United States">
       <div id="world-low" style="height: 450px"></div>
