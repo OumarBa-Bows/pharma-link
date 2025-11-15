@@ -7,25 +7,32 @@ import { NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import {UserService} from "../../../../../services/apis/user-service";
-import {map} from "rxjs";
+import {map, Observable} from "rxjs";
 import {User} from "../../../../../model/user";
 import {RouterLink} from "@angular/router";
+import {NotificationComponent} from "../../../../../components/notification/notification.component";
+import {CommandNotification} from "../../../../../components/command-notification/command-notification";
+import {CommandNotificationServiceService} from "../../../../../services/apis/CommandNotificationService";
 
 @Component({
   selector: 'app-nav-right',
-  imports: [SharedModule, RouterLink],
+  imports: [SharedModule, RouterLink, NotificationComponent, CommandNotification],
   templateUrl: './nav-right.component.html',
   styleUrls: ['./nav-right.component.scss'],
   standalone: true,
-  providers: [NgbDropdownConfig, UserService]
+  providers: [NgbDropdownConfig, UserService, CommandNotificationServiceService]
 })
 export class NavRightComponent implements OnInit {
   // public props
 
   private userService = inject(UserService);
+  private commandNotificationServiceService = inject(CommandNotificationServiceService);
+
 
   // constructor
   connectedUser: User
+  countCommandNotifications$: Observable<number>;
+   count: number;
   constructor() {
     const config = inject(NgbDropdownConfig);
 
@@ -43,5 +50,13 @@ export class NavRightComponent implements OnInit {
 
   ngOnInit(): void {
     this.getConnectedUser()
+    this.getCommandNotificationCount()
+
+  }
+
+  getCommandNotificationCount(){
+    this.countCommandNotifications$.subscribe(count=>{
+      this.count = count
+    });
   }
 }

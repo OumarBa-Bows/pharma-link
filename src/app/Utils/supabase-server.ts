@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import { createServerClient } from '../Utils/supabase';
 import { SupabaseClient } from '@supabase/supabase-js';
 
@@ -6,7 +6,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 export class SupabaseServerService {
   private supabase: SupabaseClient;
 
-  constructor() {
+  constructor(private ngZone: NgZone) {
     this.supabase = createServerClient();
   }
 
@@ -21,5 +21,23 @@ export class SupabaseServerService {
 
     if (error) throw error;
     return { data, total: count };
+  }
+
+  listenToNewCommands(onNewCommand: (command: any) => void) {
+    const channel = this.supabase
+      .channel('commands-realtime')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'command' },
+        (payload) => {
+          this.ngZone.run(() => onNewCommand(payload.new));
+        }
+      )
+      .subscribe();
+    return channel;
+  }
+
+  stopListening(channel: any) {
+    this.supabase.removeChannel(channel);
   }
 }

@@ -1,0 +1,13 @@
+@if (notifications){
+  @for (notif of notifications; track notifications){
+    <a class="notif-link" (click)="onClick()">
+    <div class="notification-item">
+        <span class="notification-item-message">
+        🧾 {{ notif.description }}
+        </span>
+    </div>
+    </a>
+
+  }
+}
+

@@ -1,6 +1,13 @@
 <ul class="navbar-nav">
   <li>
     <div class="dropdown" ngbDropdown placement="auto">
+      @if (count){
+        <span class="position-absolute start-100 translate-middle badge rounded-pill bg-danger"
+              style="top: 15px;">
+        count
+       <span class="visually-hidden">unread messages</span>
+  </span>
+      }
       <a ngbDropdownToggle href="javascript:" data-toggle="dropdown"><i class="icon feather icon-bell"></i></a>
       <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end notification">
         <div class="notification-head">
@@ -11,7 +18,7 @@
           </div>
         </div>
         <ul class="notification-body">
-          <li class="n-title">
+        <!--  <li class="n-title">
             <p class="m-b-0">NEW</p>
           </li>
           <li class="notification">
@@ -31,34 +38,11 @@
           </li>
           <li class="n-title">
             <p class="m-b-0">EARLIER</p>
-          </li>
+          </li> -->
           <li class="notification">
             <div class="d-flex">
-              <img class="img-radius" src="assets/images/user/avatar-2.jpg" alt="Generic placeholder image" />
               <div class="flex-grow-1">
-                <p>
-                  <strong>Joseph William</strong>
-                  <span class="n-time text-muted">
-                    <i class="icon feather icon-clock m-r-10"></i>
-                    10 min
-                  </span>
-                </p>
-                <p>Prchace New Theme and make payment</p>
-              </div>
-            </div>
-          </li>
-          <li class="notification">
-            <div class="d-flex">
-              <img class="img-radius" src="assets/images/user/avatar-3.jpg" alt="Generic placeholder image" />
-              <div class="flex-grow-1">
-                <p>
-                  <strong>Sara Soudein</strong>
-                  <span class="n-time text-muted">
-                    <i class="icon feather icon-clock m-r-10"></i>
-                    30 min
-                  </span>
-                </p>
-                <p>currently login</p>
+                <app-command-notification></app-command-notification>
               </div>
             </div>
           </li>
