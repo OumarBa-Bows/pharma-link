@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Page, Pharmacy, PharmacyState } from 'src/app/models/pharmacy.model';
 
@@ -12,7 +12,7 @@ export class PharmacyService {
   selectedItem = signal<Pharmacy | null>(null);
   constructor(private http: HttpClient) {}
 
-  list(search: string = '', page: number = 1, pageSize: number = 10): Observable<Page<Pharmacy>> {
+  list(search: string = '', page: number = 1, pageSize: number = 10): Observable<any> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', pageSize.toString());
@@ -21,7 +21,14 @@ export class PharmacyService {
       params = params.set('search', search.trim());
     }
 
-    return this.http.get<Page<Pharmacy>>(this.apiUrl, { params });
+    return this.http.get<any>(this.apiUrl, { params }).pipe(
+      tap((res) => {
+        console.warn('pharmacies0', res.data.pharmacies);
+        return {
+          items: res.data.pharmacies
+        };
+      })
+    );
   }
 
   getById(id: string): Observable<Pharmacy> {

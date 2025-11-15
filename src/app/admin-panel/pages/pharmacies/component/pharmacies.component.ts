@@ -55,8 +55,9 @@ export class PharmaciesComponent implements OnInit {
   loadPharmacies(): void {
     this.loading = true;
     this.pharmacyService.list('', 1, 50).subscribe({
-      next: (page) => {
-        this.pharmacies = page.items;
+      next: (data) => {
+        console.warn('pharmacies', data.data.pharmacies);
+        this.pharmacies = data.data.pharmacies;
         this.loading = false;
       },
       error: (error) => {
