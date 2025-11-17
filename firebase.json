@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "dist/datta-able-free-angular-admin-template/browser",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
