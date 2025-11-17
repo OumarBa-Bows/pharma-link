@@ -6,7 +6,11 @@ import { Router } from '@angular/router';
 
 export function Interceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
   const router = inject(Router);
-  const cloned = req.clone({ withCredentials: true });
+  const token = localStorage.getItem('token');
+  console.log(token);
+  const cloned = req.clone({
+    setHeaders: token ? { Authorization: `Bearer ${token}` } : {}
+  });
   return next(cloned).pipe(
     catchError((error: any) => {
       if (error instanceof HttpErrorResponse && error.status === 401) {

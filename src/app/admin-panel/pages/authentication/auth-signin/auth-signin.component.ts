@@ -36,6 +36,7 @@ export class AuthSigninComponent {
     this.apiService.postData('auth/login', { email, password }).subscribe({
       next: (response: any) => {
         console.log('Sign-in response:', response);
+        localStorage.setItem('token', response?.accessToken);
         if (response?.user) {
           localStorage.setItem('user', JSON.stringify(response.user));
           this.router.navigate(['/dashboard']);
