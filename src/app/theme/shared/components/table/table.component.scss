@@ -3,4 +3,32 @@
   gap: 4px;
 }
 
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.page-item {
+  flex: 0 0 auto;
+}
+
+.page-link {
+  padding: 6px 10px;
+  min-width: 36px;
+  text-align: center;
+}
+
+/* Sur les petits écrans : réduire la taille */
+@media (max-width: 480px) {
+  .page-link {
+    padding: 4px 8px;
+    font-size: 13px;
+  }
+  .pagination {
+    justify-content: center !important; /* centré sur mobile */
+  }
+}
+
+
 

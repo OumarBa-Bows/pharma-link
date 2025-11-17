@@ -39,6 +39,7 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() searchPlaceholder = 'Search...';
 
   currentPage = 1;
+  pagesToShow = 5;
   selectedRows = new Set<number>();
   @Input()
   showAddButton = true;
@@ -61,13 +62,6 @@ export class TableComponent implements OnInit, OnChanges {
 
   get offset() {
     return (this.currentPage - 1) * this.pageSize;
-  }
-
-  goToPage(p: number) {
-    if (p >= 1 && p <= this.totalPages) {
-      this.currentPage = p;
-      this.pageChange.emit(p);
-    }
   }
 
   toggleRow(globalIndex: number) {
@@ -104,10 +98,6 @@ export class TableComponent implements OnInit, OnChanges {
     }
   }
 
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
-  }
-
   private emitSelection() {
     const rows = Array.from(this.selectedRows)
       .filter((i) => i >= 0 && i < this.data.length)
@@ -126,4 +116,38 @@ export class TableComponent implements OnInit, OnChanges {
   onShowDetails(row: any) {
     this.showDetatail.emit(row)
   }
+
+  get pages(): number[] {
+    const total = this.totalPages;
+    const current = this.currentPage;
+    const max = this.pagesToShow;
+
+    if (total <= max) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    const half = Math.floor(max / 2);
+    let start = current - half;
+    let end = current + half;
+
+    if (start < 1) {
+      start = 1;
+      end = max;
+    }
+
+    if (end > total) {
+      end = total;
+      start = total - max + 1;
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  }
+
+  goToPage(p: number) {
+  if (p < 1 || p > this.totalPages) return;
+  this.currentPage = p;
+  this.pageChange.emit(p);
+}
+
+
 }

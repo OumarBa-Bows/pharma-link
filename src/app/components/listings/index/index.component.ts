@@ -9,6 +9,7 @@ import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from 'src/app/theme/shared/components/confirmation-modal/confirmation-modal.component';
 import { ToastService } from 'src/app/services/apis/toast.service';
 import { NotificationService } from 'src/app/services/notifications/notification.service';
+import { ImportModalComponent } from 'src/app/theme/shared/components/import-modal/import-modal.component';
 
 @Component({
   selector: 'app-index',
@@ -47,8 +48,8 @@ export class IndexComponent {
   isLoading: boolean = false;
   listings: any[] = [];
   columns = [
-    { header: 'Nom', field: 'name' },
     { header: 'Description', field: 'description' },
+    { header: 'Date de fin', field: 'end_date' },
   ];
 
   newSubscription: Subscription;
@@ -119,4 +120,43 @@ export class IndexComponent {
       }
     });
   }
+
+    importListing(event: any) {
+      const modalRef = this.modalService.open(ImportModalComponent, {
+        size: 'md',
+        centered: true,
+        backdrop: 'static'
+      });
+      // Configure modal for Excel files
+      modalRef.componentInstance.title = 'Importer des articles (Excel)';
+      modalRef.componentInstance.description = 'Sélectionnez un fichier Excel (.xls, .xlsx) contenant les articles à importer.';
+      modalRef.componentInstance.accept =
+        '.xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      modalRef.result
+        .then((file: File) => {
+          if (!file) return;
+          const formData = new FormData();
+          formData.append('file', file);
+          this.isLoading = true;
+          this.apiService.postData('listings/import', formData).subscribe({
+            next: (res) => {
+              console.log('Listings uploaded successfully:', res);
+              this.notificationService.showSuccess('Import effectué avec succès');
+            },
+            error: (err) => {
+              this.isLoading = false;
+              var message = err?.error?.message;
+              console.error('Erreur import articles:', err);
+              this.notificationService.showError(message ?? "Une erreur s'est produite lors de l'import");
+            },
+            complete: () => {
+              this.isLoading = false;
+              this.getListings();
+            }
+          });
+        })
+        .catch(() => {
+          // Modal dismissed
+        });
+    }
 }
