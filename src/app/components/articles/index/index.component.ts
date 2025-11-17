@@ -48,7 +48,7 @@ export class IndexComponent {
   isLoading: boolean = false;
   articles: any[] = [];
   columns = [
-    { header: 'Image', field: 'imageLink', img: true },
+    //{ header: 'Image', field: 'imageLink', img: false },
     { header: 'Nom', field: 'name' },
     { header: 'Référence', field: 'reference' },
     { header: 'Prix', field: 'price' },
