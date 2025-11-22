@@ -1,1 +1,19 @@
-<p>index works!</p>
+<div class="actions">
+  @if (isLoading) {
+    <app-spinner></app-spinner>
+  }
+</div>
+<app-table
+  title="{{ 'pharmacies.pharmacy-list.title' | translate }}"
+  [columns]="columns"
+  [data]="pharmacies"
+  (selectionChange)="onSelectionChange($event)"
+  (edit)="onEdit($event)"
+  [showEdit]="true"
+  [showDelete]="false"
+  [total]="pharmacies.length"
+  (addNew)="onAddNew()"
+  [showAddButton]="false"
+  (search)="onSearch($event)"
+  [searchPlaceholder]="'pharmacies.search-placeholder' | translate"
+></app-table>

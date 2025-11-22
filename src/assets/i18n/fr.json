@@ -48,6 +48,18 @@
       "title": "Modifier un listing"
     }
   },
+  "pharmacies": {
+    "pharmacy-list": {
+      "title": "Liste des pharmacies",
+      "create-new-pharmacy": "Créer une nouvelle pharmacie"
+    },
+    "pharmacy-create": {
+      "title": "Créer une pharmacie"
+    },
+    "pharmacy-update": {
+      "title": "Modifier une pharmacie"
+    }
+  },
   "table": {
     "selectAll": "Tout Sélectionner"
   }

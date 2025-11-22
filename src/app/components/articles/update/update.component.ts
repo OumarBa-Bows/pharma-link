@@ -19,6 +19,7 @@ export class UpdateComponent {
   articleForm: FormGroup;
   isLoading = false;
   imagePath: string = '';
+  categories: any;
 
   constructor(
     private fb: FormBuilder,
@@ -27,6 +28,7 @@ export class UpdateComponent {
     private router: Router,
     private notificationService: NotificationService
   ) {
+    this.getCategory();
     this.articleForm = this.fb.group({
       reference: ['', Validators.required],
       name: ['', Validators.required],
@@ -34,7 +36,8 @@ export class UpdateComponent {
       image: [null],
       description: [''],
       expiryDate: [null],
-      barcode: ['']
+      barcode: [''],
+      categoryId:[null]
     });
     this.route.paramMap.subscribe((params) => {
       this.articleId = params.get('id');
@@ -105,12 +108,13 @@ export class UpdateComponent {
   articleFormPatchValue() {
     this.imagePath = this.article.imageLink ?? '';
     this.articleForm.patchValue({
-      code: this.article.code,
+      reference: this.article.reference,
       name: this.article.name,
       price: this.article.price,
       description: this.article.description,
       expiryDate: this.article.expiryDate,
-      barcode: this.article.barcode
+      barcode: this.article.barcode,
+      categoryId: this.article.categoryId
     });
   }
 
@@ -144,5 +148,12 @@ export class UpdateComponent {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+   getCategory(){
+    this.apiService.getData('articles/categories/get').subscribe((res: any) => {
+      console.log(res);
+      this.categories = res.data.categories;
+    })
   }
 }

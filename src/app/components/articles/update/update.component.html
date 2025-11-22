@@ -26,12 +26,19 @@
             <label for="price" class="form-label">Prix</label>
             <input type="number" class="form-control" id="price" formControlName="price" placeholder="Prix de l'article" />
           </div>
-          <div class="col-md-6 mb-3">
+           <div class="col-md-6 mb-3">
+            <label for="categoryId" class="form-label">Categorie</label>
+             <select name="" id="" class="form-control" formControlName="categoryId">
+              <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+             </select>
+          </div>
+
+        </div>
+        <div class="row">
+           <div class="col-md-6 mb-3">
             <label for="expiryDate" class="form-label">Date d'expiration</label>
             <input type="date" class="form-control" id="expiryDate" formControlName="expiryDate" />
           </div>
-        </div>
-        <div class="row">
           <div class="col-md-6 mb-3">
             <label for="image" class="form-label">Image</label>
             <input type="file" class="form-control" aria-label="file example" id="image" (change)="onFileChange($event)" />

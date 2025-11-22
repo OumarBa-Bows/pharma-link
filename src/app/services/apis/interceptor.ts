@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 export function Interceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
   const router = inject(Router);
   const token = localStorage.getItem('token');
-  console.log(token);
   const cloned = req.clone({
     setHeaders: token ? { Authorization: `Bearer ${token}` } : {}
   });
@@ -15,6 +14,7 @@ export function Interceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Obs
     catchError((error: any) => {
       if (error instanceof HttpErrorResponse && error.status === 401) {
         localStorage.removeItem('user');
+        localStorage.removeItem('token');
         router.navigate(['/login']);
       }
       return throwError(() => error);

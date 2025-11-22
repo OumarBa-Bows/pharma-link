@@ -27,23 +27,6 @@ export const routes: Routes = [
         loadComponent: () => import('./admin-panel/dashboard/dashboard.component').then((c) => c.DashboardComponent)
       },
       {
-        path: 'pharmacies',
-        children: [
-          {
-            path: '',
-            loadComponent: () => import('./admin-panel/pages/pharmacies/component/pharmacies.component').then((c) => c.PharmaciesComponent)
-          },
-          {
-            path: 'create',
-            loadComponent: () => import('./admin-panel/pages/pharmacies/create/create.component').then((c) => c.CreatePharmacyComponent)
-          },
-          {
-            path: 'edit/:id',
-            loadComponent: () => import('./admin-panel/pages/pharmacies/edit/edit.component').then((c) => c.EditPharmacyComponent)
-          }
-        ]
-      },
-      {
         path: 'basic',
         loadChildren: () => import('./admin-panel/ui-elements/ui-basic/ui-basic.module').then((m) => m.UiBasicModule)
       },
@@ -51,9 +34,13 @@ export const routes: Routes = [
         path: 'articles',
         loadChildren: () => import('./components/articles/articles-routing-module').then((m) => m.ArticlesRoutingModule)
       },
-       {
+      {
         path: 'listings',
         loadChildren: () => import('./components/listings/listings-routing-module').then((m) => m.ListingsRoutingModule)
+      },
+      {
+        path: 'pharmacy',
+        loadChildren: () => import('./components/pharmacies/pharmacies-routing-module').then((m) => m.PharmaciesRoutingModule)
       },
       {
         path: 'commands',

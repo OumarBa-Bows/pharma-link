@@ -9,7 +9,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import {UserService} from "../../../../../services/apis/user-service";
 import {map} from "rxjs";
 import {User} from "../../../../../model/user";
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-nav-right',
@@ -23,7 +23,7 @@ export class NavRightComponent implements OnInit {
   // public props
 
   private userService = inject(UserService);
-
+  private router = inject(Router);
   // constructor
   connectedUser: User
   constructor() {
@@ -43,5 +43,11 @@ export class NavRightComponent implements OnInit {
 
   ngOnInit(): void {
     this.getConnectedUser()
+  }
+
+  logOut(){
+      localStorage.removeItem('token');
+       localStorage.removeItem('user');
+      this.router.navigate(['/login']);
   }
 }

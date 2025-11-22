@@ -52,7 +52,7 @@ export class IndexComponent {
     { header: 'Nom', field: 'name' },
     { header: 'Référence', field: 'reference' },
     { header: 'Prix', field: 'price' },
-    { header: "Date d'expiration", field: 'expiryDate' }
+    { header: "Categorie", field: 'category' }
   ];
 
   newSubscription: Subscription;

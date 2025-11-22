@@ -5,8 +5,9 @@ import { NavigationEnd, Router, RouterModule, Event } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 // project import
-import { NavigationItem, NavigationItems } from 'src/app/theme/layout/admin/navigation/navigation';
+import { NavigationItem, getNavigationItems } from 'src/app/theme/layout/admin/navigation/navigation';
 import { SharedModule } from '../../shared.module';
+import { PrivilegeService } from 'src/app/services/roles/get-roles-service';
 
 interface titleType {
   // eslint-disable-next-line
@@ -34,8 +35,8 @@ export class BreadcrumbsComponent {
   navigationList!: titleType[];
 
   // constructor
-  constructor() {
-    this.navigations = NavigationItems;
+  constructor(private privilege: PrivilegeService) {
+    this.navigations = getNavigationItems(this.privilege);
     this.type = 'theme1';
     this.setBreadcrumb();
   }
@@ -56,7 +57,7 @@ export class BreadcrumbsComponent {
   filterNavigation(navItems: NavigationItem[], activeLink: string): titleType[] {
     // Remove query parameters and hash from activeLink
     const pathOnly = activeLink.split('?')[0].split('#')[0];
-    
+
     for (const navItem of navItems) {
       if (navItem.type === 'item' && 'url' in navItem) {
         // Compare only the path part of the URL

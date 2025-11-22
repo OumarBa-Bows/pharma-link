@@ -13,7 +13,7 @@ import {DatePipe} from "@angular/common";
 })
 export class TableComponent implements OnInit, OnChanges {
   @Input() title = '';
-  @Input() columns: { header: string; field: string; img: boolean; type?: any; format?: string }[] = [];
+  @Input() columns: { header: string; field: string; img: boolean; type?: any; format?: string; enumMap?: Record<string, string> }[] = [];
   @Input() data: any[] = [];
 
   @Input() showEdit = false;
@@ -44,7 +44,7 @@ export class TableComponent implements OnInit, OnChanges {
   @Input()
   showAddButton = true;
   @Input()
-  showDetails=  true;
+  showDetails=  false;
 
   get totalPages(): number {
     return Math.ceil(this.total / this.pageSize);

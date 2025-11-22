@@ -40,7 +40,7 @@
               @for (col of columns; track $index) {
                 <th>{{ col.header }}</th>
               }
-              @if (showEdit || showDelete) {
+              @if (showEdit || showDelete || showDetails) {
                 <th>{{ 'buttons-action.title' | translate }}</th>
               }
             </tr>
@@ -66,7 +66,9 @@
                <!--   @if (col.img != true) {
                     <td>{{ row[col.field] }}</td>
                   } -->
-                  @if (col.type === 'date') {
+                  @if (col.type === 'enum') {
+                    <td>{{ col.enumMap ? col.enumMap[row[col.field]] : row[col.field] }}</td>
+                  } @else if (col.type === 'date') {
                     <td>{{ row[col.field] | date: col.format ?? 'shortDate' }}</td>
                   } @else {
                     <td>{{ row[col.field] }}</td>

@@ -4,9 +4,10 @@ import { Location } from '@angular/common';
 
 // project import
 import { environment } from 'src/environments/environment';
-import { NavigationItem, NavigationItems } from '../navigation';
+import { NavigationItem, getNavigationItems } from '../navigation';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavGroupComponent } from './nav-group/nav-group.component';
+import { PrivilegeService } from 'src/app/services/roles/get-roles-service';
 
 @Component({
   selector: 'app-nav-content',
@@ -29,8 +30,8 @@ export class NavContentComponent {
   NavCollapsedMob = output();
 
   // constructor
-  constructor() {
-    this.navigations = NavigationItems;
+  constructor(private privilege: PrivilegeService) {
+    this.navigations = getNavigationItems(this.privilege);
   }
 
   fireOutClick() {

@@ -16,4 +16,12 @@ export class ApiService {
   postData<T>(endpoint: string, data: any, options: object = {}): Observable<T> {
     return this.http.post<T>(`${this.api}/${endpoint}`, data, { ...options });
   }
+
+  putData<T>(endpoint: string, data: any, options: object = {}): Observable<T> {
+    return this.http.put<T>(`${this.api}/${endpoint}`, data, { ...options });
+  }
+
+  deleteData<T>(endpoint: string, options: object = {}): Observable<T> {
+    return this.http.delete<T>(`${this.api}/${endpoint}`, { ...options });
+  }
 }
