@@ -39,6 +39,7 @@ export class AuthSigninComponent {
         localStorage.setItem('token', response?.accessToken);
         if (response?.user) {
           localStorage.setItem('user', JSON.stringify(response.user));
+          localStorage.setItem('roles', JSON.stringify(response.user?.roles));
           this.router.navigate(['/dashboard']);
         }
       },

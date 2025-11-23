@@ -1,16 +1,20 @@
 <div class="actions">
+  @if (isLoading) {
+    <app-spinner></app-spinner>
+  }
 </div>
 <app-table
-  title="{{ 'commandesList' | translate }}"
+  title="{{ 'commandes.commandes-list.title' | translate }}"
   [columns]="columns"
   [data]="commandData"
   (selectionChange)="onSelectionChange($event)"
-  (edit)="editCommand($event)"
-  (delete)="deleteCommand($event)"
+  (showDetatail)="showDetail($event)"
+  [showAddButton]="false"
   [showEdit]="false"
   [showDelete]="false"
-  [showSelected]="true"
-  [showAddButton]="false"
+  [showImport]="false"
   [showDetails]="true"
-  (showDetatail)="showDetail($event)"
+  [total]="commandData.length"
+  [searchPlaceholder]="'commandes.commandes-list.search-placeholder' | translate"
 ></app-table>
+

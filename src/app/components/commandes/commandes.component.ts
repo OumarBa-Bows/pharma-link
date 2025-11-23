@@ -3,13 +3,13 @@ import {SharedModule} from "../../theme/shared/shared.module";
 import {CommandService} from "../../services/apis/CommandService";
 import {Router} from "@angular/router";
 import {Command} from "../../model/command";
-import {CreateUserComponent} from "../users/create-user/create-user.component";
+import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {CreateCommand} from "./create-command/create-command";
 
 @Component({
   selector: 'app-commandes',
-  imports: [SharedModule],
+  imports: [SharedModule, SpinnerComponent],
   templateUrl: './commandes.component.html',
   standalone: true,
   providers: [CommandService],
@@ -22,19 +22,18 @@ export class CommandesComponent implements OnInit{
   private modalService = inject(NgbModal);
 
   columns = [
-    { header: 'Id', field: 'id' },
+    { header: 'Date', field: 'date', type: 'date', format: 'dd/MM/yyyy HH:mm' },
     { header: 'Code', field: 'code' },
-    { header: 'Status', field: 'status' },
+    { header: 'Status', field: 'status', type: 'enum', enumMap: { 'PENDING': 'En attente', 'VALIDATED': 'Validé', 'CANCELLED': 'Annulé', 'SHIPPED': 'Livré', 'DELIVERED': 'Livré' } },
     { header: 'Commandreference', field: 'commandreference' },
     { header: 'Invoicereference', field: 'invoicereference' },
     { header: 'Totalprice', field: 'totalprice' },
     { header: 'Pharmacy', field: 'pharmacy' },
-    { header: 'Distributor', field: 'distributor' },
-    { header: 'MainDistributor', field: 'mainDistributor' },
-    { header: 'Date', field: 'date' }
+
 
   ];
   protected commandData: Command[] = [];
+  isLoading: boolean;
 
   onSelectionChange($event: any[]) {
 
@@ -57,8 +56,10 @@ export class CommandesComponent implements OnInit{
   }
 
   getCommandByDistributor(distributorId: number) {
+    this.isLoading = true;
     this.commandService.getCommandByDistributor(distributorId).subscribe((value) => {
       this.commandData = value.data.commands;
+      this.isLoading = false;
     })
   }
 

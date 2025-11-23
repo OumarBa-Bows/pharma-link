@@ -9,10 +9,10 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import {UserService} from "../../../../../services/apis/user-service";
 import {map, Observable} from "rxjs";
 import {User} from "../../../../../model/user";
-import {RouterLink} from "@angular/router";
 import {NotificationComponent} from "../../../../../components/notification/notification.component";
 import {CommandNotification} from "../../../../../components/command-notification/command-notification";
 import {CommandNotificationServiceService} from "../../../../../services/apis/CommandNotificationService";
+import {Router, RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-nav-right',
@@ -29,6 +29,7 @@ export class NavRightComponent implements OnInit {
   private commandNotificationServiceService = inject(CommandNotificationServiceService);
 
 
+  private router = inject(Router);
   // constructor
   connectedUser: User
   countCommandNotifications$: Observable<number>;
@@ -61,5 +62,11 @@ export class NavRightComponent implements OnInit {
     if($event){
       this.commandNotificationServiceService.reset();
     }
+  }
+
+  logOut(){
+      localStorage.removeItem('token');
+       localStorage.removeItem('user');
+      this.router.navigate(['/login']);
   }
 }

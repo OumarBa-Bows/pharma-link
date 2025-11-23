@@ -17,6 +17,7 @@ export class CreateComponent {
   articleForm: FormGroup;
   isLoading: boolean = false;
   imagePath: string = '';
+  categories: any;
 
   constructor(
     private fb: FormBuilder,
@@ -24,6 +25,7 @@ export class CreateComponent {
     private router: Router,
     private notificationService: NotificationService
   ) {
+    this.getCategory();
     this.articleForm = this.fb.group({
       reference: ['', Validators.required],
       name: ['', Validators.required],
@@ -31,7 +33,8 @@ export class CreateComponent {
       image: [null],
       description: [''],
       expiryDate: [null],
-      barcode: ['']
+      barcode: [''],
+      categoryId:[null]
     });
   }
 
@@ -106,5 +109,12 @@ export class CreateComponent {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  getCategory(){
+    this.apiService.getData('articles/categories/get').subscribe((res: any) => {
+      console.log(res);
+      this.categories = res.data.categories;
+    })
   }
 }
