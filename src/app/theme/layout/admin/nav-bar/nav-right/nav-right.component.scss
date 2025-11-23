@@ -1,0 +1,17 @@
+.notif-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #dc3545; /* rouge */
+  color: white;
+  font-size: 10px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  box-shadow: 0 0 0 2px #fff; /* contour blanc pour propre rendu */
+}

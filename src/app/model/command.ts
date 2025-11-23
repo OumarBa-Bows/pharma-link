@@ -16,4 +16,5 @@ export interface Command{
   mainDistributor: Distributor;
   pharmacy: Pharmacy;
   details: CommandDetails[];
+  viewed: boolean;
 }

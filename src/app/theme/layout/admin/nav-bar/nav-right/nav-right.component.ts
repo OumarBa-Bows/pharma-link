@@ -7,25 +7,33 @@ import { NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import {UserService} from "../../../../../services/apis/user-service";
-import {map} from "rxjs";
+import {map, Observable} from "rxjs";
 import {User} from "../../../../../model/user";
+import {NotificationComponent} from "../../../../../components/notification/notification.component";
+import {CommandNotification} from "../../../../../components/command-notification/command-notification";
+import {CommandNotificationServiceService} from "../../../../../services/apis/CommandNotificationService";
 import {Router, RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-nav-right',
-  imports: [SharedModule, RouterLink],
+  imports: [SharedModule, RouterLink, NotificationComponent, CommandNotification],
   templateUrl: './nav-right.component.html',
   styleUrls: ['./nav-right.component.scss'],
   standalone: true,
-  providers: [NgbDropdownConfig, UserService]
+  providers: [NgbDropdownConfig, UserService, CommandNotificationServiceService]
 })
 export class NavRightComponent implements OnInit {
   // public props
 
   private userService = inject(UserService);
+  private commandNotificationServiceService = inject(CommandNotificationServiceService);
+
+
   private router = inject(Router);
   // constructor
   connectedUser: User
+  countCommandNotifications$: Observable<number>;
+   count: number;
   constructor() {
     const config = inject(NgbDropdownConfig);
 
@@ -43,6 +51,17 @@ export class NavRightComponent implements OnInit {
 
   ngOnInit(): void {
     this.getConnectedUser()
+    this.commandNotificationServiceService.count$.subscribe(c => {
+      this.count = c;
+    });
+
+
+  }
+
+  onDropdownChange($event: boolean) {
+    if($event){
+      this.commandNotificationServiceService.reset();
+    }
   }
 
   logOut(){

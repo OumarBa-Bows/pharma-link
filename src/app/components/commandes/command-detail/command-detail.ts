@@ -48,7 +48,6 @@ export class CommandDetail implements OnInit {
     modalRef.result.then(
       (newStatus: COMMAND_STATUS) => {
         if (newStatus) {
-          console.log('Nouveau statut sélectionné :', newStatus);
           this.command.status = newStatus;
           this.commandService.updateStatus(this.commandId, newStatus).subscribe(res => {
             if (res) {
@@ -67,11 +66,21 @@ export class CommandDetail implements OnInit {
   ngOnInit(): void {
     this.commandId = Number(this.route.snapshot.paramMap.get('id'));
     this.getCommandById()
+    this.listenToRouteQueryParams()
   }
 
   getCommandById(){
     this.commandService.getById(this.commandId).subscribe(res => {
       this.command = res.data.command as Command;
     })
+  }
+
+  listenToRouteQueryParams(){
+    this.route.queryParamMap.subscribe(query => {
+      if(query.has("viewed")){
+        if(this.command)
+          this.commandService.updateCommand({...this.command, viewed:true} as Command);
+      }
+    });
   }
 }
