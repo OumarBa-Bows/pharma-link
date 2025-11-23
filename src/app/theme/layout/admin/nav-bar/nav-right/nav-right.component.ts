@@ -50,13 +50,16 @@ export class NavRightComponent implements OnInit {
 
   ngOnInit(): void {
     this.getConnectedUser()
-    this.getCommandNotificationCount()
+    this.commandNotificationServiceService.count$.subscribe(c => {
+      this.count = c;
+    });
+
 
   }
 
-  getCommandNotificationCount(){
-    this.countCommandNotifications$.subscribe(count=>{
-      this.count = count
-    });
+  onDropdownChange($event: boolean) {
+    if($event){
+      this.commandNotificationServiceService.reset();
+    }
   }
 }
