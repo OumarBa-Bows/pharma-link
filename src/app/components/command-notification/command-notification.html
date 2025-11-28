@@ -11,7 +11,7 @@
 
           <div class="notif-content">
             <div class="notif-message">
-              Nouvelle mise à jour pour la commande <strong>#{{ notif.code }}</strong>
+              {{ 'notifications.newCommand' | translate }} <strong>#{{ notif.code }}</strong>
             </div>
 
             <div class="notif-status" [ngClass]="notif.status.toLowerCase()">

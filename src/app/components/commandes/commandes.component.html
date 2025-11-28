@@ -4,7 +4,7 @@
   }
 </div>
 <app-table
-  title="{{ 'commandes.commandes-list.title' | translate }}"
+  title="{{ 'commands.commands-list.title' | translate }}"
   [columns]="columns"
   [data]="commandData"
   (selectionChange)="onSelectionChange($event)"
@@ -15,6 +15,6 @@
   [showImport]="false"
   [showDetails]="true"
   [total]="commandData.length"
-  [searchPlaceholder]="'commandes.commandes-list.search-placeholder' | translate"
+  [searchPlaceholder]="'commands.commands-list.search-placeholder' | translate"
 ></app-table>
 

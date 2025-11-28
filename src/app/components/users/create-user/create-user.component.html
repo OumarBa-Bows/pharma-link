@@ -1,4 +1,4 @@
-<app-card cardTitle="{{title}}" [options]="false">
+<app-card cardTitle="{{title | translate}}" [options]="false">
   <hr />
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
     <div class="row">

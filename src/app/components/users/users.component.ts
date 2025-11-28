@@ -53,8 +53,8 @@ export class UsersComponent implements OnInit {
     });
 
     if (user) modalRef.componentInstance.user = user;
-    const toastSuccess = user ? 'Utilisateur mis à jour avec succès ✅' : 'Utilisateur créé avec succès ✅';
-    const toastError = user ? 'Erreur lors de la mise à jour ❌' : 'Erreur lors de la création ❌';
+    const toastSuccess = user ? this.translateService.instant('users.toasts.userUpdated') : this.translateService.instant('users.toasts.userCreated');
+    const toastError = user ? this.translateService.instant('users.toasts.userUpdateError') : this.translateService.instant('users.toasts.userCreateError');
     modalRef.closed.subscribe((res) => {
       if(res){
         this.notificationService.showSuccess(toastSuccess);
@@ -71,7 +71,7 @@ export class UsersComponent implements OnInit {
       centered: true,
       backdrop: 'static'
     });
-    modalRef.componentInstance.msg = 'Are you sure you want to delete this user ?';
+    modalRef.componentInstance.msg = this.translateService.instant('users.toasts.confirmDelete');
     modalRef.result.then((result) => {
       if (result) {
         this.delete(row.id);
@@ -107,12 +107,12 @@ export class UsersComponent implements OnInit {
 
     this.userService.delete(id).subscribe({
       next: () => {
-        this.notificationService.showSuccess('Utilisateur supprimé avec succès ✅');
+        this.notificationService.showSuccess(this.translateService.instant('users.toasts.deleteSuccess'));
         this.getAllUsers();
       },
       error: (err) => {
         console.error(err);
-        this.notificationService.showError('Erreur lors de la suppression ❌');
+        this.notificationService.showError(this.translateService.instant('users.toasts.deleteError'));
       },
     });
   }
