@@ -6,6 +6,7 @@ import {Command} from "../../model/command";
 import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {CreateCommand} from "./create-command/create-command";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-commandes',
@@ -20,15 +21,16 @@ export class CommandesComponent implements OnInit{
   private commandService = inject(CommandService)
   private router= inject(Router)
   private modalService = inject(NgbModal);
+  private translateService = inject(TranslateService);
 
   columns = [
-    { header: 'Date', field: 'date', type: 'date', format: 'dd/MM/yyyy HH:mm' },
-    { header: 'Code', field: 'code' },
-    { header: 'Status', field: 'status', type: 'enum', enumMap: { 'PENDING': 'En attente', 'VALIDATED': 'Validé', 'CANCELLED': 'Annulé', 'SHIPPED': 'Livré', 'DELIVERED': 'Livré' } },
-    { header: 'Commandreference', field: 'commandreference' },
-    { header: 'Invoicereference', field: 'invoicereference' },
-    { header: 'Totalprice', field: 'totalprice' },
-    { header: 'Pharmacy', field: 'pharmacy' },
+    { header: this.translateService.instant('commands.columns.date'), field: 'date', type: 'date', format: 'dd/MM/yyyy HH:mm' },
+    { header: this.translateService.instant('commands.columns.code'), field: 'code' },
+    { header: this.translateService.instant('commands.columns.status'), field: 'status', type: 'enum', enumMap: { 'PENDING': 'En attente', 'VALIDATED': 'Validé', 'CANCELLED': 'Annulé', 'SHIPPED': 'Livré', 'DELIVERED': 'Livré' } },
+    { header: this.translateService.instant('commands.columns.commandReference'), field: 'commandreference' },
+    { header: this.translateService.instant('commands.columns.invoiceReference'), field: 'invoicereference' },
+    { header: this.translateService.instant('commands.columns.totalPrice'), field: 'totalprice' },
+    { header: this.translateService.instant('commands.columns.pharmacy'), field: 'pharmacy' },
 
 
   ];

@@ -8,13 +8,15 @@ import {CreateUserComponent} from "../../users/create-user/create-user.component
 import {COMMAND_STATUS} from "../../../models/enum";
 import {Command} from "../../../model/command";
 import {NotificationService} from "../../../services/notifications/notification.service";
+import {TranslatePipe} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-command-detail',
   imports: [
     CurrencyPipe,
     DatePipe,
-    NgClass
+    NgClass,
+    TranslatePipe
   ],
   templateUrl: './command-detail.html',
   standalone: true,

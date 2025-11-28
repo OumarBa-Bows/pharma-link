@@ -7,13 +7,15 @@ import {CommandNotificationServiceService} from "../../services/apis/CommandNoti
 import {Command} from "../../model/command";
 import {Router, RouterLink} from "@angular/router";
 import {DatePipe, NgClass} from "@angular/common";
+import {TranslatePipe} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-command-notification',
   imports: [
     RouterLink,
     DatePipe,
-    NgClass
+    NgClass,
+    TranslatePipe
   ],
   templateUrl: './command-notification.html',
   standalone: true,
