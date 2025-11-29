@@ -55,8 +55,10 @@ export class CreateUserComponent {
     if (this.userForm.valid) {
       this.isSubmitting = true;
       const userData = { ...this.userForm.value };
-      // userData.roles est déjà un tableau maintenant
+
+      // En cas d'update, ne pas envoyer le password
       if (this.user) {
+        delete userData.password;
         this.userService.update(this.user.id, userData).subscribe({
           next: () => {
             this.isSubmitting = false;
