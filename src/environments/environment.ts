@@ -8,7 +8,7 @@ export const environment = {
   appVersion: packageInfo.version,
   production: false,
   apiUrl: 'https://pharma-link-backend.onrender.com/api',
-  //apiUrl: 'http://localhost:8080/api',
+  //apiUrl: 'http://localhost:8088/api',
   supabaseUrl: 'https://your-supabase-url.supabase.co',
   supabaseAnonKey: 'your-anon-key',
   supabaseServiceKey: 'your-service-role-key', // to be used server-side only

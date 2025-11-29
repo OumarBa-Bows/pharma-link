@@ -1,7 +1,8 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {COMMAND_STATUS} from "../../../models/enum";
 import {SharedModule} from "../../../theme/shared/shared.module";
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-change-status',
@@ -12,6 +13,8 @@ import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 })
 export class ChangeStatusComponent {
   @Input() currentStatus!: COMMAND_STATUS;
+
+  private translateService= inject(TranslateService);
 
   statuses = Object.values(COMMAND_STATUS);
   selectedStatus!: COMMAND_STATUS;
@@ -28,5 +31,9 @@ export class ChangeStatusComponent {
 
   cancel() {
     this.activeModal.dismiss('cancel');
+  }
+
+  getStatusLabel(status: string) {
+    return this.translateService.instant(`commands.status.${status.toLowerCase()}`);
   }
 }

@@ -1,72 +1,66 @@
-<app-card cardTitle="{{title}}" [options]="false">
+<app-card cardTitle="{{ title | translate }}" [options]="false">
   <hr />
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
     <div class="row">
       <div class="col-md-6">
         <div class="form-group mb-3">
           <label for="nom">Nom</label>
-          <input
-            type="text"
-            class="form-control"
-            id="nom"
-            placeholder="Entrez votre nom"
-            formControlName="name"
-          />
-          <div *ngIf="userForm.get('name')?.touched && userForm.get('name')?.invalid" class="text-danger small">
-            Le nom est requis.
-          </div>
+          <input type="text" class="form-control" id="nom" placeholder="Entrez votre nom" formControlName="name" />
+          <div *ngIf="userForm.get('name')?.touched && userForm.get('name')?.invalid" class="text-danger small">Le nom est requis.</div>
         </div>
       </div>
 
       <div class="col-md-6">
         <div class="form-group mb-3">
           <label for="email">Adresse Email</label>
-          <input
-            type="email"
-            class="form-control"
-            id="email"
-            placeholder="exemple@email.com"
-            formControlName="email"
-          />
+          <input type="email" class="form-control" id="email" placeholder="exemple@email.com" formControlName="email" />
           <div *ngIf="userForm.get('email')?.touched && userForm.get('email')?.invalid" class="text-danger small">
             <span *ngIf="userForm.get('email')?.errors?.['required']">L'email est requis.</span>
             <span *ngIf="userForm.get('email')?.errors?.['email']">Format email invalide.</span>
           </div>
         </div>
       </div>
-      @if (!user){
-      <div class="col-md-6">
-        <div class="form-group mb-3">
-          <label for="password">Mot de passe</label>
-          <input
-            type="text"
-            class="form-control"
-            id="password"
-            formControlName="password"
-          />
-          <div *ngIf="userForm.get('password')?.touched && userForm.get('password')?.invalid" class="text-danger small">
-            <span *ngIf="userForm.get('password')?.errors?.['required']">Mot de passe requis.</span>
-            <span *ngIf="userForm.get('password')?.errors?.['minlength']">Min. 6 caractères.</span>
+      @if (!user) {
+        <div class="col-md-6">
+          <div class="form-group mb-3">
+            <label for="password">Mot de passe</label>
+            <input type="text" class="form-control" id="password" formControlName="password" />
+            <div *ngIf="userForm.get('password')?.touched && userForm.get('password')?.invalid" class="text-danger small">
+              <span *ngIf="userForm.get('password')?.errors?.['required']">Mot de passe requis.</span>
+              <span *ngIf="userForm.get('password')?.errors?.['minlength']">Min. 6 caractères.</span>
+            </div>
           </div>
         </div>
-      </div>
       }
       <div class="col-md-6">
         <div class="form-group mb-3">
-          <label for="roles">Rôle</label>
-          <select class="form-control" id="roles" formControlName="roles">
-            <option value="" disabled>Choisir un rôle</option>
-            @for (role of roles; track role){
-              <option value="{{role.name}}">{{ role.name }}</option>
+          <label>Rôles</label>
+          <div class="border rounded p-3">
+            @for (role of roles; track role.id) {
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [id]="'role-' + role.id"
+                  [checked]="isRoleSelected(role.name)"
+                  (change)="onRoleChange(role.name, $event)"
+                />
+                <label class="form-check-label" [for]="'role-' + role.id">
+                  {{ role.name }}
+                </label>
+              </div>
             }
-          </select>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="text-end">
-      <button type="submit" class="btn btn-primary" (click)="closeModal()">Cancel</button>
-      <button type="submit" class="btn btn-success" [disabled]="userForm.invalid">Valider</button>
+      <button type="button" class="btn btn-primary" (click)="closeModal()" [disabled]="isSubmitting">Cancel</button>
+      <button type="submit" class="btn btn-success" [disabled]="userForm.invalid || isSubmitting">
+        <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        {{ isSubmitting ? 'Chargement...' : 'Valider' }}
+      </button>
     </div>
   </form>
 </app-card>

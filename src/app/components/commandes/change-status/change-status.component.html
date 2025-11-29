@@ -1,20 +1,20 @@
 <div class="modal-header">
-  <h5 class="modal-title">Changer le statut</h5>
+  <h5 class="modal-title">{{ 'commands.details.statusChange.title'|translate }}</h5>
   <button type="button" class="btn-close" aria-label="Close" (click)="cancel()"></button>
 </div>
 
 <div class="modal-body">
-  <p>Statut actuel : <strong>{{ currentStatus }}</strong></p>
+  <p>{{ 'commands.details.statusChange.actualStatus'|translate }} : <strong>{{ currentStatus }}</strong></p>
 
-  <label for="statusSelect" class="form-label mt-2">Nouveau statut :</label>
+  <label for="statusSelect" class="form-label mt-2">{{ 'commands.details.statusChange.newStatus'|translate }} :</label>
   <select id="statusSelect" class="form-select" [(ngModel)]="selectedStatus">
     @for (status of statuses; track status) {
-      <option [value]="status">{{ status }}</option>
+      <option [value]="status">{{ getStatusLabel(status)}}</option>
     }
   </select>
 </div>
 
 <div class="modal-footer">
-  <button type="button" class="btn btn-secondary" (click)="cancel()">Annuler</button>
-  <button type="button" class="btn btn-primary" (click)="confirmChange()">Valider</button>
+  <button type="button" class="btn btn-secondary" (click)="cancel()">{{ 'commands.details.cancel'|translate }}</button>
+  <button type="button" class="btn btn-primary" (click)="confirmChange()">{{ 'commands.details.validate'|translate }}</button>
 </div>

@@ -16,12 +16,32 @@
       "title": "Liste des utilisateurs"
     },
     "columns": {
-        "id": "ID",
-        "name":  "Nom",
-        "email":  "Email",
-        "createdAt": "Créé le",
-        "updatedAt": "Mis à jour le",
-        "role": "Rôle"
+      "id": "ID",
+      "name": "Nom",
+      "email": "Email",
+      "createdAt": "Créé le",
+      "updatedAt": "Mis à jour le",
+      "role": "Rôle"
+    },
+    "user-create": {
+      "title": "Créer un utilisateur"
+    },
+    "user-update": {
+      "title": "Modifier un utilisateur"
+    },
+    "roles": {
+      "admin": "Admin",
+      "editor": "Éditeur",
+      "viewer": "Lecteur"
+    },
+    "toasts": {
+      "userCreated": "Utilisateur créé avec succès.",
+      "userUpdated": "Utilisateur mis à jour avec succès.",
+      "userDeleted": "Utilisateur supprimé avec succès ✅",
+      "userDeleteError": "Erreur lors de la suppression ❌",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
+      "userCreateError": "Erreur lors de la création de l'utilisateur ❌",
+      "userUpdateError": "Erreur lors de la mise à jour de l'utilisateur ❌"
     }
   },
   "articles": {
@@ -62,5 +82,70 @@
   },
   "table": {
     "selectAll": "Tout Sélectionner"
+  },
+  "commands": {
+    "commands-list": {
+      "title": "Liste des commandes",
+      "search-placeholder": "Rechercher"
+    },
+    "columns": {
+      "date": "Date",
+      "status": "Statut",
+      "totalPrice": "Total Prix",
+      "commandReference": "Référence Commande",
+      "pharmacy": "Pharmacie",
+      "invoiceReference": "Référence Facture",
+      "code": "Code"
+    },
+    "statuses": {
+      "pending": "En attente",
+      "shipped": "Expédiée",
+      "delivered": "Livrée",
+      "canceled": "Annulée"
+    },
+    "details": {
+      "title": "Détails de la commande",
+      "commandId":"Commande #",
+      "code":"Code",
+      "status":"Statut",
+      "reference":"Référence commande",
+      "referenceInvoice":"Référence facture",
+      "pharmacy":"Pharmacie",
+      "distributor":"Distributeur",
+      "distributorPrincipal":"Distributeur principal",
+      "date":"Date de la commande",
+      "products": "Produits",
+      "quantity": "Quantité",
+      "price": "Prix unitaire",
+      "prixTotal": "Prix Total",
+      "noCommand":"Aucune donnée de commande disponible.",
+      "cancel": "Anuuler",
+      "validate": "Valider",
+      "article": {
+        "title": "Détails de l'article",
+        "articleId":"Article #",
+        "name":"Nom",
+        "description":"Description",
+        "price":"Prix",
+        "stock":"Stock disponible",
+        "noArticle":"Aucun article dans cette commande.",
+        "backToCommands":"Retour",
+        "changeStatus":"Changer le statut"
+      },
+      "statusChange": {
+        "title":"Changer le statut de la commande",
+        "selectStatus":"Sélectionner le nouveau statut",
+        "updateButton":"Mettre à jour le statut",
+        "cancelButton":"Annuler",
+        "actualStatus":"Statut actuel",
+        "newStatus":"Nouveau statut"
+      }
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "newCommand": "Nouvelle mise à jour pour la commande",
+    "markAllAsRead": "Tout marquer comme lu",
+    "noNotifications": "Aucune nouvelle notification"
   }
 }

@@ -1,25 +1,25 @@
 <header class="page-header">
-  <h1>📦 Détail de la commande</h1>
+  <h1>📦 {{ 'commands.details.title' | translate }}</h1>
 </header>
 
 <main class="page-content">
   @if (command) {
     <div class="command-detail-container">
-      <h2>Commande #{{ command.id }}</h2>
+      <h2>{{ 'commands.details.commandId' }}{{ command.id }}</h2>
 
       <div class="detail-grid">
-        <div><strong>Code :</strong> {{ command.code }}</div>
-        <div  class="status-badge" [ngClass]="command.status.toLowerCase()" ><strong>Status :</strong> {{ command.status }}</div>
-        <div><strong>Référence commande :</strong> {{ command.commandReference }}</div>
-        <div><strong>Référence facture :</strong> {{ command.invoiceReference }}</div>
-        <div><strong>Prix total :</strong> {{ command.totalPrice | currency:'EUR' }}</div>
-        <div><strong>Pharmacie :</strong> {{ command.pharmacy?.name }}</div>
-        <div><strong>Distributeur :</strong> {{ command.distributor?.name }}</div>
-        <div><strong>Distributeur principal :</strong> {{ command.mainDistributor?.name }}</div>
-        <div><strong>Date :</strong> {{ command.date | date:'short' }}</div>
+        <div><strong>{{ 'commands.details.code' }} :</strong> {{ command.code }}</div>
+        <div  class="status-badge" [ngClass]="command.status.toLowerCase()" ><strong>{{ 'commands.details.status'|translate }} :</strong> {{ command.status }}</div>
+        <div><strong>{{ 'commands.details.reference'| translate }} :</strong> {{ command.commandReference }}</div>
+        <div><strong>{{ 'commands.details.referenceInvoice'|translate }} :</strong> {{ command.invoiceReference }}</div>
+        <div><strong>{{ 'commands.details.prixTotal' | translate}} :</strong> {{ command.totalPrice | currency:'EUR' }}</div>
+        <div><strong>{{ 'commands.details.pharmacy' | translate}} :</strong> {{ command.pharmacy?.name }}</div>
+        <div><strong>{{ 'commands.details.distributor' | translate}} :</strong> {{ command.distributor?.name }}</div>
+        <div><strong>{{ 'commands.details.distributorPrincipal' | translate}} :</strong> {{ command.mainDistributor?.name }}</div>
+        <div><strong>{{ 'commands.details.date' | translate}} :</strong> {{ command.date | date:'short' }}</div>
       </div>
 
-      <h3 class="mt-4">🧾 Détails des articles</h3>
+      <h3 class="mt-4">🧾 {{'commands.details.article.title' | translate}}</h3>
 
       @if (command.details?.length > 0) {
         <div class="table-responsive">
@@ -51,17 +51,17 @@
         </table>
         </div>
       } @else {
-        <p>Aucun article dans cette commande.</p>
+        <p>{{'commands.details.article.noArticle' | translate}}</p>
       }
       <div class="details-buttons">
-        <button class="btn-back" (click)="goBack()">← Retour</button>
-        <button class="chang-status-button" (click)="openModal()">Change Status</button>
+        <button class="btn-back" (click)="goBack()">← {{'commands.details.article.backToCommands' | translate}}</button>
+        <button class="chang-status-button" (click)="openModal()">{{'commands.details.article.changeStatus' | translate}}</button>
       </div>
     </div>
   } @else {
     <div class="command-detail-container">
-      <p>Aucune donnée de commande disponible.</p>
-      <button class="btn-back" (click)="goBack()">Retour</button>
+      <p>{{ 'commands.details.noCommand' | translate }}</p>
+      <button class="btn-back" (click)="goBack()">{{ 'commands.details.article.backToCommands' }}</button>
     </div>
   }
 </main>

@@ -1,0 +1,32 @@
+@if (notifications){
+  <div class="notification-wrapper" >
+    <div class="notification-list">
+      @for (notif of notifications; track notif.id) {
+        <div
+          class="notification-item"
+          (click)="onClick(notif)"
+          [class.unread]="!notif.viewed">
+
+          <div class="notif-icon">📦</div>
+
+          <div class="notif-content">
+            <div class="notif-message">
+              {{ 'notifications.newCommand' | translate }} <strong>#{{ notif.code }}</strong>
+            </div>
+
+            <div class="notif-status" [ngClass]="notif.status.toLowerCase()">
+              {{ notif.status }}
+            </div>
+
+            <div class="notif-date">
+              {{ notif.date | date:'short' }}
+            </div>
+          </div>
+          @if (!notif.viewed){
+            <div class="notif-unread-dot"></div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}

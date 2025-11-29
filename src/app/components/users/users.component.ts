@@ -7,7 +7,6 @@ import { CreateUserComponent } from './create-user/create-user.component';
 import { ToastService } from '../../services/apis/toast.service';
 import { ConfirmationModalComponent } from '../../theme/shared/components/confirmation-modal/confirmation-modal.component';
 
-
 import { NotificationService } from 'src/app/services/notifications/notification.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -26,25 +25,26 @@ export class UsersComponent implements OnInit {
   private userdata: User[];
   private notificationService = inject(NotificationService);
 
-
-  constructor(private translateService: TranslateService ) {}
+  constructor(private translateService: TranslateService) {}
 
   columns = [
-    { header: this.translateService.instant('users.columns.id'), field: 'id' },
+    { header: this.translateService.instant('users.columns.createdAt'), field: 'createdAt', type: 'date', format: 'dd/MM/yyyy HH:mm' },
+    //{ header: this.translateService.instant('users.columns.id'), field: 'id' },
     { header: this.translateService.instant('users.columns.name'), field: 'name' },
     { header: this.translateService.instant('users.columns.email'), field: 'email' },
-    { header: this.translateService.instant('users.columns.createdAt'), field: 'createdAt', type: 'date', format: 'dd/MM/yyyy HH:mm' },
-    { header: this.translateService.instant('users.columns.updatedAt'), field: 'updatedAt', type: 'date', format: 'dd/MM/yyyy HH:mm' },
+    //{ header: this.translateService.instant('users.columns.updatedAt'), field: 'updatedAt', type: 'date', format: 'dd/MM/yyyy HH:mm' },
     { header: this.translateService.instant('users.columns.role'), field: 'roles' }
   ];
 
   public users: User[];
 
   editUser(user: User) {
-    this.openCreationModal(user);
+    // Trouver l'utilisateur original avec les rôles non transformés
+    const originalUser = this.userdata.find((u) => u.id === user.id);
+    this.openCreationModal(originalUser || user, 'users.user-update.title');
   }
 
-  private openCreationModal(user?: User) {
+  private openCreationModal(user?: User, title?: string) {
     const modalRef = this.modalService.open(CreateUserComponent, {
       size: 'xl',
       centered: true,
@@ -53,13 +53,18 @@ export class UsersComponent implements OnInit {
     });
 
     if (user) modalRef.componentInstance.user = user;
-    const toastSuccess = user ? 'Utilisateur mis à jour avec succès ✅' : 'Utilisateur créé avec succès ✅';
-    const toastError = user ? 'Erreur lors de la mise à jour ❌' : 'Erreur lors de la création ❌';
+    if (title) modalRef.componentInstance.title = title;
+    const toastSuccess = user
+      ? this.translateService.instant('users.toasts.userUpdated')
+      : this.translateService.instant('users.toasts.userCreated');
+    const toastError = user
+      ? this.translateService.instant('users.toasts.userUpdateError')
+      : this.translateService.instant('users.toasts.userCreateError');
     modalRef.closed.subscribe((res) => {
-      if(res){
+      if (res) {
         this.notificationService.showSuccess(toastSuccess);
         this.getAllUsers();
-      }else {
+      } else {
         this.notificationService.showError(toastError);
       }
     });
@@ -71,7 +76,7 @@ export class UsersComponent implements OnInit {
       centered: true,
       backdrop: 'static'
     });
-    modalRef.componentInstance.msg = 'Are you sure you want to delete this user ?';
+    modalRef.componentInstance.msg = this.translateService.instant('users.toasts.confirmDelete');
     modalRef.result.then((result) => {
       if (result) {
         this.delete(row.id);
@@ -85,10 +90,13 @@ export class UsersComponent implements OnInit {
 
   getAllUsers() {
     this.userService.getAll().subscribe((result) => {
-      this.users = result.data.users;
-      this.users.forEach((user) => {
-        user.roles = user.roles.map((r) => r.name).join(',');
-      });
+      // Garder les données originales
+      this.userdata = result.data.users;
+      // Créer une copie pour l'affichage avec les rôles transformés
+      this.users = result.data.users.map((user) => ({
+        ...user,
+        roles: user.roles.map((r) => r.name).join(',')
+      }));
     });
   }
 
@@ -107,13 +115,13 @@ export class UsersComponent implements OnInit {
 
     this.userService.delete(id).subscribe({
       next: () => {
-        this.notificationService.showSuccess('Utilisateur supprimé avec succès ✅');
+        this.notificationService.showSuccess(this.translateService.instant('users.toasts.deleteSuccess'));
         this.getAllUsers();
       },
       error: (err) => {
         console.error(err);
-        this.notificationService.showError('Erreur lors de la suppression ❌');
-      },
+        this.notificationService.showError(this.translateService.instant('users.toasts.deleteError'));
+      }
     });
   }
 }
