@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/services/apis/api-service';
+import {TranslatePipe} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-auth-signin',
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule],
+  imports: [RouterModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './auth-signin.component.html',
   styleUrls: ['./auth-signin.component.scss']
 })

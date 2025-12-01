@@ -11,25 +11,25 @@
         <div class="mb-4">
           <i class="feather icon-unlock auth-icon"></i>
         </div>
-        <h3 class="mb-4">Login</h3>
+        <h3 class="mb-4">{{ 'login.title'| translate }}</h3>
 
         <form [formGroup]="loginForm" (ngSubmit)="signIn()">
           <div class="input-group mb-3">
-            <input type="email" class="form-control" placeholder="Email" formControlName="email" required />
+            <input type="email" class="form-control" placeholder="{{'login.email'|translate}}" formControlName="email" required />
           </div>
           <div class="input-group mb-4">
-            <input type="password" class="form-control" placeholder="Password" formControlName="password" required />
+            <input type="password" class="form-control" placeholder="{{'login.password'|translate}}" formControlName="password" required />
           </div>
-          <button type="submit" class="btn btn-primary mb-4" [disabled]="loginForm.invalid">Login</button>
+          <button type="submit" class="btn btn-primary mb-4" [disabled]="loginForm.invalid">{{ 'login.loginButton'|translate }}</button>
         </form>
 
         <p class="mb-2 text-muted">
-          Forgot password?
-          <a href="javascript:">Reset</a>
+          {{'login.forgotPassword' |translate}}
+          <a href="javascript:">{{ 'login.reset'|translate }}</a>
         </p>
         <p class="mb-0 text-muted">
-          Don’t have an account?
-          <a [routerLink]="['/register']">Sign up</a>
+          {{'login.noAccount'|translate }}
+          <a [routerLink]="['/register']">{{ 'login.register'|translate }}</a>
         </p>
       </div>
     </div>

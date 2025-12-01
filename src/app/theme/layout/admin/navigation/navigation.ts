@@ -22,13 +22,13 @@ export function getNavigationItems(privilege: PrivilegeService): NavigationItem[
   return [
     {
       id: 'navigation',
-      title: 'Navigation',
+      title: 'navBar.navigate',
       type: 'group',
       icon: 'icon-navigation',
       children: [
         {
           id: 'dashboard',
-          title: 'Dashboard',
+          title: 'navBar.dashboard',
           type: 'item',
           url: '/dashboard',
           icon: 'feather icon-home',
@@ -39,13 +39,13 @@ export function getNavigationItems(privilege: PrivilegeService): NavigationItem[
 
     {
       id: 'gestions',
-      title: 'Gestions',
+      title: 'navBar.management',
       type: 'group',
       icon: 'icon-navigation',
       children: [
         {
           id: 'articles',
-          title: 'Articles',
+          title: 'navBar.articles',
           type: 'item',
           url: '/articles/index',
           icon: 'feather icon-package',
@@ -54,7 +54,7 @@ export function getNavigationItems(privilege: PrivilegeService): NavigationItem[
         },
         {
           id: 'articles-create',
-          title: 'Créer un article',
+          title: 'navBar.article-title',
           type: 'item',
           url: '/articles/create',
           icon: 'feather icon-plus',
@@ -64,7 +64,7 @@ export function getNavigationItems(privilege: PrivilegeService): NavigationItem[
         },
         {
           id: 'pharmacies',
-          title: 'Pharmacies',
+          title: 'navBar.pharmacies',
           type: 'item',
           url: '/pharmacy/index',
           classes: 'nav-item',
@@ -73,7 +73,7 @@ export function getNavigationItems(privilege: PrivilegeService): NavigationItem[
         },
         {
           id: 'commandes',
-          title: 'Commandes',
+          title: 'navBar.commands',
           type: 'item',
           url: '/commands',
           classes: 'nav-item',
@@ -82,7 +82,7 @@ export function getNavigationItems(privilege: PrivilegeService): NavigationItem[
         },
         {
           id: 'listings',
-          title: 'Listings',
+          title: 'navBar.listings',
           type: 'item',
           url: '/listings/index',
           classes: 'nav-item',
@@ -93,13 +93,13 @@ export function getNavigationItems(privilege: PrivilegeService): NavigationItem[
     },
     {
       id: 'administration',
-      title: 'Administration',
+      title: 'navBar.administration',
       type: 'group',
       icon: 'icon-user',
       children: [
         {
           id: 'users',
-          title: 'Users',
+          title: 'navBar.users',
           type: 'item',
           url: '/users',
           icon: 'feather icon-user',
