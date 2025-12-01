@@ -135,5 +135,45 @@
     "newCommand": "New update for command",
     "markAllAsRead": "Mark all as read",
     "noNotifications": "No new notifications"
+  },
+  "navBar": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "articles": "Articles",
+    "listings": "Listings",
+    "pharmacies": "Pharmacies",
+    "commands": "Commands",
+    "notifications": "Notifications",
+    "profile": "Profile",
+    "navigate": "Navigation",
+    "management": "Management",
+    "settings": "Settings",
+    "logout": "Logout",
+    "login": "Login",
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "articles": "Articles",
+    "article-title": "Articles",
+    "administration": "Administration"
+  },
+  "login": {
+    "title": "Login to PharmaLink",
+    "email": "Email",
+    "password": "Password",
+    "loginButton": "Login",
+    "forgotPassword": "Forgot your password?",
+    "noAccount": "Don’t have an account?",
+    "register": "Sign up",
+    "errors": {
+      "invalidCredentials": "Invalid credentials. Please try again.",
+      "requiredField": "This field is required."
+    },
+    "placeholders": {
+      "email": "Enter your email",
+      "password": "Enter your password"
+    },
+    "reset": "Reset"
   }
+
 }

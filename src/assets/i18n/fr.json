@@ -147,5 +147,44 @@
     "newCommand": "Nouvelle mise à jour pour la commande",
     "markAllAsRead": "Tout marquer comme lu",
     "noNotifications": "Aucune nouvelle notification"
+  },
+  "navBar": {
+    "dashboard": "Tableau de bord",
+    "users": "Utilisateurs",
+    "articles": "Articles",
+    "listings": "Listings",
+    "pharmacies": "Pharmacies",
+    "commands": "Commandes",
+    "notifications": "Notifications",
+    "profile": "Profile",
+    "navigate": "Navigation",
+    "management": "Gestions",
+    "settings": "Paramètres",
+    "logout": "Se déconnecter",
+    "login": "Se connecter",
+    "home": "Accueil",
+    "about": "À propos",
+    "contact": "Contact",
+    "articles": "Articles",
+    "article-title": "Créer un article",
+    "administration": "Administration"
+  },
+  "login": {
+    "title": "Connexion à PharmaLink",
+    "email": "Email",
+    "password": "Mot de passe",
+    "loginButton": "Se connecter",
+    "forgotPassword": "Mot de passe oublié ?",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "register": "Inscrivez-vous",
+    "errors": {
+      "invalidCredentials": "Identifiants invalides. Veuillez réessayer.",
+      "requiredField": "Ce champ est requis."
+    },
+    "placeholders": {
+      "email": "Entrez votre email",
+      "password": "Entrez votre mot de passe"
+    },
+    "reset": "Réinitialiser"
   }
 }

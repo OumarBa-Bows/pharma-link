@@ -13,6 +13,7 @@ import {NotificationComponent} from "../../../../../components/notification/noti
 import {CommandNotification} from "../../../../../components/command-notification/command-notification";
 import {CommandNotificationServiceService} from "../../../../../services/apis/CommandNotificationService";
 import {Router, RouterLink} from "@angular/router";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-nav-right',
@@ -34,7 +35,7 @@ export class NavRightComponent implements OnInit {
   connectedUser: User
   countCommandNotifications$: Observable<number>;
    count: number;
-  constructor() {
+  constructor(private translateService: TranslateService) {
     const config = inject(NgbDropdownConfig);
 
     config.placement = 'bottom-right';
@@ -69,4 +70,10 @@ export class NavRightComponent implements OnInit {
        localStorage.removeItem('user');
       this.router.navigate(['/login']);
   }
+
+  changeLanguage(lang: string) {
+    this.translateService.use(lang);
+    localStorage.setItem('lang', lang);
+  }
+
 }

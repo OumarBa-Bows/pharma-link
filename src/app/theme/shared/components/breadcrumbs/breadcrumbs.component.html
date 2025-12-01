@@ -8,7 +8,7 @@
               @for (breadcrumb of navigationList; track breadcrumb; let last = $last) {
                 @if (last) {
                   <h5 class="m-b-10">
-                    {{ breadcrumb.title }}
+                    {{ breadcrumb.title | translate }}
                   </h5>
                 }
               }
@@ -25,7 +25,7 @@
               @for (breadcrumb of navigationList; track breadcrumb) {
                 @if (breadcrumb.url !== false) {
                   <li class="breadcrumb-item">
-                    <a [routerLink]="breadcrumb.url">{{ breadcrumb.title }}</a>
+                    <a [routerLink]="breadcrumb.url">{{ breadcrumb.title | translate}}</a>
                   </li>
                 }
                 @if (breadcrumb.url === false && breadcrumb.type !== 'group') {
