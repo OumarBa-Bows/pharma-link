@@ -118,6 +118,7 @@
   },
   "notifications": {
     "title": "Notifications",
+    "count": "notification(s)",
     "newCommand": "Nouvelle mise à jour pour la commande",
     "markAllAsRead": "Tout marquer comme lu",
     "noNotifications": "Aucune nouvelle notification"

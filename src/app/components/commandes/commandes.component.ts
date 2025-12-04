@@ -38,8 +38,8 @@ export class CommandesComponent implements OnInit {
         DELIVERED: this.translateService.instant('commands.status.delivered')
       }
     },
-    { header: this.translateService.instant('commands.columns.commandReference'), field: 'commandreference' },
-    { header: this.translateService.instant('commands.columns.invoiceReference'), field: 'invoicereference' },
+    // { header: this.translateService.instant('commands.columns.commandReference'), field: 'commandreference' },
+    // { header: this.translateService.instant('commands.columns.invoiceReference'), field: 'invoicereference' },
     { header: this.translateService.instant('commands.columns.totalPrice'), field: 'totalprice' },
     { header: this.translateService.instant('commands.columns.pharmacy'), field: 'pharmacy' }
   ];
@@ -97,8 +97,8 @@ export class CommandesComponent implements OnInit {
           DELIVERED: this.translateService.instant('commands.status.delivered')
         }
       },
-      { header: this.translateService.instant('commands.columns.commandReference'), field: 'commandreference' },
-      { header: this.translateService.instant('commands.columns.invoiceReference'), field: 'invoicereference' },
+      // { header: this.translateService.instant('commands.columns.commandReference'), field: 'commandreference' },
+      // { header: this.translateService.instant('commands.columns.invoiceReference'), field: 'invoicereference' },
       { header: this.translateService.instant('commands.columns.totalPrice'), field: 'totalprice' },
       { header: this.translateService.instant('commands.columns.pharmacy'), field: 'pharmacy' }
     ];

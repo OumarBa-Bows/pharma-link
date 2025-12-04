@@ -1,17 +1,15 @@
 <ul class="navbar-nav">
   <li>
     <div class="dropdown" ngbDropdown placement="auto">
-      @if (count) {
-        <span class="position-absolute start-100 translate-middle badge rounded-pill bg-danger" style="top: 15px">
-          {{ count }}
-          <span class="visually-hidden">unread messages</span>
-        </span>
-      }
-
-      <div ngbDropdown (openChange)="onDropdownChange($event)">
+      <div ngbDropdown #notificationDropdown="ngbDropdown" (openChange)="onDropdownChange($event)" class="position-relative">
         <a ngbDropdownToggle href="javascript:" data-toggle="dropdown">
           <i class="icon feather icon-bell"></i>
         </a>
+        @if (count > 0) {
+          <span class="notification-badge animate-pulse">
+            {{ count }}
+          </span>
+        }
 
         <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end notification">
           <div class="notification-head">
@@ -22,7 +20,7 @@
             <li class="notification">
               <div class="d-flex">
                 <div class="flex-grow-1">
-                  <app-command-notification></app-command-notification>
+                  <app-command-notification [dropdown]="notificationDropdown"></app-command-notification>
                 </div>
               </div>
             </li>

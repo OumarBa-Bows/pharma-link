@@ -117,8 +117,9 @@
   },
   "notifications": {
     "title": "الإشعارات",
+    "count": "إشعار(ات)",
     "newCommand": "تحديث جديد للطلب",
-    "markAllAsRead": "تحديد الكل كمقروء",
+    "markAllAsRead": "وضع علامة على الكل كمقروء",
     "noNotifications": "لا توجد إشعارات جديدة"
   },
   "navBar": {

@@ -118,6 +118,7 @@
   },
   "notifications": {
     "title": "Notifications",
+    "count": "notification(s)",
     "newCommand": "New update for order",
     "markAllAsRead": "Mark all as read",
     "noNotifications": "No new notifications"

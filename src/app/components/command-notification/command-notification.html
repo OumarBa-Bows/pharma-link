@@ -1,10 +1,14 @@
 @if (notifications){
 <div class="notification-wrapper">
+  <div class="notification-header">
+    <span class="notification-count-text">
+      {{ notifications.length }} {{ notifications.length > 1 ? ('notifications.title' | translate) : ('notifications.title' | translate) }}
+    </span>
+  </div>
   <div class="notification-list">
     @for (notif of notifications; track notif.id) {
     <div class="notification-item" (click)="onClick(notif)" [class.unread]="!notif.viewed">
       <div class="notif-icon">📦</div>
-
       <div class="notif-content">
         <div class="notif-message">
           {{ 'notifications.newCommand' | translate }}
