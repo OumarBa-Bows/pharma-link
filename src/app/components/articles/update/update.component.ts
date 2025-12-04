@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ApiService } from 'src/app/services/apis/api-service';
 import { NotificationService } from 'src/app/services/notifications/notification.service';
 import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
@@ -26,7 +26,8 @@ export class UpdateComponent {
     private route: ActivatedRoute,
     private apiService: ApiService,
     private router: Router,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private translateService: TranslateService
   ) {
     this.getCategory();
     this.articleForm = this.fb.group({
@@ -37,7 +38,7 @@ export class UpdateComponent {
       description: [''],
       expiryDate: [null],
       barcode: [''],
-      categoryId:[null]
+      categoryId: [null]
     });
     this.route.paramMap.subscribe((params) => {
       this.articleId = params.get('id');
@@ -58,6 +59,7 @@ export class UpdateComponent {
       error: (error) => {
         this.isLoading = false;
         console.error("Erreur lors du chargement de l'article :", error);
+        this.notificationService.showError(this.translateService.instant('articles.article-update.loadError'));
       },
       complete: () => {
         this.articleFormPatchValue();
@@ -96,9 +98,10 @@ export class UpdateComponent {
           console.error("Erreur lors de la mise à jour de l'article :", error);
           this.isLoading = false;
           this.articleForm.enable();
+          this.notificationService.showError(this.translateService.instant('articles.article-update.errorMessage'));
         },
         complete: () => {
-          this.notificationService.showSuccess('Article mis à jour avec succès!');
+          this.notificationService.showSuccess(this.translateService.instant('articles.article-update.successMessage'));
           this.router.navigateByUrl('/articles/index');
         }
       });
@@ -126,7 +129,7 @@ export class UpdateComponent {
 
       // Validation taille
       if (file.size > 1 * 1024 * 1024) {
-        alert('Le fichier ne doit pas dépasser 1MB');
+        this.notificationService.showError(this.translateService.instant('articles.article-update.fileSizeError'));
 
         // ❌ Réinitialiser le input
         input.value = '';
@@ -150,10 +153,10 @@ export class UpdateComponent {
     }
   }
 
-   getCategory(){
+  getCategory() {
     this.apiService.getData('articles/categories/get').subscribe((res: any) => {
       console.log(res);
       this.categories = res.data.categories;
-    })
+    });
   }
 }

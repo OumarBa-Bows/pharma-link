@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ApiService } from 'src/app/services/apis/api-service';
 import { NotificationService } from 'src/app/services/notifications/notification.service';
 import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
@@ -25,7 +25,8 @@ export class UpdateComponent {
     private route: ActivatedRoute,
     private apiService: ApiService,
     private router: Router,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private translateService: TranslateService
   ) {
     this.pharmacyForm = this.fb.group({
       code: ['', Validators.required],
@@ -33,11 +34,11 @@ export class UpdateComponent {
       phone: ['', Validators.required],
       address: ['', Validators.required],
       customerType: ['', Validators.required],
-      state: ['',Validators.required],
+      state: ['', Validators.required],
       managerName: [''],
       managerPhone: [''],
       doctorName: [''],
-      doctorPhone: [''],
+      doctorPhone: ['']
     });
     this.route.paramMap.subscribe((params) => {
       this.pharmacyId = params.get('id');
@@ -57,7 +58,7 @@ export class UpdateComponent {
       },
       error: (error) => {
         this.isLoading = false;
-        console.error("Erreur lors du chargement de la pharmacie :", error);
+        console.error('Erreur lors du chargement de la pharmacie :', error);
       },
       complete: () => {
         this.pharmacyFormPatchValue();
@@ -77,12 +78,12 @@ export class UpdateComponent {
           this.pharmacyForm.enable();
         },
         error: (error) => {
-          console.error("Erreur lors de la mise à jour de la pharmacie :", error);
+          console.error('Erreur lors de la mise à jour de la pharmacie :', error);
           this.isLoading = false;
           this.pharmacyForm.enable();
         },
         complete: () => {
-          this.notificationService.showSuccess('Pharmacie mis à jour avec succès!');
+          this.notificationService.showSuccess(this.translateService.instant('pharmacies.updateSuccess'));
           this.router.navigateByUrl('/pharmacy/index');
         }
       });
@@ -100,8 +101,7 @@ export class UpdateComponent {
       managerName: this.pharmacy.managerName,
       managerPhone: this.pharmacy.managerPhone,
       doctorName: this.pharmacy.doctorName,
-      doctorPhone: this.pharmacy.doctorPhone,
+      doctorPhone: this.pharmacy.doctorPhone
     });
   }
-
 }

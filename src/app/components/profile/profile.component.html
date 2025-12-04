@@ -2,7 +2,7 @@
   <div class="card shadow-sm p-4">
     <div class="d-flex align-items-center mb-3 flex-wrap gap-2">
       <i class="feather icon-user fs-4 text-primary"></i>
-      <h3 class="m-0">Profil utilisateur</h3>
+      <h3 class="m-0">{{ 'profile.userProfile' | translate }}</h3>
     </div>
 
     <!-- ✅ Ajout du wrapper responsive -->
@@ -10,27 +10,29 @@
       <table class="table table-striped align-middle mb-0">
         <tbody>
           <tr>
-            <th scope="row">Nom</th>
+            <th scope="row">{{ 'common.name' | translate }}</th>
             <td>{{ user.name }}</td>
           </tr>
           <tr>
-            <th scope="row">Email</th>
+            <th scope="row">{{ 'common.email' | translate }}</th>
             <td>{{ user.email }}</td>
           </tr>
           <tr>
-            <th scope="row">Date de création</th>
+            <th scope="row">{{ 'common.createdAt' | translate }}</th>
             <td>{{ user.createdAt | date: 'short' }}</td>
           </tr>
           <tr>
-            <th scope="row">Dernière mise à jour</th>
+            <th scope="row">{{ 'profile.lastUpdate' | translate }}</th>
             <td>{{ user.updatedAt | date: 'short' }}</td>
           </tr>
           <tr *ngIf="user.roles?.length">
-            <th scope="row">Rôles</th>
+            <th scope="row">{{ 'profile.roles' | translate }}</th>
             <td>
-              <span *ngFor="let role of user.roles" class="badge bg-primary me-1 mb-1">
-                {{ role.name }}
-              </span>
+              <div class="d-flex flex-wrap gap-2">
+                <span *ngFor="let role of user.roles" class="badge bg-primary" style="flex: 0 0 calc(50% - 0.5rem)">
+                  {{ getRoleTranslation(role.name) }}
+                </span>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -39,7 +41,7 @@
 
     <!-- <div class="mt-3 text-end">
       <button class="btn btn-outline-primary" (click)="openCreationModal()">
-        <i class="feather icon-edit"></i> Modifier
+        <i class="feather icon-edit"></i> {{ 'common.edit' | translate }}
       </button>
     </div> -->
   </div>
@@ -47,34 +49,34 @@
   <div class="card shadow-sm p-4 mt-4">
     <h4 class="mb-3">
       <i class="feather icon-lock text-secondary"></i>
-      Changer le mot de passe
+      {{ 'profile.changePassword' | translate }}
     </h4>
 
     <form (ngSubmit)="changePassword()" #passwordForm="ngForm">
       <div class="mb-3">
-        <label for="oldPassword" class="form-label">Ancien mot de passe</label>
+        <label for="oldPassword" class="form-label">{{ 'profile.oldPassword' | translate }}</label>
         <input type="text" id="oldPassword" [(ngModel)]="currentPassword" class="form-control" name="currentPassword" required />
       </div>
 
       <div class="mb-3">
-        <label for="newPassword" class="form-label">Nouveau mot de passe</label>
+        <label for="newPassword" class="form-label">{{ 'profile.newPassword' | translate }}</label>
         <input type="text" id="newPassword" class="form-control" [(ngModel)]="newPassword" name="newPassword" required />
       </div>
 
       <div class="mb-3">
-        <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
+        <label for="confirmPassword" class="form-label">{{ 'profile.confirmPassword' | translate }}</label>
         <input type="text" id="confirmPassword" class="form-control" [(ngModel)]="confirmPassword" name="confirmPassword" required />
       </div>
 
       <div class="text-end">
         <button type="submit" class="btn btn-primary">
           <i class="feather icon-refresh-ccw"></i>
-          Mettre à jour
+          {{ 'common.update' | translate }}
         </button>
       </div>
 
       @if (passwordChanged) {
-        <div class="alert alert-success mt-3 mb-0">✅ Mot de passe changé avec succès !</div>
+        <div class="alert alert-success mt-3 mb-0">{{ 'profile.passwordChangeSuccess' | translate }}</div>
       }
     </form>
   </div>

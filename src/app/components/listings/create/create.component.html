@@ -13,57 +13,61 @@
       <form [formGroup]="listingForm" (ngSubmit)="onSubmit()">
         <div class="row">
           <div class="col-md-12 mb-3">
-            <label for="name" class="form-label">Nom</label>
-            <input type="text" class="form-control" id="name" formControlName="name" placeholder="Nom de l'listing" />
+            <label for="name" class="form-label">{{ 'common.name' | translate }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              formControlName="name"
+              [placeholder]="'listings.namePlaceholder' | translate"
+            />
           </div>
         </div>
 
         <div class="row">
           <div class="col-md-12 mb-3">
-            <label for="description" class="form-label">Description</label>
+            <label for="description" class="form-label">{{ 'common.description' | translate }}</label>
             <textarea
               class="form-control"
               id="description"
               formControlName="description"
               rows="3"
-              placeholder="Description de l'listing"
+              [placeholder]="'listings.descriptionPlaceholder' | translate"
             ></textarea>
           </div>
         </div>
 
         <div class="row">
           <div class="col-md-12 mb-3">
-            <label for="articleIds" class="form-label">Articles</label>
+            <label for="articleIds" class="form-label">{{ 'listings.articles' | translate }}</label>
             <div class="mb-2" *ngIf="isArticlesLoading">
-              <small>Chargement des articles...</small>
+              <small>{{ 'listings.loadingArticles' | translate }}</small>
             </div>
             <div class="input-group input-group-sm mb-2">
               <span class="input-group-text"><i class="fa fa-search"></i></span>
               <input
                 type="text"
                 class="form-control"
-                placeholder="Rechercher par nom ou code..."
+                [placeholder]="'listings.searchArticles' | translate"
                 [value]="articleSearch"
                 (input)="articleSearch = $any($event.target).value"
               />
             </div>
-            <div style="max-height: 300px; overflow-y: auto; border: 1px solid #e9ecef; border-radius: 4px; padding: 8px;">
+            <div style="max-height: 300px; overflow-y: auto; border: 1px solid #e9ecef; border-radius: 4px; padding: 8px">
               <div class="form-check" *ngFor="let a of filteredArticles">
                 <input
                   type="checkbox"
                   class="form-check-input"
-                  [id]="'article-'+a.id"
+                  [id]="'article-' + a.id"
                   [checked]="isArticleSelected(a.id)"
                   (change)="onArticleToggle(a.id, $event.target.checked)"
                 />
-                <label class="form-check-label" [for]="'article-'+a.id">
-                  {{ a.name }} ({{ a.code }})
-                </label>
+                <label class="form-check-label" [for]="'article-' + a.id">{{ a.name }} ({{ a.code }})</label>
               </div>
             </div>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary" [disabled]="listingForm.invalid">Enregistrer</button>
+        <button type="submit" class="btn btn-primary" [disabled]="listingForm.invalid">{{ 'common.save' | translate }}</button>
       </form>
     </app-card>
   </div>

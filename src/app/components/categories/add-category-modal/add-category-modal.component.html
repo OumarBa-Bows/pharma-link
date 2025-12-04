@@ -1,0 +1,66 @@
+<div class="modal-header">
+  <h5 class="modal-title">
+    {{ isEditMode ? ('categories.category-update.title' | translate) : ('categories.category-create.title' | translate) }}
+  </h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()"></button>
+</div>
+
+<div class="modal-body">
+  @if (!isSubmitting) {
+    <form [formGroup]="categoryForm">
+      <div class="mb-3">
+        <label for="name" class="form-label">
+          {{ 'common.name' | translate }}
+          <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          formControlName="name"
+          placeholder="{{ 'common.enterNameFr' | translate }}"
+          [class.is-invalid]="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched"
+        />
+        @if (categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched) {
+          <div class="invalid-feedback">{{ 'common.nameFrRequired' | translate }}</div>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label for="nameAr" class="form-label">
+          {{ 'common.nameAr' | translate }}
+          <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="nameAr"
+          formControlName="nameAr"
+          placeholder="{{ 'common.enterNameAr' | translate }}"
+          dir="rtl"
+          [class.is-invalid]="categoryForm.get('nameAr')?.invalid && categoryForm.get('nameAr')?.touched"
+        />
+        @if (categoryForm.get('nameAr')?.invalid && categoryForm.get('nameAr')?.touched) {
+          <div class="invalid-feedback">{{ 'common.nameArRequired' | translate }}</div>
+        }
+      </div>
+    </form>
+  }
+
+  @if (isSubmitting) {
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 150px">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{ 'common.loading' | translate }}</span>
+      </div>
+    </div>
+  }
+</div>
+
+<div class="modal-footer">
+  @if (!isSubmitting) {
+    <button type="button" class="btn btn-secondary" (click)="onCancel()">{{ 'common.cancel' | translate }}</button>
+    <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="categoryForm.invalid">
+      {{ 'common.confirm' | translate }}
+    </button>
+  }
+</div>

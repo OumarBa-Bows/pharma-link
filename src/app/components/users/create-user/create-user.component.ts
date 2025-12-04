@@ -6,10 +6,11 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../../services/apis/user-service';
 import { User } from '../../../model/user';
 import { Role } from '../../../model/role';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-user',
-  imports: [CardComponent, FormsModule, SharedModule],
+  imports: [CardComponent, FormsModule, SharedModule, TranslatePipe],
   templateUrl: './create-user.component.html',
   standalone: true,
   styleUrl: './create-user.component.scss',
@@ -28,7 +29,8 @@ export class CreateUserComponent {
 
   constructor(
     private fb: FormBuilder,
-    private modal: NgbActiveModal
+    private modal: NgbActiveModal,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -89,6 +91,10 @@ export class CreateUserComponent {
   isRoleSelected(roleName: string): boolean {
     const selectedRoles = this.userForm.get('roles')?.value || [];
     return selectedRoles.includes(roleName);
+  }
+
+  getRoleTranslation(roleName: string): string {
+    return this.translateService.instant(`users.roles.${roleName}`);
   }
 
   onRoleChange(roleName: string, event: any): void {

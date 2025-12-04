@@ -8,6 +8,7 @@ import { Title } from '@angular/platform-browser';
 import { NavigationItem, getNavigationItems } from 'src/app/theme/layout/admin/navigation/navigation';
 import { SharedModule } from '../../shared.module';
 import { PrivilegeService } from 'src/app/services/roles/get-roles-service';
+import { TranslateService } from '@ngx-translate/core';
 
 interface titleType {
   // eslint-disable-next-line
@@ -33,6 +34,7 @@ export class BreadcrumbsComponent {
   navigations: NavigationItem[];
   breadcrumbList: string[] = [];
   navigationList!: titleType[];
+  private translateService = inject(TranslateService);
 
   // constructor
   constructor(private privilege: PrivilegeService) {

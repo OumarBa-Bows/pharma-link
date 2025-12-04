@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-article-import-modal',
   standalone: true,
-  imports: [SharedModule],
+  imports: [SharedModule, TranslatePipe],
   templateUrl: './article-import-modal.component.html',
   styleUrls: ['./article-import-modal.component.scss']
 })
@@ -21,10 +22,7 @@ export class ArticleImportModalComponent {
       this.file = null;
       return;
     }
-    const allowedTypes = [
-      'application/vnd.ms-excel',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    ];
+    const allowedTypes = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
     const allowedExt = ['.xls', '.xlsx'];
     const nameOk = allowedExt.some((ext) => f.name.toLowerCase().endsWith(ext));
     const typeOk = allowedTypes.includes(f.type);

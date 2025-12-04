@@ -1,9 +1,8 @@
 <ul class="navbar-nav">
   <li>
     <div class="dropdown" ngbDropdown placement="auto">
-      @if (count){
-        <span class="position-absolute start-100 translate-middle badge rounded-pill bg-danger"
-              style="top: 15px;">
+      @if (count) {
+        <span class="position-absolute start-100 translate-middle badge rounded-pill bg-danger" style="top: 15px">
           {{ count }}
           <span class="visually-hidden">unread messages</span>
         </span>
@@ -16,7 +15,7 @@
 
         <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end notification">
           <div class="notification-head">
-            <h6 class="d-inline-block m-b-0">{{ 'navBar.notifications'|translate }}</h6>
+            <h6 class="d-inline-block m-b-0">{{ 'navBar.notifications' | translate }}</h6>
           </div>
 
           <ul class="notification-body">
@@ -30,7 +29,6 @@
           </ul>
         </div>
       </div>
-
     </div>
   </li>
 
@@ -45,7 +43,7 @@
           <i class="feather icon-user fs-4 me-2 text-secondary"></i>
           <span>{{ connectedUser?.name }}</span>
 
-          <a href="javascript:" (click)="logOut()" class="dud-logout" title="{{'navBar.logout' | translate}}">
+          <a href="javascript:" (click)="logOut()" class="dud-logout" title="{{ 'navBar.logout' | translate }}">
             <i class="feather icon-log-out"></i>
           </a>
         </div>
@@ -53,7 +51,8 @@
         <ul class="pro-body">
           <li>
             <a routerLink="/profile" class="dropdown-item">
-              <i class="feather icon-user"></i> {{ 'navBar.profile' | translate }}
+              <i class="feather icon-user"></i>
+              {{ 'navBar.profile' | translate }}
             </a>
           </li>
         </ul>
@@ -63,22 +62,16 @@
 
   <li>
     <div class="dropdown drp-lang" ngbDropdown placement="auto">
-      <a href="javascript:" ngbDropdownToggle>
-        <i class="feather icon-globe"></i>
+      <a href="javascript:" ngbDropdownToggle class="d-flex align-items-center">
+        <i class="feather icon-globe me-1"></i>
+        <span>{{ 'navBar.language' | translate }}</span>
       </a>
 
       <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-        <button class="dropdown-item" (click)="changeLanguage('en')">
-          🇬🇧 English
-        </button>
-        <button class="dropdown-item" (click)="changeLanguage('fr')">
-          🇫🇷 Français
-        </button>
-        <button class="dropdown-item" (click)="changeLanguage('ar')">
-          🇸🇦 العربية
-        </button>
+        <button class="dropdown-item" (click)="changeLanguage('en')">English</button>
+        <button class="dropdown-item" (click)="changeLanguage('fr')">Français</button>
+        <button class="dropdown-item" (click)="changeLanguage('ar')">العربية</button>
       </div>
     </div>
   </li>
-
 </ul>

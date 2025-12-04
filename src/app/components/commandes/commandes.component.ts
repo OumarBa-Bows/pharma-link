@@ -7,6 +7,7 @@ import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinne
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateCommand } from './create-command/create-command';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-commandes',
@@ -29,7 +30,13 @@ export class CommandesComponent implements OnInit {
       header: this.translateService.instant('commands.columns.status'),
       field: 'status',
       type: 'enum',
-      enumMap: { PENDING: 'En attente', VALIDATED: 'Validé', CANCELLED: 'Annulé', SHIPPED: 'Livré', DELIVERED: 'Livré' }
+      enumMap: {
+        PENDING: this.translateService.instant('commands.status.pending'),
+        VALIDATED: this.translateService.instant('commands.status.validated'),
+        CANCELLED: this.translateService.instant('commands.status.cancelled'),
+        SHIPPED: this.translateService.instant('commands.status.shipped'),
+        DELIVERED: this.translateService.instant('commands.status.delivered')
+      }
     },
     { header: this.translateService.instant('commands.columns.commandReference'), field: 'commandreference' },
     { header: this.translateService.instant('commands.columns.invoiceReference'), field: 'invoicereference' },
@@ -38,6 +45,7 @@ export class CommandesComponent implements OnInit {
   ];
   commandData: Command[] = [];
   isLoading: boolean;
+  langSubscription: Subscription;
 
   onSelectionChange($event: any[]) {}
 
@@ -67,6 +75,37 @@ export class CommandesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCommandByDistributor(1);
+    this.updateColumns();
+    this.langSubscription = this.translateService.onLangChange.subscribe(() => {
+      this.updateColumns();
+    });
+  }
+
+  updateColumns() {
+    this.columns = [
+      { header: this.translateService.instant('commands.columns.date'), field: 'date', type: 'date', format: 'dd/MM/yyyy HH:mm' },
+      { header: this.translateService.instant('commands.columns.code'), field: 'code' },
+      {
+        header: this.translateService.instant('commands.columns.status'),
+        field: 'status',
+        type: 'enum',
+        enumMap: {
+          PENDING: this.translateService.instant('commands.status.pending'),
+          VALIDATED: this.translateService.instant('commands.status.validated'),
+          CANCELLED: this.translateService.instant('commands.status.cancelled'),
+          SHIPPED: this.translateService.instant('commands.status.shipped'),
+          DELIVERED: this.translateService.instant('commands.status.delivered')
+        }
+      },
+      { header: this.translateService.instant('commands.columns.commandReference'), field: 'commandreference' },
+      { header: this.translateService.instant('commands.columns.invoiceReference'), field: 'invoicereference' },
+      { header: this.translateService.instant('commands.columns.totalPrice'), field: 'totalprice' },
+      { header: this.translateService.instant('commands.columns.pharmacy'), field: 'pharmacy' }
+    ];
+  }
+
+  ngOnDestroy(): void {
+    this.langSubscription?.unsubscribe();
   }
 
   showDetail(command: any) {

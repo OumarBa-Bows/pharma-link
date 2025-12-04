@@ -1,20 +1,21 @@
 import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-import-modal',
   standalone: true,
-  imports: [SharedModule],
+  imports: [SharedModule, TranslatePipe],
   templateUrl: './import-modal.component.html',
   styleUrls: ['./import-modal.component.scss']
 })
 export class ImportModalComponent {
-  @Input() title = 'Importer un fichier';
+  @Input() title = 'common.importFile';
   @Input() description = '';
   @Input() accept = '*/*';
-  @Input() confirmLabel = 'Importer';
-  @Input() cancelLabel = 'Annuler';
+  @Input() confirmLabel = 'common.import';
+  @Input() cancelLabel = 'common.cancel';
 
   file: File | null = null;
 
@@ -29,10 +30,10 @@ export class ImportModalComponent {
     }
     // Basic check using accept list (extensions)
     if (this.accept && this.accept !== '*/*') {
-      const parts = this.accept.split(',').map(s => s.trim().toLowerCase());
+      const parts = this.accept.split(',').map((s) => s.trim().toLowerCase());
       const name = f.name.toLowerCase();
       const type = f.type.toLowerCase();
-      const ok = parts.some(p => {
+      const ok = parts.some((p) => {
         if (p.startsWith('.')) return name.endsWith(p);
         return type === p;
       });

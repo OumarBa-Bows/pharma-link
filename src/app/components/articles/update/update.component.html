@@ -13,34 +13,51 @@
       <form [formGroup]="articleForm" (ngSubmit)="onSubmit()">
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="reference" class="form-label">Référence</label>
-            <input type="text" class="form-control" id="reference" formControlName="reference" placeholder="Référence de l'article" />
+            <label for="reference" class="form-label">{{ 'common.reference' | translate }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="reference"
+              formControlName="reference"
+              placeholder="{{ 'articles.article-update.referencePlaceholder' | translate }}"
+            />
           </div>
           <div class="col-md-6 mb-3">
-            <label for="name" class="form-label">Nom</label>
-            <input type="text" class="form-control" id="name" formControlName="name" placeholder="Nom de l'article" />
+            <label for="name" class="form-label">{{ 'common.name' | translate }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              formControlName="name"
+              placeholder="{{ 'articles.article-update.namePlaceholder' | translate }}"
+            />
           </div>
         </div>
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="price" class="form-label">Prix</label>
-            <input type="number" class="form-control" id="price" formControlName="price" placeholder="Prix de l'article" />
+            <label for="price" class="form-label">{{ 'common.price' | translate }}</label>
+            <input
+              type="number"
+              class="form-control"
+              id="price"
+              formControlName="price"
+              placeholder="{{ 'articles.article-update.pricePlaceholder' | translate }}"
+            />
           </div>
-           <div class="col-md-6 mb-3">
-            <label for="categoryId" class="form-label">Categorie</label>
-             <select name="" id="" class="form-control" formControlName="categoryId">
+          <div class="col-md-6 mb-3">
+            <label for="categoryId" class="form-label">{{ 'common.category' | translate }}</label>
+            <select name="" id="" class="form-control" formControlName="categoryId">
               <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
-             </select>
+            </select>
           </div>
-
         </div>
         <div class="row">
-           <div class="col-md-6 mb-3">
-            <label for="expiryDate" class="form-label">Date d'expiration</label>
+          <div class="col-md-6 mb-3">
+            <label for="expiryDate" class="form-label">{{ 'articles.article-update.expiryDate' | translate }}</label>
             <input type="date" class="form-control" id="expiryDate" formControlName="expiryDate" />
           </div>
           <div class="col-md-6 mb-3">
-            <label for="image" class="form-label">Image</label>
+            <label for="image" class="form-label">{{ 'common.image' | translate }}</label>
             <input type="file" class="form-control" aria-label="file example" id="image" (change)="onFileChange($event)" />
           </div>
           @if (imagePath) {
@@ -51,21 +68,27 @@
         </div>
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="barcode" class="form-label">Code-barres</label>
-            <input type="text" class="form-control" id="barcode" formControlName="barcode" placeholder="Code-barres" />
+            <label for="barcode" class="form-label">{{ 'articles.article-update.barcode' | translate }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="barcode"
+              formControlName="barcode"
+              placeholder="{{ 'articles.article-update.barcodePlaceholder' | translate }}"
+            />
           </div>
           <div class="col-md-6 mb-3">
-            <label for="description" class="form-label">Description</label>
+            <label for="description" class="form-label">{{ 'common.description' | translate }}</label>
             <textarea
               class="form-control"
               id="description"
               formControlName="description"
               rows="3"
-              placeholder="Description de l'article"
+              placeholder="{{ 'articles.article-update.descriptionPlaceholder' | translate }}"
             ></textarea>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary" [disabled]="articleForm.invalid">Enregistrer</button>
+        <button type="submit" class="btn btn-primary" [disabled]="articleForm.invalid">{{ 'common.save' | translate }}</button>
       </form>
     </app-card>
   </div>

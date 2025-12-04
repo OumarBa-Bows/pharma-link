@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ApiService } from 'src/app/services/apis/api-service';
@@ -25,7 +25,8 @@ export class CreateComponent implements OnInit {
     private fb: FormBuilder,
     private apiService: ApiService,
     private router: Router,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private translateService: TranslateService
   ) {
     this.listingForm = this.fb.group({
       name: ['', Validators.required],
@@ -51,12 +52,12 @@ export class CreateComponent implements OnInit {
           this.listingForm.reset();
         },
         error: (error) => {
-          console.error("Erreur lors de la création de listing :", error);
+          console.error('Erreur lors de la création de listing :', error);
           this.isLoading = false;
           this.listingForm.enable();
         },
         complete: () => {
-          this.notificationService.showSuccess('listing créé avec succès!');
+          this.notificationService.showSuccess(this.translateService.instant('listings.createSuccess'));
           this.router.navigateByUrl('/listings/index');
         }
       });
@@ -81,7 +82,6 @@ export class CreateComponent implements OnInit {
     ctrl?.markAsDirty();
     ctrl?.updateValueAndValidity();
   }
-
 
   getArticles() {
     this.isArticlesLoading = true;

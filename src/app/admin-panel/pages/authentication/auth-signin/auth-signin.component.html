@@ -1,4 +1,40 @@
 <div class="auth-wrapper">
+  <!-- Notification Component -->
+  <app-notification></app-notification>
+
+  <!-- Language Selector -->
+  <div class="position-absolute top-0 end-0 m-4">
+    <div class="btn-group shadow-sm" role="group" aria-label="Language selector">
+      <button
+        type="button"
+        class="btn btn-sm px-3 py-2"
+        [ngClass]="currentLang === 'fr' ? 'btn-primary' : 'btn-light'"
+        (click)="changeLanguage('fr')"
+        title="Français"
+      >
+        Français
+      </button>
+      <button
+        type="button"
+        class="btn btn-sm px-3 py-2"
+        [ngClass]="currentLang === 'ar' ? 'btn-primary' : 'btn-light'"
+        (click)="changeLanguage('ar')"
+        title="العربية"
+      >
+        العربية
+      </button>
+      <button
+        type="button"
+        class="btn btn-sm px-3 py-2"
+        [ngClass]="currentLang === 'en' ? 'btn-primary' : 'btn-light'"
+        (click)="changeLanguage('en')"
+        title="English"
+      >
+        English
+      </button>
+    </div>
+  </div>
+
   <div class="auth-content">
     <div class="auth-bg">
       <span class="r"></span>
@@ -11,26 +47,26 @@
         <div class="mb-4">
           <i class="feather icon-unlock auth-icon"></i>
         </div>
-        <h3 class="mb-4">{{ 'login.title'| translate }}</h3>
+        <h3 class="mb-4">{{ 'login.title' | translate }}</h3>
 
         <form [formGroup]="loginForm" (ngSubmit)="signIn()">
           <div class="input-group mb-3">
-            <input type="email" class="form-control" placeholder="{{'login.email'|translate}}" formControlName="email" required />
+            <input type="email" class="form-control" placeholder="{{ 'login.email' | translate }}" formControlName="email" required />
           </div>
           <div class="input-group mb-4">
-            <input type="password" class="form-control" placeholder="{{'login.password'|translate}}" formControlName="password" required />
+            <input
+              type="password"
+              class="form-control"
+              placeholder="{{ 'login.password' | translate }}"
+              formControlName="password"
+              required
+            />
           </div>
-          <button type="submit" class="btn btn-primary mb-4" [disabled]="loginForm.invalid">{{ 'login.loginButton'|translate }}</button>
+          <button type="submit" class="btn btn-primary mb-4" [disabled]="loginForm.invalid || isLoading">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            {{ isLoading ? ('login.loading' | translate) : ('login.loginButton' | translate) }}
+          </button>
         </form>
-
-        <p class="mb-2 text-muted">
-          {{'login.forgotPassword' |translate}}
-          <a href="javascript:">{{ 'login.reset'|translate }}</a>
-        </p>
-        <p class="mb-0 text-muted">
-          {{'login.noAccount'|translate }}
-          <a [routerLink]="['/register']">{{ 'login.register'|translate }}</a>
-        </p>
       </div>
     </div>
   </div>

@@ -47,8 +47,12 @@ export const routes: Routes = [
         loadComponent: () => import('./components/commandes/commandes.component').then((m) => m.CommandesComponent)
       },
       {
-         path: 'commands/details/:id',
+        path: 'commands/details/:id',
         loadComponent: () => import('./components/commandes/command-detail/command-detail').then((m) => m.CommandDetail)
+      },
+      {
+        path: 'categories',
+        loadChildren: () => import('./components/categories/categories-routing-module').then((m) => m.CategoriesRoutingModule)
       },
       {
         path: 'forms',

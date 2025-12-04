@@ -1,5 +1,4 @@
-<div class="actions">
-</div>
+<div class="actions"></div>
 <app-table
   title="{{ 'users.user-list.title' | translate }}"
   [columns]="columns"
@@ -11,5 +10,5 @@
   [showDelete]="true"
   (addNew)="addUser()"
   [showSelected]="false"
+  [searchPlaceholder]="'common.search' | translate"
 ></app-table>
-

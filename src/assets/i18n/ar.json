@@ -30,7 +30,11 @@
       "title": "تعديل مستخدم"
     },
     "roles": {
-      "admin": "مسؤول",
+      "admin": "مدير النظام",
+      "article": "مدير الأدوية",
+      "user": "مدير المستخدمين",
+      "pharmacy": "مدير الصيدليات",
+      "commande": "مدير الطلبات",
       "editor": "محرر",
       "viewer": "قارئ"
     },
@@ -38,109 +42,78 @@
       "userCreated": "تم إنشاء المستخدم بنجاح.",
       "userUpdated": "تم تحديث المستخدم بنجاح.",
       "userDeleted": "تم حذف المستخدم بنجاح ✅",
+      "deleteSuccess": "تم حذف المستخدم بنجاح ✅",
+      "deleteError": "حدث خطأ أثناء الحذف ❌",
       "userDeleteError": "حدث خطأ أثناء الحذف ❌",
-      "confirmDelete": "هل أنت متأكد أنك تريد حذف هذا المستخدم؟",
+      "confirmDelete": "هل أنت متأكد من رغبتك في حذف هذا المستخدم؟",
       "userCreateError": "حدث خطأ أثناء إنشاء المستخدم ❌",
       "userUpdateError": "حدث خطأ أثناء تحديث المستخدم ❌"
-    }
+    },
+    "namePlaceholder": "أدخل اسمك",
+    "emailPlaceholder": "exemple@email.com",
+    "nameRequired": "الاسم مطلوب.",
+    "emailRequired": "البريد الإلكتروني مطلوب.",
+    "emailInvalid": "تنسيق البريد الإلكتروني غير صالح.",
+    "password": "كلمة المرور",
+    "passwordRequired": "كلمة المرور مطلوبة.",
+    "passwordMinLength": "الحد الأدنى 6 أحرف.",
+    "my_roles": "الأدوار",
+    "loading": "تحميل...",
+    "validate": "تأكيد"
   },
   "articles": {
     "article-list": {
-      "title": "قائمة المقالات",
-      "create-new-article": "إنشاء مقال جديد"
+      "title": "قائمة الأدوية",
+      "create-new-article": "إنشاء مقال جديد",
+      "delete": {
+        "confirmDelete": "هل أنت متأكد من رغبتك في حذف هذا الدواء؟",
+        "successMessage": "تم حذف الدواء بنجاح",
+        "errorMessage": "حدث خطأ أثناء حذف الدواء"
+      },
+      "import": {
+        "title": "استيراد الأدوية (Excel)",
+        "description": "اختر ملف Excel (.xls, .xlsx) يحتوي على الأدوية المراد استيرادها.",
+        "successMessage": "تم الاستيراد بنجاح",
+        "errorMessage": "حدث خطأ أثناء الاستيراد"
+      }
     },
     "article-create": {
-      "title": "إنشاء مقال"
+      "title": "إنشاء مقال",
+      "successMessage": "تم إنشاء الدواء بنجاح!",
+      "errorMessage": "حدث خطأ أثناء إنشاء الدواء",
+      "fileSizeError": "يجب ألا يتجاوز حجم الملف 1 ميجابايت",
+      "referencePlaceholder": "مرجع الدواء",
+      "namePlaceholder": "اسم الدواء",
+      "pricePlaceholder": "سعر الدواء",
+      "expiryDate": "تاريخ الانتهاء",
+      "barcode": "الباركود",
+      "barcodePlaceholder": "الباركود",
+      "descriptionPlaceholder": "وصف الدواء"
     },
     "article-update": {
-      "title": "تعديل مقال"
-    }
-  },
-  "listings": {
-    "listing-list": {
-      "title": "قائمة القوائم",
-      "create-new-listing": "إنشاء قائمة جديدة"
+      "title": "تعديل مقال",
+      "successMessage": "تم تحديث الدواء بنجاح!",
+      "errorMessage": "حدث خطأ أثناء تحديث الدواء",
+      "loadError": "حدث خطأ أثناء تحميل الدواء",
+      "fileSizeError": "يجب ألا يتجاوز حجم الملف 1 ميجابايت",
+      "referencePlaceholder": "مرجع الدواء",
+      "namePlaceholder": "اسم الدواء",
+      "pricePlaceholder": "سعر الدواء",
+      "expiryDate": "تاريخ الانتهاء",
+      "barcode": "الباركود",
+      "barcodePlaceholder": "رمز الباركود",
+      "descriptionPlaceholder": "وصف المقال"
     },
-    "listing-create": {
-      "title": "إنشاء قائمة"
-    },
-    "listing-update": {
-      "title": "تعديل قائمة"
-    }
-  },
-  "pharmacies": {
-    "pharmacy-list": {
-      "title": "قائمة الصيدليات",
-      "create-new-pharmacy": "إنشاء صيدلية جديدة"
-    },
-    "pharmacy-create": {
-      "title": "إنشاء صيدلية"
-    },
-    "pharmacy-update": {
-      "title": "تعديل صيدلية"
+    "importModal": {
+      "title": "استيراد الأدوية (Excel)",
+      "description": "حدد ملف Excel (.xls, .xlsx) يحتوي على الأدوية المراد استيرادها.",
+      "selectedFile": "الملف المحدد",
+      "import": "استيراد"
     }
   },
   "table": {
-    "selectAll": "تحديد الكل"
-  },
-  "commands": {
-    "commands-list": {
-      "title": "قائمة الطلبات",
-      "search-placeholder": "بحث"
-    },
-    "columns": {
-      "date": "التاريخ",
-      "status": "الحالة",
-      "totalPrice": "السعر الإجمالي",
-      "commandReference": "مرجع الطلب",
-      "pharmacy": "الصيدلية",
-      "invoiceReference": "مرجع الفاتورة",
-      "code": "الرمز"
-    },
-    "statuses": {
-      "pending": "قيد الانتظار",
-      "shipped": "تم الشحن",
-      "delivered": "تم التسليم",
-      "canceled": "ملغاة"
-    },
-    "details": {
-      "title": "تفاصيل الطلب",
-      "commandId": "طلب #",
-      "code": "الرمز",
-      "status": "الحالة",
-      "reference": "مرجع الطلب",
-      "referenceInvoice": "مرجع الفاتورة",
-      "pharmacy": "الصيدلية",
-      "distributor": "الموزع",
-      "distributorPrincipal": "الموزع الرئيسي",
-      "date": "تاريخ الطلب",
-      "products": "المنتجات",
-      "quantity": "الكمية",
-      "price": "السعر للوحدة",
-      "prixTotal": "السعر الإجمالي",
-      "noCommand": "لا توجد بيانات للطلب.",
-      "cancel": "إلغاء",
-      "validate": "تأكيد",
-      "article": {
-        "title": "تفاصيل المقال",
-        "articleId": "مقال #",
-        "name": "الاسم",
-        "description": "الوصف",
-        "price": "السعر",
-        "stock": "المخزون المتوفر",
-        "noArticle": "لا يوجد أي مقال في هذا الطلب.",
-        "backToCommands": "رجوع",
-        "changeStatus": "تغيير الحالة"
-      },
-      "statusChange": {
-        "title": "تغيير حالة الطلب",
-        "selectStatus": "اختر الحالة الجديدة",
-        "updateButton": "تحديث الحالة",
-        "cancelButton": "إلغاء",
-        "actualStatus": "الحالة الحالية",
-        "newStatus": "الحالة الجديدة"
-      }
-    }
+    "selectAll": "تحديد الكل",
+    "total": "المجموع"
   },
   "notifications": {
     "title": "الإشعارات",
@@ -151,7 +124,7 @@
   "navBar": {
     "dashboard": "لوحة التحكم",
     "users": "المستخدمون",
-    "articles": "المقالات",
+    "articles": "الأدوية",
     "listings": "القوائم",
     "pharmacies": "الصيدليات",
     "commands": "الطلبات",
@@ -166,13 +139,51 @@
     "about": "حول",
     "contact": "اتصال",
     "article-title": "إنشاء مقال",
-    "administration": "الإدارة"
+    "administration": "الإدارة",
+    "categories": "الفئات",
+    "language": "اللغة"
+  },
+  "dashboard": {
+    "title": "لوحة القيادة",
+    "kpis": {
+      "totalPharmacies": "إجمالي الصيدليات",
+      "activePharmacies": "الصيدليات النشطة",
+      "pendingApprovals": "الموافقات المعلقة",
+      "active": "نشط"
+    },
+    "recentOrders": {
+      "title": "الطلبات الأخيرة",
+      "columns": {
+        "code": "الرمز",
+        "pharmacy": "الصيدلية",
+        "status": "الحالة",
+        "date": "التاريخ"
+      },
+      "view": "عرض",
+      "statuses": {
+        "PENDING": "قيد الانتظار",
+        "CONFIRMED": "مؤكد",
+        "SHIPPED": "تم الشحن",
+        "DELIVERED": "تم التسليم",
+        "CANCELLED": "ملغى"
+      }
+    },
+    "recentPharmacies": {
+      "title": "الصيدليات الأخيرة",
+      "columns": {
+        "name": "الاسم",
+        "zone": "المنطقة",
+        "created": "تاريخ الإنشاء"
+      },
+      "open": "فتح"
+    }
   },
   "login": {
     "title": "تسجيل الدخول إلى PharmaLink",
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
     "loginButton": "تسجيل الدخول",
+    "loading": "جارٍ تسجيل الدخول...",
     "forgotPassword": "هل نسيت كلمة المرور ؟",
     "noAccount": "ليس لديك حساب ؟",
     "register": "سجّل الآن",
@@ -185,5 +196,203 @@
       "password": "أدخل كلمة المرور"
     },
     "reset": "إعادة تعيين"
+  },
+  "categories": {
+    "category-list": {
+      "title": "قائمة الفئات",
+      "create-new-category": "إنشاء فئة جديدة"
+    },
+    "category-create": {
+      "title": "إنشاء فئة",
+      "successMessage": "تم إنشاء الفئة بنجاح!",
+      "duplicateErrorMessage": "فئة بهذا الاسم موجودة بالفعل.",
+      "errorMessage": "حدث خطأ أثناء إنشاء الفئة"
+    },
+    "category-update": {
+      "title": "تعديل فئة",
+      "successMessage": "تم تعديل الفئة بنجاح!",
+      "duplicateErrorMessage": "فئة بهذا الاسم موجودة بالفعل.",
+      "errorMessage": "حدث خطأ أثناء تعديل الفئة"
+    }
+  },
+  "common": {
+    "loading": "جارٍ التحميل...",
+    "no-data": "لا توجد بيانات متاحة.",
+    "error": "حدث خطأ. يرجى المحاولة مرة أخرى لاحقًا.",
+    "search": "بحث...",
+    "confirm": "تأكيد",
+    "confirmation": "التأكيد",
+    "close": "إغلاق",
+    "name": "الاسم ",
+    "nameAr": "الاسم بالعربية",
+    "email": "البريد الإلكتروني",
+    "description": "الوصف",
+    "actions": "الإجراءات",
+    "submit": "إرسال",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "add": "إضافة",
+    "update": "تحديث",
+    "cancel": "إلغاء",
+    "view": "عرض",
+    "save": "حفظ",
+    "back": "رجوع",
+    "confirmDelete": "هل أنت متأكد من رغبتك في حذف هذا العنصر؟",
+    "yes": "نعم",
+    "no": "لا",
+    "createdAt": "تاريخ الإنشاء",
+    "updatedAt": "تم التحديث في",
+    "home": " الرئيسية",
+    "enterNameFr": "أدخل الاسم بالفرنسية",
+    "enterNameAr": "أدخل الاسم بالعربية",
+    "nameFrRequired": "الاسم بالفرنسية مطلوب",
+    "nameArRequired": "الاسم بالعربية مطلوب",
+    "reference": "المرجع",
+    "price": "السعر",
+    "category": "الفئة",
+    "image": "الصورة",
+    "import": "استيراد",
+    "importFile": "استيراد ملف",
+    "selectedFile": "الملف المحدد"
+  },
+  "listings": {
+    "listing-list": {
+      "title": "قائمة القوائم",
+      "search-placeholder": "بحث عن قائمة..."
+    },
+    "listing-create": {
+      "title": "إنشاء قائمة"
+    },
+    "listing-update": {
+      "title": "تعديل قائمة"
+    },
+    "endDate": "تاريخ الانتهاء",
+    "namePlaceholder": "اسم القائمة",
+    "descriptionPlaceholder": "وصف القائمة",
+    "articles": "الأدوية",
+    "loadingArticles": "تحميل الأدوية...",
+    "searchArticles": "ابحث بالاسم أو الرمز...",
+    "createSuccess": "تم إنشاء القائمة بنجاح!",
+    "updateSuccess": "تم تحديث القائمة بنجاح!",
+    "deleteSuccess": "تم حذف القائمة بنجاح!",
+    "deleteError": "حدث خطأ أثناء حذف القائمة",
+    "confirmDelete": "هل أنت متأكد من رغبتك في حذف هذه القائمة؟",
+    "importTitle": "استيراد القوائم (Excel)",
+    "importDescription": "حدد ملف Excel (.xls، .xlsx) يحتوي على القوائم للاستيراد.",
+    "importSuccess": "تم الاستيراد بنجاح",
+    "importError": "حدث خطأ أثناء الاستيراد"
+  },
+  "pharmacies": {
+    "pharmacy-list": {
+      "title": "قائمة الصيدليات"
+    },
+    "pharmacy-update": {
+      "title": "تعديل صيدلية"
+    },
+    "search-placeholder": "بحث عن صيدلية...",
+    "code": "الرمز",
+    "codePlaceholder": "رمز الصيدلية",
+    "phone": "الهاتف",
+    "phonePlaceholder": "هاتف الصيدلية",
+    "address": "العنوان",
+    "addressPlaceholder": "عنوان الصيدلية",
+    "type": "النوع",
+    "selectType": "حدد نوعًا",
+    "pharmacy": "صيدلية",
+    "depot": "مستودع",
+    "status": "الحالة",
+    "selectStatus": "حدد حالة",
+    "active": "نشط",
+    "blocked": "محظور",
+    "pending": "قيد الانتظار",
+    "namePlaceholder": "اسم الصيدلية",
+    "managerName": "اسم المدير",
+    "managerNamePlaceholder": "اسم المدير",
+    "managerPhone": "هاتف المدير",
+    "managerPhonePlaceholder": "هاتف المدير",
+    "doctorName": "اسم الطبيب",
+    "doctorNamePlaceholder": "اسم الطبيب",
+    "doctorPhone": "هاتف الطبيب",
+    "doctorPhonePlaceholder": "هاتف الطبيب",
+    "updateSuccess": "تم تحديث الصيدلية بنجاح!",
+    "importTitle": "استيراد الصيدليات (Excel)",
+    "importDescription": "حدد ملف Excel (.xls، .xlsx) يحتوي على الصيدليات للاستيراد.",
+    "importSuccess": "تم الاستيراد بنجاح",
+    "importError": "حدث خطأ أثناء الاستيراد"
+  },
+  "commands": {
+    "commands-list": {
+      "title": "قائمة الطلبات",
+      "search-placeholder": "بحث عن طلب..."
+    },
+    "columns": {
+      "date": "التاريخ",
+      "code": "الرمز",
+      "status": "الحالة",
+      "commandReference": "مرجع الطلب",
+      "invoiceReference": "مرجع الفاتورة",
+      "totalPrice": "السعر الإجمالي",
+      "pharmacy": "الصيدلية"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "validated": "موثق",
+      "cancelled": "ملغى",
+      "shipped": "تم الشحن",
+      "delivered": "تم التسليم"
+    },
+    "details": {
+      "title": "تفاصيل الطلب",
+      "commandId": "طلب #",
+      "code": "الرمز",
+      "status": "الحالة",
+      "reference": "المرجع",
+      "referenceInvoice": "مرجع الفاتورة",
+      "prixTotal": "السعر الإجمالي",
+      "pharmacy": "الصيدلية",
+      "distributor": "الموزع",
+      "distributorPrincipal": "الموزع الرئيسي",
+      "date": "التاريخ",
+      "noCommand": "لم يتم العثور على طلب",
+      "cancel": "إلغاء",
+      "validate": "تأكيد",
+      "statusUpdateSuccess": "تم تحديث الحالة بنجاح",
+      "article": {
+        "title": "الأدوية",
+        "article": "مقالة",
+        "code": "الرمز",
+        "expirationDate": "تاريخ الانتهاء",
+        "batchNumber": "رقم الدفعة",
+        "quantity": "الكمية",
+        "unitPrice": "سعر الوحدة",
+        "total": "الإجمالي",
+        "noArticle": "لا توجد مقالات في هذا الطلب",
+        "backToCommands": "العودة إلى الطلبات",
+        "changeStatus": "تغيير الحالة"
+      },
+      "statusChange": {
+        "title": "تغيير الحالة",
+        "actualStatus": "الحالة الحالية",
+        "newStatus": "الحالة الجديدة"
+      }
+    }
+  },
+  "profile": {
+    "userProfile": "الملف الشخصي للمستخدم",
+    "lastUpdate": "آخر تحديث",
+    "roles": "الأدوار",
+    "changePassword": "تغيير كلمة المرور",
+    "oldPassword": "كلمة المرور القديمة",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "updateProfile": "تحديث الملف الشخصي",
+    "updateSuccess": "تم تحديث المستخدم بنجاح ✅",
+    "updateError": "حدث خطأ أثناء التحديث ❌",
+    "allFieldsRequired": "جميع الحقول مطلوبة.",
+    "passwordMismatch": "كلمات المرور الجديدة غير متطابقة.",
+    "passwordChangeSuccess": "✅ تم تغيير كلمة المرور بنجاح!"
+  },
+  "auth": {
+    "signInError": "فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد والمحاولة مرة أخرى."
   }
 }

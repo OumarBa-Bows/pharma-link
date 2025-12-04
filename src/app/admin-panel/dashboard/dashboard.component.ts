@@ -1,7 +1,9 @@
 // angular import
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -11,18 +13,39 @@ import { PharmacyState } from 'src/app/models/pharmacy.model';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, SharedModule, RouterModule],
+  imports: [CommonModule, SharedModule, RouterModule, TranslatePipe],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
+  private langSubscription?: Subscription;
   // life cycle event
   ngOnInit() {
+    this.updateKpiTitles();
     this.loadData();
+    this.langSubscription = this.translateService.onLangChange.subscribe(() => {
+      this.updateKpiTitles();
+    });
   }
 
-  private loadData(){
-   this.dashboardService.getSummary().subscribe({
+  ngOnDestroy() {
+    if (this.langSubscription) {
+      this.langSubscription.unsubscribe();
+    }
+  }
+
+  private updateKpiTitles() {
+    this.sales[0].title = this.translateService.instant('dashboard.kpis.totalPharmacies');
+    this.sales[1].title = this.translateService.instant('dashboard.kpis.activePharmacies');
+    this.sales[2].title = this.translateService.instant('dashboard.kpis.pendingApprovals');
+  }
+
+  getOrderStatusTranslation(status: string): string {
+    return this.translateService.instant(`dashboard.recentOrders.statuses.${status}`);
+  }
+
+  private loadData() {
+    this.dashboardService.getSummary().subscribe({
       next: (summary: DashboardSummary) => {
         const totals = summary.totals || { totalPharmacies: 0, activePharmacies: 0, pendingPharmacies: 0, blockedPharmacies: 0 };
         const total = totals.totalPharmacies || 0;
@@ -32,7 +55,8 @@ export class DashboardComponent implements OnInit {
         // Map KPIs (counts only)
         this.sales[0].amount = String(total);
         this.sales[1].amount = String(active);
-        this.sales[1].percentage = total > 0 ? `${Math.round((active / total) * 100)}% active` : '0% active';
+        const activeText = this.translateService.instant('dashboard.kpis.active');
+        this.sales[1].percentage = total > 0 ? `${Math.round((active / total) * 100)}% ${activeText}` : `0% ${activeText}`;
         this.sales[2].amount = String(pending);
 
         // Tables
@@ -42,15 +66,18 @@ export class DashboardComponent implements OnInit {
       error: () => {
         // Keep sample data as fallback
       }
-    }); 
+    });
   }
 
-  constructor(private dashboardService: DashboardService) {}
+  constructor(
+    private dashboardService: DashboardService,
+    private translateService: TranslateService
+  ) {}
 
   // public method
   sales = [
     {
-      title: 'Total Pharmacies',
+      title: '',
       icon: 'icon-activity text-c-blue',
       amount: '0',
       percentage: '',
@@ -59,7 +86,7 @@ export class DashboardComponent implements OnInit {
       progress_bg: 'progress-c-theme'
     },
     {
-      title: 'Active Pharmacies',
+      title: '',
       icon: 'icon-check text-c-green',
       amount: '0',
       percentage: '',
@@ -68,7 +95,7 @@ export class DashboardComponent implements OnInit {
       progress_bg: 'progress-c-theme2'
     },
     {
-      title: 'Pending Approvals',
+      title: '',
       icon: 'icon-clock text-c-yellow',
       amount: '0',
       percentage: '',
@@ -77,9 +104,6 @@ export class DashboardComponent implements OnInit {
       progress_bg: 'progress-c-theme'
     }
   ];
-
- 
-
 
   recentOrders: DashboardOrderItem[] = [];
 

@@ -9,10 +9,20 @@ import { NavigationComponent } from './navigation/navigation.component';
 import { ConfigurationComponent } from 'src/app/theme/layout/admin/configuration/configuration.component';
 import { BreadcrumbsComponent } from '../../shared/components/breadcrumbs/breadcrumbs.component';
 import { Footer } from './footer/footer';
+import { NotificationComponent } from 'src/app/components/notification/notification.component';
 
 @Component({
   selector: 'app-admin',
-  imports: [NavBarComponent, NavigationComponent, RouterModule, CommonModule, ConfigurationComponent, BreadcrumbsComponent, Footer],
+  imports: [
+    NavBarComponent,
+    NavigationComponent,
+    RouterModule,
+    CommonModule,
+    ConfigurationComponent,
+    BreadcrumbsComponent,
+    Footer,
+    NotificationComponent
+  ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })

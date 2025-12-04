@@ -1,38 +1,39 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {INotification} from "../../models/INotification";
-import {Subscription} from "rxjs";
-import {NotificationService} from "../../services/notifications/notification.service";
-import {SupabaseBrowserService} from "../../Utils/supabase-server";
-import {CommandNotificationServiceService} from "../../services/apis/CommandNotificationService";
-import {Command} from "../../model/command";
-import {Router, RouterLink} from "@angular/router";
-import {DatePipe, NgClass} from "@angular/common";
-import {TranslatePipe} from "@ngx-translate/core";
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { INotification } from '../../models/INotification';
+import { Subscription } from 'rxjs';
+import { NotificationService } from '../../services/notifications/notification.service';
+import { SupabaseBrowserService } from '../../Utils/supabase-server';
+import { CommandNotificationServiceService } from '../../services/apis/CommandNotificationService';
+import { Command } from '../../model/command';
+import { Router, RouterLink } from '@angular/router';
+import { DatePipe, NgClass } from '@angular/common';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-command-notification',
-  imports: [
-    RouterLink,
-    DatePipe,
-    NgClass,
-    TranslatePipe
-  ],
+  imports: [RouterLink, DatePipe, NgClass, TranslatePipe],
   templateUrl: './command-notification.html',
   standalone: true,
   providers: [],
   styleUrl: './command-notification.scss'
 })
 export class CommandNotification implements OnInit, OnDestroy {
-
   notifications: Command[] = [];
   private channel: any;
   private sub!: Subscription;
-  private commandNotificationService= inject(CommandNotificationServiceService);
-  private router= inject(Router);
+  private commandNotificationService = inject(CommandNotificationServiceService);
+  private router = inject(Router);
+  private translateService = inject(TranslateService);
 
-
-  constructor(private notificationService: NotificationService, private supabaseServerService: SupabaseBrowserService) {
+  constructor(
+    private notificationService: NotificationService,
+    private supabaseServerService: SupabaseBrowserService
+  ) {
     console.log('NotificationComponent initialized');
+  }
+
+  getStatusTranslation(status: string): string {
+    return this.translateService.instant(`commands.status.${status.toLowerCase()}`);
   }
 
   ngOnInit() {
@@ -44,10 +45,10 @@ export class CommandNotification implements OnInit, OnDestroy {
          }
        }); */
     this.channel = this.supabaseServerService.listenToNewCommands((command) => {
-      console.log("command received from supabase:", command);
+      console.log('command received from supabase:', command);
       this.notifications.push(command as Command);
-      console.log("New command notification added", this.notifications);
-      const activeNotifications = this.notifications.filter(notif => !notif.viewed)
+      console.log('New command notification added', this.notifications);
+      const activeNotifications = this.notifications.filter((notif) => !notif.viewed);
       this.commandNotificationService.updateCommandNotificationCount(activeNotifications);
     });
   }
@@ -57,24 +58,24 @@ export class CommandNotification implements OnInit, OnDestroy {
   }
 
   buildNotification(): any {
-      return {
-        code: "FGYHJK",
-        commandreference: "ref",
-        date: new Date(),
-        details: [],
-        distributor: undefined,
-        distributorid: 1,
-        invoicereference: "",
-        mainDistributor: undefined,
-        pharmacy: undefined,
-        pharmacyId: "",
-        status: "",
-        totalprice: 0,
-        viewed: false,
-        id: "1"
-      };
+    return {
+      code: 'FGYHJK',
+      commandreference: 'ref',
+      date: new Date(),
+      details: [],
+      distributor: undefined,
+      distributorid: 1,
+      invoicereference: '',
+      mainDistributor: undefined,
+      pharmacy: undefined,
+      pharmacyId: '',
+      status: '',
+      totalprice: 0,
+      viewed: false,
+      id: '1'
+    };
 
-  /*  return {
+    /*  return {
       description:`Nouvelle commande reçue (code : ${command.code} – ${command?.pharmacy?.name}) — cliquez pour voir les détails`,
       status: 'new',
       commandId: command.id,
@@ -94,15 +95,12 @@ export class CommandNotification implements OnInit, OnDestroy {
     if (notif.resolve) notif.resolve(result);
   } */
 
-
   onClick(notification: Command) {
-    this.router.navigate(['/commands/details', notification.id],  {
+    this.router.navigate(['/commands/details', notification.id], {
       queryParams: {
         viewed: true,
         type: 'command'
       }
     });
   }
-
-
 }

@@ -30,7 +30,11 @@
       "title": "Modifier un utilisateur"
     },
     "roles": {
-      "admin": "Admin",
+      "admin": "Administrateur système",
+      "article": "Gestionnaire des articles",
+      "user": "Gestionnaire des utilisateurs",
+      "pharmacy": "Gestionnaire des pharmacies",
+      "commande": "Gestionnaire des commandes",
       "editor": "Éditeur",
       "viewer": "Lecteur"
     },
@@ -38,109 +42,79 @@
       "userCreated": "Utilisateur créé avec succès.",
       "userUpdated": "Utilisateur mis à jour avec succès.",
       "userDeleted": "Utilisateur supprimé avec succès ✅",
+      "deleteSuccess": "Utilisateur supprimé avec succès ✅",
+      "deleteError": "Erreur lors de la suppression ❌",
       "userDeleteError": "Erreur lors de la suppression ❌",
       "confirmDelete": "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
       "userCreateError": "Erreur lors de la création de l'utilisateur ❌",
       "userUpdateError": "Erreur lors de la mise à jour de l'utilisateur ❌"
-    }
+    },
+    "namePlaceholder": "Entrez votre nom",
+    "emailPlaceholder": "exemple@email.com",
+    "nameRequired": "Le nom est requis.",
+    "emailRequired": "L'email est requis.",
+    "emailInvalid": "Format email invalide.",
+    "password": "Mot de passe",
+    "passwordRequired": "Mot de passe requis.",
+    "passwordMinLength": "Min. 6 caractères.",
+    "my_roles": "Rôles",
+    "loading": "Chargement...",
+    "validate": "Valider"
   },
   "articles": {
     "article-list": {
       "title": "Liste des articles",
-      "create-new-article": "Créer un nouvel article"
+      "create-new-article": "Créer un nouvel article",
+      "delete": {
+        "confirmDelete": "Êtes-vous sûr de vouloir supprimer cet article ?",
+        "successMessage": "Article supprimé avec succès",
+        "errorMessage": "Une erreur s'est produite lors de la suppression de l'article"
+      },
+      "import": {
+        "title": "Importer des articles (Excel)",
+        "description": "Sélectionnez un fichier Excel (.xls, .xlsx) contenant les articles à importer.",
+        "successMessage": "Import effectué avec succès",
+        "errorMessage": "Une erreur s'est produite lors de l'import"
+      }
     },
     "article-create": {
-      "title": "Créer un article"
+      "title": "Créer un article",
+      "successMessage": "Article créé avec succès!",
+      "errorMessage": "Une erreur s'est produite lors de la création de l'article",
+      "fileSizeError": "Le fichier ne doit pas dépasser 1MB",
+      "referencePlaceholder": "Référence de l'article",
+      "namePlaceholder": "Nom de l'article",
+      "pricePlaceholder": "Prix de l'article",
+      "expiryDate": "Date d'expiration",
+      "barcode": "Code-barres",
+      "barcodePlaceholder": "Code-barres",
+      "descriptionPlaceholder": "Description de l'article"
     },
     "article-update": {
-      "title": "Modifier un article"
+      "title": "Modifier un article",
+      "successMessage": "Article mis à jour avec succès!",
+      "errorMessage": "Une erreur s'est produite lors de la mise à jour de l'article",
+      "loadError": "Erreur lors du chargement de l'article",
+      "fileSizeError": "Le fichier ne doit pas dépasser 1MB",
+      "referencePlaceholder": "Référence de l'article",
+      "namePlaceholder": "Nom de l'article",
+      "pricePlaceholder": "Prix de l'article",
+      "expiryDate": "Date d'expiration",
+      "barcode": "Code-barres",
+      "barcodePlaceholder": "Code-barres",
+      "descriptionPlaceholder": "Description de l'article"
+    },
+    "importModal": {
+      "title": "Importer des articles (Excel)",
+      "description": "Sélectionnez un fichier Excel (.xls, .xlsx) contenant les articles à importer.",
+      "selectedFile": "Fichier sélectionné",
+      "import": "Importer"
     }
   },
-  "listings": {
-    "listing-list": {
-      "title": "Liste des listings",
-      "create-new-listing": "Créer un nouvel listing"
-    },
-    "listing-create": {
-      "title": "Créer un listing"
-    },
-    "listing-update": {
-      "title": "Modifier un listing"
-    }
-  },
-  "pharmacies": {
-    "pharmacy-list": {
-      "title": "Liste des pharmacies",
-      "create-new-pharmacy": "Créer une nouvelle pharmacie"
-    },
-    "pharmacy-create": {
-      "title": "Créer une pharmacie"
-    },
-    "pharmacy-update": {
-      "title": "Modifier une pharmacie"
-    }
-  },
+
   "table": {
-    "selectAll": "Tout Sélectionner"
-  },
-  "commands": {
-    "commands-list": {
-      "title": "Liste des commandes",
-      "search-placeholder": "Rechercher"
-    },
-    "columns": {
-      "date": "Date",
-      "status": "Statut",
-      "totalPrice": "Total Prix",
-      "commandReference": "Référence Commande",
-      "pharmacy": "Pharmacie",
-      "invoiceReference": "Référence Facture",
-      "code": "Code"
-    },
-    "statuses": {
-      "pending": "En attente",
-      "shipped": "Expédiée",
-      "delivered": "Livrée",
-      "canceled": "Annulée"
-    },
-    "details": {
-      "title": "Détails de la commande",
-      "commandId":"Commande #",
-      "code":"Code",
-      "status":"Statut",
-      "reference":"Référence commande",
-      "referenceInvoice":"Référence facture",
-      "pharmacy":"Pharmacie",
-      "distributor":"Distributeur",
-      "distributorPrincipal":"Distributeur principal",
-      "date":"Date de la commande",
-      "products": "Produits",
-      "quantity": "Quantité",
-      "price": "Prix unitaire",
-      "prixTotal": "Prix Total",
-      "noCommand":"Aucune donnée de commande disponible.",
-      "cancel": "Anuuler",
-      "validate": "Valider",
-      "article": {
-        "title": "Détails de l'article",
-        "articleId":"Article #",
-        "name":"Nom",
-        "description":"Description",
-        "price":"Prix",
-        "stock":"Stock disponible",
-        "noArticle":"Aucun article dans cette commande.",
-        "backToCommands":"Retour",
-        "changeStatus":"Changer le statut"
-      },
-      "statusChange": {
-        "title":"Changer le statut de la commande",
-        "selectStatus":"Sélectionner le nouveau statut",
-        "updateButton":"Mettre à jour le statut",
-        "cancelButton":"Annuler",
-        "actualStatus":"Statut actuel",
-        "newStatus":"Nouveau statut"
-      }
-    }
+    "selectAll": "Tout Sélectionner",
+    "total": "Total"
   },
   "notifications": {
     "title": "Notifications",
@@ -165,15 +139,52 @@
     "home": "Accueil",
     "about": "À propos",
     "contact": "Contact",
-    "articles": "Articles",
     "article-title": "Créer un article",
-    "administration": "Administration"
+    "administration": "Administration",
+    "categories": "Catégories",
+    "language": "Langue"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "kpis": {
+      "totalPharmacies": "Total des pharmacies",
+      "activePharmacies": "Pharmacies actives",
+      "pendingApprovals": "Approbations en attente",
+      "active": "actif"
+    },
+    "recentOrders": {
+      "title": "Commandes récentes",
+      "columns": {
+        "code": "Code",
+        "pharmacy": "Pharmacie",
+        "status": "Statut",
+        "date": "Date"
+      },
+      "view": "Voir",
+      "statuses": {
+        "PENDING": "En attente",
+        "CONFIRMED": "Confirmé",
+        "SHIPPED": "Expédié",
+        "DELIVERED": "Livré",
+        "CANCELLED": "Annulé"
+      }
+    },
+    "recentPharmacies": {
+      "title": "Pharmacies récentes",
+      "columns": {
+        "name": "Nom",
+        "zone": "Zone",
+        "created": "Créé le"
+      },
+      "open": "Ouvrir"
+    }
   },
   "login": {
     "title": "Connexion à PharmaLink",
     "email": "Email",
     "password": "Mot de passe",
     "loginButton": "Se connecter",
+    "loading": "Connexion en cours...",
     "forgotPassword": "Mot de passe oublié ?",
     "noAccount": "Vous n'avez pas de compte ?",
     "register": "Inscrivez-vous",
@@ -186,5 +197,203 @@
       "password": "Entrez votre mot de passe"
     },
     "reset": "Réinitialiser"
+  },
+  "categories": {
+    "category-list": {
+      "title": "Liste des catégories",
+      "create-new-category": "Créer une nouvelle catégorie"
+    },
+    "category-create": {
+      "title": "Créer une catégorie",
+      "successMessage": "Catégorie créée avec succès!",
+      "duplicateErrorMessage": "Une catégorie avec ce nom existe déjà.",
+      "errorMessage": "Erreur lors de la création de la catégorie"
+    },
+    "category-update": {
+      "title": "Modifier une catégorie",
+      "successMessage": "Catégorie modifiée avec succès!",
+      "duplicateErrorMessage": "Une catégorie avec ce nom existe déjà.",
+      "errorMessage": "Erreur lors de la modification de la catégorie"
+    }
+  },
+  "common": {
+    "loading": "Chargement...",
+    "no-data": "Aucune donnée disponible.",
+    "error": "Une erreur est survenue. Veuillez réessayer plus tard.",
+    "search": "Rechercher...",
+    "confirm": "Confirmer",
+    "confirmation": "Confirmation",
+    "close": "Fermer",
+    "name": "Nom",
+    "nameAr": "Nom en arabe",
+    "email": "Email",
+    "description": "Description",
+    "actions": "Actions",
+    "submit": "Soumettre",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "add": "Ajouter",
+    "update": "Mettre à jour",
+    "cancel": "Annuler",
+    "view": "Voir",
+    "save": "Enregistrer",
+    "back": "Retour",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer cet élément ?",
+    "yes": "Oui",
+    "no": "Non",
+    "createdAt": "Date de création",
+    "updatedAt": "Mis à jour le",
+    "home": "Accueil",
+    "enterNameFr": "Entrez le nom en français",
+    "enterNameAr": "Entrez le nom en arabe",
+    "nameFrRequired": "Le nom en français est obligatoire",
+    "nameArRequired": "Le nom en arabe est obligatoire",
+    "reference": "Référence",
+    "price": "Prix",
+    "category": "Catégorie",
+    "image": "Image",
+    "import": "Importer",
+    "importFile": "Importer un fichier",
+    "selectedFile": "Fichier sélectionné"
+  },
+  "listings": {
+    "listing-list": {
+      "title": "Liste des listings",
+      "search-placeholder": "Rechercher un listing..."
+    },
+    "listing-create": {
+      "title": "Créer un listing"
+    },
+    "listing-update": {
+      "title": "Modifier un listing"
+    },
+    "endDate": "Date de fin",
+    "namePlaceholder": "Nom du listing",
+    "descriptionPlaceholder": "Description du listing",
+    "articles": "Articles",
+    "loadingArticles": "Chargement des articles...",
+    "searchArticles": "Rechercher par nom ou code...",
+    "createSuccess": "Listing créé avec succès!",
+    "updateSuccess": "Listing mis à jour avec succès!",
+    "deleteSuccess": "Listing supprimé avec succès!",
+    "deleteError": "Une erreur est survenue lors de la suppression du listing",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce listing?",
+    "importTitle": "Importer des listings (Excel)",
+    "importDescription": "Sélectionnez un fichier Excel (.xls, .xlsx) contenant les listings à importer.",
+    "importSuccess": "Import effectué avec succès",
+    "importError": "Une erreur s'est produite lors de l'import"
+  },
+  "pharmacies": {
+    "pharmacy-list": {
+      "title": "Liste des pharmacies"
+    },
+    "pharmacy-update": {
+      "title": "Modifier une pharmacie"
+    },
+    "search-placeholder": "Rechercher une pharmacie...",
+    "code": "Code",
+    "codePlaceholder": "Code de la pharmacie",
+    "phone": "Téléphone",
+    "phonePlaceholder": "Téléphone de la pharmacie",
+    "address": "Adresse",
+    "addressPlaceholder": "Adresse de la pharmacie",
+    "type": "Type",
+    "selectType": "Sélectionnez un type",
+    "pharmacy": "Pharmacie",
+    "depot": "Dépôt",
+    "status": "Statut",
+    "selectStatus": "Sélectionnez un statut",
+    "active": "Actif",
+    "blocked": "Bloqué",
+    "pending": "En attente",
+    "namePlaceholder": "Nom de la pharmacie",
+    "managerName": "Nom du gérant",
+    "managerNamePlaceholder": "Nom du gérant",
+    "managerPhone": "Téléphone du gérant",
+    "managerPhonePlaceholder": "Téléphone du gérant",
+    "doctorName": "Nom du docteur",
+    "doctorNamePlaceholder": "Nom du docteur",
+    "doctorPhone": "Téléphone du docteur",
+    "doctorPhonePlaceholder": "Téléphone du docteur",
+    "updateSuccess": "Pharmacie mise à jour avec succès!",
+    "importTitle": "Importer des pharmacies (Excel)",
+    "importDescription": "Sélectionnez un fichier Excel (.xls, .xlsx) contenant les pharmacies à importer.",
+    "importSuccess": "Import effectué avec succès",
+    "importError": "Une erreur s'est produite lors de l'import"
+  },
+  "commands": {
+    "commands-list": {
+      "title": "Liste des commandes",
+      "search-placeholder": "Rechercher une commande..."
+    },
+    "columns": {
+      "date": "Date",
+      "code": "Code",
+      "status": "Statut",
+      "commandReference": "Référence commande",
+      "invoiceReference": "Référence facture",
+      "totalPrice": "Prix total",
+      "pharmacy": "Pharmacie"
+    },
+    "status": {
+      "pending": "En attente",
+      "validated": "Validé",
+      "cancelled": "Annulé",
+      "shipped": "Expédié",
+      "delivered": "Livré"
+    },
+    "details": {
+      "title": "Détails de la commande",
+      "commandId": "Commande #",
+      "code": "Code",
+      "status": "Statut",
+      "reference": "Référence",
+      "referenceInvoice": "Référence facture",
+      "prixTotal": "Prix total",
+      "pharmacy": "Pharmacie",
+      "distributor": "Distributeur",
+      "distributorPrincipal": "Distributeur principal",
+      "date": "Date",
+      "noCommand": "Aucune commande trouvée",
+      "cancel": "Annuler",
+      "validate": "Valider",
+      "statusUpdateSuccess": "Statut mis à jour avec succès",
+      "article": {
+        "title": "Articles",
+        "article": "Article",
+        "code": "Code",
+        "expirationDate": "Date d'expiration",
+        "batchNumber": "Numéro de lot",
+        "quantity": "Quantité",
+        "unitPrice": "Prix unitaire",
+        "total": "Total",
+        "noArticle": "Aucun article dans cette commande",
+        "backToCommands": "Retour aux commandes",
+        "changeStatus": "Changer le statut"
+      },
+      "statusChange": {
+        "title": "Changer le statut",
+        "actualStatus": "Statut actuel",
+        "newStatus": "Nouveau statut"
+      }
+    }
+  },
+  "profile": {
+    "userProfile": "Profil utilisateur",
+    "lastUpdate": "Dernière mise à jour",
+    "roles": "Rôles",
+    "changePassword": "Changer le mot de passe",
+    "oldPassword": "Ancien mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "updateProfile": "Mettre à jour le profil",
+    "updateSuccess": "Utilisateur mis à jour avec succès ✅",
+    "updateError": "Erreur lors de la mise à jour ❌",
+    "allFieldsRequired": "Tous les champs sont obligatoires.",
+    "passwordMismatch": "Les nouveaux mots de passe ne correspondent pas.",
+    "passwordChangeSuccess": "✅ Mot de passe changé avec succès !"
+  },
+  "auth": {
+    "signInError": "Connexion échouée. Veuillez vérifier vos identifiants et réessayer."
   }
 }

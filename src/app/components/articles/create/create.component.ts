@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ApiService } from 'src/app/services/apis/api-service';
@@ -23,7 +23,8 @@ export class CreateComponent {
     private fb: FormBuilder,
     private apiService: ApiService,
     private router: Router,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private translateService: TranslateService
   ) {
     this.getCategory();
     this.articleForm = this.fb.group({
@@ -34,7 +35,7 @@ export class CreateComponent {
       description: [''],
       expiryDate: [null],
       barcode: [''],
-      categoryId:[null]
+      categoryId: [null]
     });
   }
 
@@ -70,9 +71,10 @@ export class CreateComponent {
           console.error("Erreur lors de la création de l'article :", error);
           this.isLoading = false;
           this.articleForm.enable();
+          this.notificationService.showError(this.translateService.instant('articles.article-create.errorMessage'));
         },
         complete: () => {
-          this.notificationService.showSuccess('Article créé avec succès!');
+          this.notificationService.showSuccess(this.translateService.instant('articles.article-create.successMessage'));
           this.router.navigateByUrl('/articles/index');
         }
       });
@@ -87,7 +89,7 @@ export class CreateComponent {
 
       // Validation taille
       if (file.size > 1 * 1024 * 1024) {
-        alert('Le fichier ne doit pas dépasser 1MB');
+        this.notificationService.showError(this.translateService.instant('articles.article-create.fileSizeError'));
 
         // ❌ Réinitialiser le input
         input.value = '';
@@ -111,10 +113,10 @@ export class CreateComponent {
     }
   }
 
-  getCategory(){
+  getCategory() {
     this.apiService.getData('articles/categories/get').subscribe((res: any) => {
       console.log(res);
       this.categories = res.data.categories;
-    })
+    });
   }
 }

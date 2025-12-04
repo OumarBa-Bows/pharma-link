@@ -19,13 +19,13 @@
                   <a [routerLink]="['/dashboard/default/']"><i class="feather icon-home"></i></a>
                 }
                 @if (type === 'theme1') {
-                  <a [routerLink]="['/dashboard/default/']">{{ 'Home' }}</a>
+                  <a [routerLink]="['/dashboard/default/']">{{ 'common.home' | translate }}</a>
                 }
               </li>
               @for (breadcrumb of navigationList; track breadcrumb) {
                 @if (breadcrumb.url !== false) {
                   <li class="breadcrumb-item">
-                    <a [routerLink]="breadcrumb.url">{{ breadcrumb.title | translate}}</a>
+                    <a [routerLink]="breadcrumb.url">{{ breadcrumb.title | translate }}</a>
                   </li>
                 }
                 @if (breadcrumb.url === false && breadcrumb.type !== 'group') {

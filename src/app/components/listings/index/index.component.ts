@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ApiService } from 'src/app/services/apis/api-service';
 import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
@@ -49,18 +49,31 @@ export class IndexComponent {
   listings: any[] = [];
   columns = [
     { header: 'Description', field: 'description' },
-    { header: 'Date de fin', field: 'end_date' },
+    { header: 'Date de fin', field: 'end_date' }
   ];
 
   newSubscription: Subscription;
+  langSubscription: Subscription;
 
   constructor(
     private apiService: ApiService,
-    private router: Router
+    private router: Router,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit() {
     this.getListings();
+    this.updateColumns();
+    this.langSubscription = this.translateService.onLangChange.subscribe(() => {
+      this.updateColumns();
+    });
+  }
+
+  updateColumns() {
+    this.columns = [
+      { header: this.translateService.instant('common.description'), field: 'description' },
+      { header: this.translateService.instant('listings.endDate'), field: 'end_date' }
+    ];
   }
 
   onSelectionChange(rows: any[]) {
@@ -91,12 +104,12 @@ export class IndexComponent {
     this.apiService.getData(`listings/delete/${row['id']}`).subscribe({
       next: (response) => {
         console.log('Listing supprimé :', response);
-        this.notificationService.showSuccess('Listing hase been deleted successfully');
+        this.notificationService.showSuccess(this.translateService.instant('listings.deleteSuccess'));
       },
       error: (error) => {
         this.isLoading = false;
         console.error("Erreur lors de la suppression de l'Listing :", error);
-        this.notificationService.showError('An error occurred while deleting the Listing');
+        this.notificationService.showError(this.translateService.instant('listings.deleteError'));
       },
       complete: () => {
         this.getListings(); // Rafraîchir la liste des listings
@@ -104,7 +117,8 @@ export class IndexComponent {
     });
   }
   ngOnDestroy() {
-    this.newSubscription.unsubscribe();
+    this.newSubscription?.unsubscribe();
+    this.langSubscription?.unsubscribe();
   }
 
   deleteListing(row: any) {
@@ -113,7 +127,7 @@ export class IndexComponent {
       centered: true,
       backdrop: 'static'
     });
-    modalRef.componentInstance.msg = 'Are you sure you want to delete this Listing ?';
+    modalRef.componentInstance.msg = 'listings.confirmDelete';
     modalRef.result.then((result) => {
       if (result) {
         this.onDelete(row);
@@ -121,42 +135,42 @@ export class IndexComponent {
     });
   }
 
-    importListing(event: any) {
-      const modalRef = this.modalService.open(ImportModalComponent, {
-        size: 'md',
-        centered: true,
-        backdrop: 'static'
-      });
-      // Configure modal for Excel files
-      modalRef.componentInstance.title = 'Importer des articles (Excel)';
-      modalRef.componentInstance.description = 'Sélectionnez un fichier Excel (.xls, .xlsx) contenant les articles à importer.';
-      modalRef.componentInstance.accept =
-        '.xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-      modalRef.result
-        .then((file: File) => {
-          if (!file) return;
-          const formData = new FormData();
-          formData.append('file', file);
-          this.isLoading = true;
-          this.apiService.postData('listings/import', formData).subscribe({
-            next: (res) => {
-              console.log('Listings uploaded successfully:', res);
-              this.notificationService.showSuccess('Import effectué avec succès');
-            },
-            error: (err) => {
-              this.isLoading = false;
-              var message = err?.error?.message;
-              console.error('Erreur import articles:', err);
-              this.notificationService.showError(message ?? "Une erreur s'est produite lors de l'import");
-            },
-            complete: () => {
-              this.isLoading = false;
-              this.getListings();
-            }
-          });
-        })
-        .catch(() => {
-          // Modal dismissed
+  importListing(event: any) {
+    const modalRef = this.modalService.open(ImportModalComponent, {
+      size: 'md',
+      centered: true,
+      backdrop: 'static'
+    });
+    // Configure modal for Excel files
+    modalRef.componentInstance.title = 'listings.importTitle';
+    modalRef.componentInstance.description = 'listings.importDescription';
+    modalRef.componentInstance.accept =
+      '.xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    modalRef.result
+      .then((file: File) => {
+        if (!file) return;
+        const formData = new FormData();
+        formData.append('file', file);
+        this.isLoading = true;
+        this.apiService.postData('listings/import', formData).subscribe({
+          next: (res) => {
+            console.log('Listings uploaded successfully:', res);
+            this.notificationService.showSuccess(this.translateService.instant('listings.importSuccess'));
+          },
+          error: (err) => {
+            this.isLoading = false;
+            var message = err?.error?.message;
+            console.error('Erreur import articles:', err);
+            this.notificationService.showError(message ?? this.translateService.instant('listings.importError'));
+          },
+          complete: () => {
+            this.isLoading = false;
+            this.getListings();
+          }
         });
-    }
+      })
+      .catch(() => {
+        // Modal dismissed
+      });
+  }
 }

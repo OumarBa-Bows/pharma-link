@@ -9,6 +9,7 @@ import { ConfirmationModalComponent } from '../../theme/shared/components/confir
 
 import { NotificationService } from 'src/app/services/notifications/notification.service';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-users',
@@ -31,12 +32,13 @@ export class UsersComponent implements OnInit {
     { header: this.translateService.instant('users.columns.createdAt'), field: 'createdAt', type: 'date', format: 'dd/MM/yyyy HH:mm' },
     //{ header: this.translateService.instant('users.columns.id'), field: 'id' },
     { header: this.translateService.instant('users.columns.name'), field: 'name' },
-    { header: this.translateService.instant('users.columns.email'), field: 'email' },
+    { header: this.translateService.instant('users.columns.email'), field: 'email' }
     //{ header: this.translateService.instant('users.columns.updatedAt'), field: 'updatedAt', type: 'date', format: 'dd/MM/yyyy HH:mm' },
-    { header: this.translateService.instant('users.columns.role'), field: 'roles' }
+    //{ header: this.translateService.instant('users.columns.role'), field: 'roles' }
   ];
 
   public users: User[];
+  langSubscription: Subscription;
 
   editUser(user: User) {
     // Trouver l'utilisateur original avec les rôles non transformés
@@ -57,15 +59,11 @@ export class UsersComponent implements OnInit {
     const toastSuccess = user
       ? this.translateService.instant('users.toasts.userUpdated')
       : this.translateService.instant('users.toasts.userCreated');
-    const toastError = user
-      ? this.translateService.instant('users.toasts.userUpdateError')
-      : this.translateService.instant('users.toasts.userCreateError');
+
     modalRef.closed.subscribe((res) => {
       if (res) {
         this.notificationService.showSuccess(toastSuccess);
         this.getAllUsers();
-      } else {
-        this.notificationService.showError(toastError);
       }
     });
   }
@@ -92,16 +90,41 @@ export class UsersComponent implements OnInit {
     this.userService.getAll().subscribe((result) => {
       // Garder les données originales
       this.userdata = result.data.users;
-      // Créer une copie pour l'affichage avec les rôles transformés
+      // Créer une copie pour l'affichage avec les rôles transformés et traduits
       this.users = result.data.users.map((user) => ({
         ...user,
-        roles: user.roles.map((r) => r.name).join(',')
+        roles: user.roles.map((r) => this.translateService.instant(`users.roles.${r.name}`)).join(', ')
       }));
     });
   }
 
   ngOnInit(): void {
     this.getAllUsers();
+    this.updateColumns();
+    this.langSubscription = this.translateService.onLangChange.subscribe(() => {
+      this.updateColumns();
+    });
+  }
+
+  updateColumns() {
+    this.columns = [
+      { header: this.translateService.instant('users.columns.createdAt'), field: 'createdAt', type: 'date', format: 'dd/MM/yyyy HH:mm' },
+      { header: this.translateService.instant('users.columns.name'), field: 'name' },
+      { header: this.translateService.instant('users.columns.email'), field: 'email' }
+      //{ header: this.translateService.instant('users.columns.role'), field: 'roles' }
+    ];
+
+    // Mettre à jour les rôles traduits pour tous les utilisateurs
+    if (this.userdata) {
+      this.users = this.userdata.map((user) => ({
+        ...user,
+        roles: user.roles.map((r) => this.translateService.instant(`users.roles.${r.name}`)).join(', ')
+      }));
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.langSubscription?.unsubscribe();
   }
 
   addUser() {
@@ -109,10 +132,6 @@ export class UsersComponent implements OnInit {
   }
 
   delete(id: number) {
-    this.userService.delete(id).subscribe((res) => {
-      this.getAllUsers();
-    });
-
     this.userService.delete(id).subscribe({
       next: () => {
         this.notificationService.showSuccess(this.translateService.instant('users.toasts.deleteSuccess'));

@@ -4,9 +4,9 @@
       <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="d-flex gap-2">
           @if (showAddButton) {
-          <button class="btn btn-success" (click)="addNew.emit()">
-            <i class="feather icon-plus me-1"></i>
-          </button>
+            <button class="btn btn-success" (click)="addNew.emit()">
+              <i class="feather icon-plus me-1"></i>
+            </button>
           }
           @if (showImport) {
             <button class="btn btn-primary" (click)="import.emit()">
@@ -21,7 +21,7 @@
             [placeholder]="searchPlaceholder"
             (input)="search.emit($any($event.target).value)"
           />
-          <div class="text-muted small">Total: {{ this.total }}</div>
+          <div class="text-muted small">{{ 'table.total' | translate }}: {{ this.total }}</div>
         </div>
       </div>
 
@@ -63,7 +63,7 @@
                       <img src="assets/images/image-not.png" class="img-thumbnail mt-2" style="max-height: 50px" />
                     }
                   }
-               <!--   @if (col.img != true) {
+                  <!--   @if (col.img != true) {
                     <td>{{ row[col.field] }}</td>
                   } -->
                   @if (col.type === 'enum') {
@@ -77,17 +77,32 @@
                 @if (showEdit || showDelete || showDetails) {
                   <td>
                     @if (showEdit) {
-                        <button type="button" class="btn btn-sm btn-outline-primary me-2" (click)="onEdit(row)" title="{{'buttons-action.edit'| translate}}">
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-primary me-2"
+                        (click)="onEdit(row)"
+                        title="{{ 'buttons-action.edit' | translate }}"
+                      >
                         <i class="feather icon-edit-2"></i>
                       </button>
                     }
                     @if (showDelete) {
-                      <button type="button" class="btn btn-sm btn-outline-danger" (click)="onDelete(row)" title="{{ 'buttons-action.delete' | translate }}">
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-danger"
+                        (click)="onDelete(row)"
+                        title="{{ 'buttons-action.delete' | translate }}"
+                      >
                         <i class="fa fa-trash"></i>
                       </button>
                     }
-                    @if (showDetails){
-                      <button type="button" class="btn btn-sm btn-outline-info" (click)="onShowDetails(row)" title="{{ 'buttons-action.showDetails' | translate }}">
+                    @if (showDetails) {
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-info"
+                        (click)="onShowDetails(row)"
+                        title="{{ 'buttons-action.showDetails' | translate }}"
+                      >
                         <i class="fa fa-eye"></i>
                       </button>
                     }

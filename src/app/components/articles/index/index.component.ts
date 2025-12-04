@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ApiService } from 'src/app/services/apis/api-service';
 import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
@@ -23,6 +23,7 @@ export class IndexComponent {
   pageSize = 20;
   private modalService = inject(NgbModal);
   private notificationService = inject(NotificationService);
+  private translateService = inject(TranslateService);
 
   onAddNew() {
     this.router.navigateByUrl('/articles/create');
@@ -52,10 +53,11 @@ export class IndexComponent {
     { header: 'Nom', field: 'name' },
     { header: 'Référence', field: 'reference' },
     { header: 'Prix', field: 'price' },
-    { header: "Categorie", field: 'category' }
+    { header: 'Catégorie', field: 'category' }
   ];
 
   newSubscription: Subscription;
+  langSubscription: Subscription;
 
   constructor(
     private apiService: ApiService,
@@ -64,6 +66,22 @@ export class IndexComponent {
 
   ngOnInit() {
     this.getArticles();
+    this.updateColumns();
+
+    // S'abonner aux changements de langue
+    this.langSubscription = this.translateService.onLangChange.subscribe(() => {
+      this.updateColumns();
+    });
+  }
+
+  updateColumns() {
+    this.columns = [
+      //{ header: this.translateService.instant('common.image'), field: 'imageLink', img: false },
+      { header: this.translateService.instant('common.name'), field: 'name' },
+      { header: this.translateService.instant('common.reference'), field: 'reference' },
+      { header: this.translateService.instant('common.price'), field: 'price' },
+      { header: this.translateService.instant('common.category'), field: 'category' }
+    ];
   }
 
   onSelectionChange(rows: any[]) {
@@ -94,12 +112,12 @@ export class IndexComponent {
     this.apiService.getData(`articles/delete/${row['id']}`).subscribe({
       next: (response) => {
         console.log('Article supprimé :', response);
-        this.notificationService.showSuccess('Article hase been deleted successfully');
+        this.notificationService.showSuccess(this.translateService.instant('articles.article-list.delete.successMessage'));
       },
       error: (error) => {
         this.isLoading = false;
         console.error("Erreur lors de la suppression de l'article :", error);
-        this.notificationService.showError('An error occurred while deleting the article');
+        this.notificationService.showError(this.translateService.instant('articles.article-list.delete.errorMessage'));
       },
       complete: () => {
         this.getArticles(); // Rafraîchir la liste des articles
@@ -107,7 +125,12 @@ export class IndexComponent {
     });
   }
   ngOnDestroy() {
-    this.newSubscription.unsubscribe();
+    if (this.newSubscription) {
+      this.newSubscription.unsubscribe();
+    }
+    if (this.langSubscription) {
+      this.langSubscription.unsubscribe();
+    }
   }
 
   deleteArticle(row: any) {
@@ -116,7 +139,7 @@ export class IndexComponent {
       centered: true,
       backdrop: 'static'
     });
-    modalRef.componentInstance.msg = 'Are you sure you want to delete this article ?';
+    modalRef.componentInstance.msg = this.translateService.instant('articles.article-list.delete.confirmDelete');
     modalRef.result.then((result) => {
       if (result) {
         this.onDelete(row);
@@ -131,8 +154,8 @@ export class IndexComponent {
       backdrop: 'static'
     });
     // Configure modal for Excel files
-    modalRef.componentInstance.title = 'Importer des articles (Excel)';
-    modalRef.componentInstance.description = 'Sélectionnez un fichier Excel (.xls, .xlsx) contenant les articles à importer.';
+    modalRef.componentInstance.title = this.translateService.instant('articles.article-list.import.title');
+    modalRef.componentInstance.description = this.translateService.instant('articles.article-list.import.description');
     modalRef.componentInstance.accept =
       '.xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
     modalRef.result
@@ -144,13 +167,13 @@ export class IndexComponent {
         this.apiService.postData('articles/upload', formData).subscribe({
           next: (res) => {
             console.log('Articles uploaded successfully:', res);
-            this.notificationService.showSuccess('Import effectué avec succès');
+            this.notificationService.showSuccess(this.translateService.instant('articles.article-list.import.successMessage'));
           },
           error: (err) => {
             this.isLoading = false;
 
             console.error('Erreur import articles:', err);
-            this.notificationService.showError("Une erreur s'est produite lors de l'import");
+            this.notificationService.showError(this.translateService.instant('articles.article-list.import.errorMessage'));
           },
           complete: () => {
             this.isLoading = false;

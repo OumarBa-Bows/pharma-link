@@ -17,7 +17,6 @@ export interface NavigationItem {
   children?: NavigationItem[];
 }
 
-
 export function getNavigationItems(privilege: PrivilegeService): NavigationItem[] {
   return [
     {
@@ -43,6 +42,15 @@ export function getNavigationItems(privilege: PrivilegeService): NavigationItem[
       type: 'group',
       icon: 'icon-navigation',
       children: [
+        {
+          id: 'categories',
+          title: 'navBar.categories',
+          type: 'item',
+          url: '/categories/index',
+          icon: 'feather icon-grid',
+          classes: 'nav-item',
+          hidden: !privilege.getPrivilege(['admin', 'article'])
+        },
         {
           id: 'articles',
           title: 'navBar.articles',

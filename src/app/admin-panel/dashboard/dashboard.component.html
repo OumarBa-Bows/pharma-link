@@ -22,16 +22,16 @@
   }
 
   <div class="col-xl-6 col-md-12">
-    <app-card cardTitle="Recent Orders" cardClass="Recent-Orders table-card" blockClass="p-0">
+    <app-card [cardTitle]="'dashboard.recentOrders.title' | translate" cardClass="Recent-Orders table-card" blockClass="p-0">
       <div class="table-responsive">
         <table class="table table-hover mb-0">
           <thead>
             <tr>
-              <th>Code</th>
-              <th>Pharmacy</th>
+              <th>{{ 'dashboard.recentOrders.columns.code' | translate }}</th>
+              <th>{{ 'dashboard.recentOrders.columns.pharmacy' | translate }}</th>
               <!-- <th>Distributor</th> -->
-              <th>Status</th>
-              <th>Date</th>
+              <th>{{ 'dashboard.recentOrders.columns.status' | translate }}</th>
+              <th>{{ 'dashboard.recentOrders.columns.date' | translate }}</th>
               <th></th>
             </tr>
           </thead>
@@ -42,15 +42,22 @@
                 <td>{{ order.pharmacy }}</td>
                 <!-- <td>{{ order.distributor }}</td> -->
                 <td>
-                  <span class="badge f-12" [ngClass]="{
-                    'theme-bg2 text-white': order.status === 'PENDING',
-                    'bg-success text-white': order.status === 'CONFIRMED' || order.status === 'SHIPPED',
-                    'bg-danger text-white': order.status === 'CANCELLED'
-                  }">{{ order.status }}</span>
+                  <span
+                    class="badge f-12"
+                    [ngClass]="{
+                      'theme-bg2 text-white': order.status === 'PENDING',
+                      'bg-success text-white': order.status === 'CONFIRMED' || order.status === 'SHIPPED',
+                      'bg-danger text-white': order.status === 'CANCELLED'
+                    }"
+                  >
+                    {{ getOrderStatusTranslation(order.status) }}
+                  </span>
                 </td>
-                <td>{{ order.date }}</td>
+                <td>{{ order.date | date: 'short' }}</td>
                 <td class="text-end">
-                  <a [routerLink]="['/commands/details', order.id]" class="badge theme-bg text-white f-12">View</a>
+                  <a [routerLink]="['/commands/details', order.id]" class="badge theme-bg text-white f-12">
+                    {{ 'dashboard.recentOrders.view' | translate }}
+                  </a>
                 </td>
               </tr>
             }
@@ -61,15 +68,15 @@
   </div>
 
   <div class="col-xl-6 col-md-12">
-    <app-card cardTitle="Recent Pharmacies" cardClass="Recent-Pharmacies table-card" blockClass="p-0">
+    <app-card [cardTitle]="'dashboard.recentPharmacies.title' | translate" cardClass="Recent-Pharmacies table-card" blockClass="p-0">
       <div class="table-responsive">
         <table class="table table-hover mb-0">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Zone</th>
+              <th>{{ 'dashboard.recentPharmacies.columns.name' | translate }}</th>
+              <th>{{ 'dashboard.recentPharmacies.columns.zone' | translate }}</th>
               <!-- <th>State</th> -->
-              <th>Created</th>
+              <th>{{ 'dashboard.recentPharmacies.columns.created' | translate }}</th>
               <th></th>
             </tr>
           </thead>
@@ -85,9 +92,11 @@
                     'bg-secondary text-white': p.state === 'BLOCKED'
                   }">{{ p.state }}</span>
                 </td> -->
-                <td>{{ p.createdAt }}</td>
+                <td>{{ p.createdAt | date: 'short' }}</td>
                 <td class="text-end">
-                  <a [routerLink]="['/pharmacies']" class="badge theme-bg text-white f-12">Open</a>
+                  <a [routerLink]="['/pharmacies']" class="badge theme-bg text-white f-12">
+                    {{ 'dashboard.recentPharmacies.open' | translate }}
+                  </a>
                 </td>
               </tr>
             }

@@ -4,17 +4,13 @@
   }
 </div>
 <app-table
-  title="{{ 'articles.article-list.title' | translate }}"
+  title="{{ 'categories.category-list.title' | translate }}"
   [columns]="columns"
-  [data]="articles"
+  [data]="categories"
   (selectionChange)="onSelectionChange($event)"
   (edit)="onEdit($event)"
-  (delete)="deleteArticle($event)"
-  (import)="importArticle($event)"
   [showEdit]="true"
-  [showDelete]="true"
-  [showImport]="true"
-  [total]="articles.length"
+  [total]="categories.length"
   (addNew)="onAddNew()"
   (search)="onSearch($event)"
   [searchPlaceholder]="'common.search' | translate"

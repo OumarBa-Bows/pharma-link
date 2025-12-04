@@ -1,20 +1,22 @@
 <div class="modal-header">
-  <h5 class="modal-title">{{ title }}</h5>
+  <h5 class="modal-title">{{ title | translate }}</h5>
   <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()"></button>
 </div>
 <div class="modal-body">
-  <p class="mb-2" *ngIf="description">{{ description }}</p>
-  <input
-    type="file"
-    class="form-control"
-    (change)="onFileChange($event)"
-    [attr.accept]="accept"
-  />
-  <div class="mt-2" *ngIf="file">
-    <small>Fichier sélectionné: <strong>{{ file.name }}</strong></small>
-  </div>
+  @if (description) {
+    <p class="mb-2">{{ description | translate }}</p>
+  }
+  <input type="file" class="form-control" (change)="onFileChange($event)" [attr.accept]="accept" />
+  @if (file) {
+    <div class="mt-2">
+      <small>
+        {{ 'common.selectedFile' | translate }}:
+        <strong>{{ file.name }}</strong>
+      </small>
+    </div>
+  }
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-secondary" (click)="onCancel()">{{ cancelLabel }}</button>
-  <button type="button" class="btn btn-primary" [disabled]="!file" (click)="onImport()">{{ confirmLabel }}</button>
+  <button type="button" class="btn btn-secondary" (click)="onCancel()">{{ cancelLabel | translate }}</button>
+  <button type="button" class="btn btn-primary" [disabled]="!file" (click)="onImport()">{{ confirmLabel | translate }}</button>
 </div>
