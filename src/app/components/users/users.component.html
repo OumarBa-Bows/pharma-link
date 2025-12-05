@@ -2,13 +2,15 @@
 <app-table
   title="{{ 'users.user-list.title' | translate }}"
   [columns]="columns"
-  [data]="users"
+  [data]="displayedUsers"
   (selectionChange)="onSelectionChange($event)"
   (edit)="editUser($event)"
   (delete)="deleteUser($event)"
+  (search)="onSearch($event)"
   [showEdit]="true"
   [showDelete]="true"
   (addNew)="addUser()"
   [showSelected]="false"
+  [total]="displayedUsers.length"
   [searchPlaceholder]="'common.search' | translate"
 ></app-table>

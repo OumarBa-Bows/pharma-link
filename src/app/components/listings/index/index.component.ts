@@ -24,29 +24,41 @@ export class IndexComponent {
   private modalService = inject(NgbModal);
   private notificationService = inject(NotificationService);
 
+  allListings: any[] = []; // Liste complète des listings
+  filteredListings: any[] = []; // Liste filtrée pour l'affichage
+
   onAddNew() {
     this.router.navigateByUrl('/listings/create');
   }
 
-  onSearch(c: any) {
-    if (c == '' || c.length == 0) {
+  onSearch(searchTerm: any) {
+    // Si la recherche est vide, afficher tous les listings
+    if (!searchTerm || searchTerm.length === 0) {
       this.search = '';
-      this.page = 1;
-      this.pageSize = 20;
-      this.getListings();
+      this.filteredListings = [...this.allListings];
       return;
     }
 
-    if (c.length < 2 || c == this.search) return;
+    this.search = searchTerm.toLowerCase();
 
-    this.search = c;
-    this.page = 1;
-    this.pageSize = 20;
-    this.getListings();
+    // Filtrer les listings par description et date de fin
+    this.filteredListings = this.allListings.filter((listing) => {
+      const description = listing.description?.toLowerCase() || '';
+      const endDate = listing.end_date?.toString() || '';
+
+      return description.includes(this.search) || endDate.includes(this.search);
+    });
+
+    console.log(`[onSearch] Recherche: "${searchTerm}", Résultats: ${this.filteredListings.length}/${this.allListings.length}`);
   }
 
   isLoading: boolean = false;
-  listings: any[] = [];
+  listings: any[] = []; // Propriété utilisée par le template pour afficher
+
+  get displayedListings() {
+    return this.filteredListings.length > 0 || this.search ? this.filteredListings : this.allListings;
+  }
+
   columns = [
     { header: 'Description', field: 'description' },
     { header: 'Date de fin', field: 'end_date' }
@@ -82,10 +94,12 @@ export class IndexComponent {
 
   getListings() {
     this.isLoading = true;
-    this.newSubscription = this.apiService.getData(`listings?search=${this.search}&page=${this.page}&pageSize=${this.pageSize}`).subscribe({
+    this.newSubscription = this.apiService.getData(`listings?page=${this.page}&pageSize=${this.pageSize}`).subscribe({
       next: (response: any) => {
         console.log('Listings fetched successfully:', response);
-        this.listings = response.data.listings;
+        this.allListings = response.data.listings;
+        this.filteredListings = [...this.allListings];
+        this.listings = this.displayedListings; // Pour le template
         this.isLoading = false;
       },
       error: (error) => {

@@ -6,7 +6,7 @@
 <app-table
   title="{{ 'articles.article-list.title' | translate }}"
   [columns]="columns"
-  [data]="articles"
+  [data]="displayedArticles"
   (selectionChange)="onSelectionChange($event)"
   (edit)="onEdit($event)"
   (delete)="deleteArticle($event)"
@@ -14,7 +14,7 @@
   [showEdit]="true"
   [showDelete]="true"
   [showImport]="true"
-  [total]="articles.length"
+  [total]="displayedArticles.length"
   (addNew)="onAddNew()"
   (search)="onSearch($event)"
   [searchPlaceholder]="'common.search' | translate"

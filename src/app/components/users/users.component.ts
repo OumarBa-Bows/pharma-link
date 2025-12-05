@@ -26,7 +26,15 @@ export class UsersComponent implements OnInit {
   private userdata: User[];
   private notificationService = inject(NotificationService);
 
+  search = '';
+  allUsers: User[] = []; // Liste complète des utilisateurs
+  filteredUsers: User[] = []; // Liste filtrée pour l'affichage
+
   constructor(private translateService: TranslateService) {}
+
+  get displayedUsers() {
+    return this.filteredUsers.length > 0 || this.search ? this.filteredUsers : this.allUsers;
+  }
 
   columns = [
     { header: this.translateService.instant('users.columns.createdAt'), field: 'createdAt', type: 'date', format: 'dd/MM/yyyy HH:mm' },
@@ -86,15 +94,42 @@ export class UsersComponent implements OnInit {
     console.log('Lignes sélectionnées :', rows);
   }
 
+  onSearch(searchTerm: any) {
+    // Si la recherche est vide, afficher tous les utilisateurs
+    if (!searchTerm || searchTerm.length === 0) {
+      this.search = '';
+      this.filteredUsers = [...this.allUsers];
+      return;
+    }
+
+    this.search = searchTerm.toLowerCase();
+
+    // Filtrer les utilisateurs par nom, email, rôles et date de création
+    this.filteredUsers = this.allUsers.filter((user) => {
+      const name = user.name?.toLowerCase() || '';
+      const email = user.email?.toLowerCase() || '';
+      const roles = user.roles?.toString().toLowerCase() || ''; // roles déjà traduits dans allUsers
+      const createdAt = user.createdAt?.toString() || '';
+
+      return name.includes(this.search) || email.includes(this.search) || roles.includes(this.search) || createdAt.includes(this.search);
+    });
+
+    console.log(`[onSearch] Recherche: "${searchTerm}", Résultats: ${this.filteredUsers.length}/${this.allUsers.length}`);
+  }
+
   getAllUsers() {
     this.userService.getAll().subscribe((result) => {
       // Garder les données originales
       this.userdata = result.data.users;
       // Créer une copie pour l'affichage avec les rôles transformés et traduits
-      this.users = result.data.users.map((user) => ({
+      const transformedUsers = result.data.users.map((user) => ({
         ...user,
         roles: user.roles.map((r) => this.translateService.instant(`users.roles.${r.name}`)).join(', ')
       }));
+
+      this.allUsers = transformedUsers;
+      this.filteredUsers = [...this.allUsers];
+      this.users = this.displayedUsers; // Pour le template
     });
   }
 
@@ -116,10 +151,14 @@ export class UsersComponent implements OnInit {
 
     // Mettre à jour les rôles traduits pour tous les utilisateurs
     if (this.userdata) {
-      this.users = this.userdata.map((user) => ({
+      const transformedUsers = this.userdata.map((user) => ({
         ...user,
         roles: user.roles.map((r) => this.translateService.instant(`users.roles.${r.name}`)).join(', ')
       }));
+
+      this.allUsers = transformedUsers;
+      this.filteredUsers = [...this.allUsers];
+      this.users = this.displayedUsers; // Pour le template
     }
   }
 

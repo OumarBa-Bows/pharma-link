@@ -6,11 +6,11 @@
 <app-table
   title="{{ 'categories.category-list.title' | translate }}"
   [columns]="columns"
-  [data]="categories"
+  [data]="displayedCategories"
   (selectionChange)="onSelectionChange($event)"
   (edit)="onEdit($event)"
   [showEdit]="true"
-  [total]="categories.length"
+  [total]="displayedCategories.length"
   (addNew)="onAddNew()"
   (search)="onSearch($event)"
   [searchPlaceholder]="'common.search' | translate"

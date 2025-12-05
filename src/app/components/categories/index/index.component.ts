@@ -25,6 +25,9 @@ export class IndexComponent {
   private currentModalRef: any;
   private translateService = inject(TranslateService);
 
+  allCategories: any[] = []; // Liste complète des catégories
+  filteredCategories: any[] = []; // Liste filtrée pour l'affichage
+
   onAddNew() {
     this.currentModalRef = this.modalService.open(AddCategoryModalComponent, {
       centered: true,
@@ -43,25 +46,35 @@ export class IndexComponent {
     };
   }
 
-  onSearch(c: any) {
-    if (c == '' || c.length == 0) {
+  onSearch(searchTerm: any) {
+    // Si la recherche est vide, afficher toutes les catégories
+    if (!searchTerm || searchTerm.length === 0) {
       this.search = '';
-      this.page = 1;
-      this.pageSize = 20;
-      this.getCategories();
+      this.filteredCategories = [...this.allCategories];
       return;
     }
 
-    if (c.length < 2 || c == this.search) return;
+    this.search = searchTerm.toLowerCase();
 
-    this.search = c;
-    this.page = 1;
-    this.pageSize = 20;
-    this.getCategories();
+    // Filtrer les catégories par nom (fr), nom (ar), et date de création
+    this.filteredCategories = this.allCategories.filter((category) => {
+      const name = category.name?.toLowerCase() || '';
+      const nameAr = category.nameAr?.toLowerCase() || '';
+      const createdAt = category.createdAt?.toString() || '';
+
+      return name.includes(this.search) || nameAr.includes(this.search) || createdAt.includes(this.search);
+    });
+
+    console.log(`[onSearch] Recherche: "${searchTerm}", Résultats: ${this.filteredCategories.length}/${this.allCategories.length}`);
   }
 
   isLoading: boolean = false;
-  categories: any[] = [];
+  categories: any[] = []; // Propriété utilisée par le template pour afficher
+
+  get displayedCategories() {
+    return this.filteredCategories.length > 0 || this.search ? this.filteredCategories : this.allCategories;
+  }
+
   columns = [
     { header: 'Date de création', field: 'createdAt', type: 'date', format: 'dd/MM/yyyy' },
     { header: 'Nom fr', field: 'name' },
@@ -100,7 +113,9 @@ export class IndexComponent {
     this.newSubscription = this.apiService.getData(`categories`).subscribe({
       next: (response: any) => {
         console.log('categories fetched successfully:', response);
-        this.categories = response.data.categories;
+        this.allCategories = response.data.categories;
+        this.filteredCategories = [...this.allCategories];
+        this.categories = this.displayedCategories; // Pour le template
         this.isLoading = false;
       },
       error: (error) => {

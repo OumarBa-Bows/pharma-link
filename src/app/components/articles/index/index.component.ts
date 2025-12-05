@@ -25,29 +25,43 @@ export class IndexComponent {
   private notificationService = inject(NotificationService);
   private translateService = inject(TranslateService);
 
+  allArticles: any[] = []; // Liste complète des articles
+  filteredArticles: any[] = []; // Liste filtrée pour l'affichage
+
   onAddNew() {
     this.router.navigateByUrl('/articles/create');
   }
 
-  onSearch(c: any) {
-    if (c == '' || c.length == 0) {
+  onSearch(searchTerm: any) {
+    // Si la recherche est vide, afficher tous les articles
+    if (!searchTerm || searchTerm.length === 0) {
       this.search = '';
-      this.page = 1;
-      this.pageSize = 20;
-      this.getArticles();
+      this.filteredArticles = [...this.allArticles];
       return;
     }
 
-    if (c.length < 2 || c == this.search) return;
+    this.search = searchTerm.toLowerCase();
 
-    this.search = c;
-    this.page = 1;
-    this.pageSize = 20;
-    this.getArticles();
+    // Filtrer les articles par nom, catégorie, prix et référence
+    this.filteredArticles = this.allArticles.filter((article) => {
+      const name = article.name?.toLowerCase() || '';
+      const category = article.category?.toLowerCase() || '';
+      const reference = article.reference?.toLowerCase() || '';
+      const price = article.price?.toString() || '';
+
+      return name.includes(this.search) || category.includes(this.search) || reference.includes(this.search) || price.includes(this.search);
+    });
+
+    console.log(`[onSearch] Recherche: "${searchTerm}", Résultats: ${this.filteredArticles.length}/${this.allArticles.length}`);
   }
 
   isLoading: boolean = false;
-  articles: any[] = [];
+  articles: any[] = []; // Propriété utilisée par le template pour afficher
+
+  get displayedArticles() {
+    return this.filteredArticles.length > 0 || this.search ? this.filteredArticles : this.allArticles;
+  }
+
   columns = [
     //{ header: 'Image', field: 'imageLink', img: false },
     { header: 'Nom', field: 'name' },
@@ -90,10 +104,12 @@ export class IndexComponent {
 
   getArticles() {
     this.isLoading = true;
-    this.newSubscription = this.apiService.getData(`articles?search=${this.search}&page=${this.page}&pageSize=${this.pageSize}`).subscribe({
+    this.newSubscription = this.apiService.getData(`articles?page=${this.page}&pageSize=${this.pageSize}`).subscribe({
       next: (response: any) => {
         console.log('Articles fetched successfully:', response);
-        this.articles = response.data.articles;
+        this.allArticles = response.data.articles;
+        this.filteredArticles = [...this.allArticles];
+        this.articles = this.displayedArticles; // Pour le template
         this.isLoading = false;
       },
       error: (error) => {

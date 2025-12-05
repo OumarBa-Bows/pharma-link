@@ -22,29 +22,50 @@ export class IndexComponent {
   private modalService = inject(NgbModal);
   private notificationService = inject(NotificationService);
 
+  allPharmacies: any[] = []; // Liste complète des pharmacies
+  filteredPharmacies: any[] = []; // Liste filtrée pour l'affichage
+
   onAddNew() {
     this.router.navigateByUrl('/pharmacy/create');
   }
 
-  onSearch(c: any) {
-    if (c == '' || c.length == 0) {
+  onSearch(searchTerm: any) {
+    // Si la recherche est vide, afficher toutes les pharmacies
+    if (!searchTerm || searchTerm.length === 0) {
       this.search = '';
-      this.page = 1;
-      this.pageSize = 20;
-      this.getPharmacies();
+      this.filteredPharmacies = [...this.allPharmacies];
       return;
     }
 
-    if (c.length < 2 || c == this.search) return;
+    this.search = searchTerm.toLowerCase();
 
-    this.search = c;
-    this.page = 1;
-    this.pageSize = 20;
-    this.getPharmacies();
+    // Filtrer les pharmacies par nom, téléphone, adresse, type et statut
+    this.filteredPharmacies = this.allPharmacies.filter((pharmacy) => {
+      const name = pharmacy.name?.toLowerCase() || '';
+      const phone = pharmacy.phone?.toLowerCase() || '';
+      const address = pharmacy.address?.toLowerCase() || '';
+      const customerType = pharmacy.customerType?.toLowerCase() || '';
+      const state = pharmacy.state?.toLowerCase() || '';
+
+      return (
+        name.includes(this.search) ||
+        phone.includes(this.search) ||
+        address.includes(this.search) ||
+        customerType.includes(this.search) ||
+        state.includes(this.search)
+      );
+    });
+
+    console.log(`[onSearch] Recherche: "${searchTerm}", Résultats: ${this.filteredPharmacies.length}/${this.allPharmacies.length}`);
   }
 
   isLoading: boolean = false;
-  pharmacies: any[] = [];
+  pharmacies: any[] = []; // Propriété utilisée par le template pour afficher
+
+  get displayedPharmacies() {
+    return this.filteredPharmacies.length > 0 || this.search ? this.filteredPharmacies : this.allPharmacies;
+  }
+
   columns = [
     { header: 'Nom', field: 'name' },
     { header: 'Telephone', field: 'phone' },
@@ -103,19 +124,19 @@ export class IndexComponent {
 
   getPharmacies() {
     this.isLoading = true;
-    this.newSubscription = this.apiService
-      .getData(`pharmacies?search=${this.search}&page=${this.page}&pageSize=${this.pageSize}`)
-      .subscribe({
-        next: (response: any) => {
-          console.log('Pharmacies fetched successfully:', response);
-          this.pharmacies = response.data.pharmacies;
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error fetching pharmacies:', error);
-          this.isLoading = false;
-        }
-      });
+    this.newSubscription = this.apiService.getData(`pharmacies?page=${this.page}&pageSize=${this.pageSize}`).subscribe({
+      next: (response: any) => {
+        console.log('Pharmacies fetched successfully:', response);
+        this.allPharmacies = response.data.pharmacies;
+        this.filteredPharmacies = [...this.allPharmacies];
+        this.pharmacies = this.displayedPharmacies; // Pour le template
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching pharmacies:', error);
+        this.isLoading = false;
+      }
+    });
   }
 
   onEdit(row: any) {

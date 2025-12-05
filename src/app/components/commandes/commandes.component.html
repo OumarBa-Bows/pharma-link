@@ -6,14 +6,15 @@
 <app-table
   title="{{ 'commands.commands-list.title' | translate }}"
   [columns]="columns"
-  [data]="commandData"
+  [data]="displayedCommands"
   (selectionChange)="onSelectionChange($event)"
   (showDetatail)="showDetail($event)"
+  (search)="onSearch($event)"
   [showAddButton]="false"
   [showEdit]="false"
   [showDelete]="false"
   [showImport]="false"
   [showDetails]="true"
-  [total]="commandData?.length"
+  [total]="displayedCommands?.length"
   [searchPlaceholder]="'commands.commands-list.search-placeholder' | translate"
 ></app-table>

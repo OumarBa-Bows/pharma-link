@@ -23,6 +23,14 @@ export class CommandesComponent implements OnInit {
   private modalService = inject(NgbModal);
   private translateService = inject(TranslateService);
 
+  search = '';
+  allCommands: any[] = []; // Liste complète des commandes
+  filteredCommands: any[] = []; // Liste filtrée pour l'affichage
+
+  get displayedCommands() {
+    return this.filteredCommands.length > 0 || this.search ? this.filteredCommands : this.allCommands;
+  }
+
   columns = [
     { header: this.translateService.instant('commands.columns.date'), field: 'date', type: 'date', format: 'dd/MM/yyyy HH:mm' },
     { header: this.translateService.instant('commands.columns.code'), field: 'code' },
@@ -49,6 +57,36 @@ export class CommandesComponent implements OnInit {
 
   onSelectionChange($event: any[]) {}
 
+  onSearch(searchTerm: any) {
+    // Si la recherche est vide, afficher toutes les commandes
+    if (!searchTerm || searchTerm.length === 0) {
+      this.search = '';
+      this.filteredCommands = [...this.allCommands];
+      return;
+    }
+
+    this.search = searchTerm.toLowerCase();
+
+    // Filtrer les commandes par code, status, prix total, pharmacie, et date
+    this.filteredCommands = this.allCommands.filter((command) => {
+      const code = command.code?.toLowerCase() || '';
+      const status = command.status?.toLowerCase() || '';
+      const totalPrice = command.totalprice?.toString() || '';
+      const pharmacy = command.pharmacy?.toLowerCase() || '';
+      const date = command.date?.toString() || '';
+
+      return (
+        code.includes(this.search) ||
+        status.includes(this.search) ||
+        totalPrice.includes(this.search) ||
+        pharmacy.includes(this.search) ||
+        date.includes(this.search)
+      );
+    });
+
+    console.log(`[onSearch] Recherche: "${searchTerm}", Résultats: ${this.filteredCommands.length}/${this.allCommands.length}`);
+  }
+
   editCommand(command: Command) {
     this.openCreateCommandModal(command);
   }
@@ -66,7 +104,9 @@ export class CommandesComponent implements OnInit {
   getCommandByDistributor(distributorId: number) {
     this.isLoading = true;
     this.commandService.getCommandByDistributor(distributorId).subscribe((value) => {
-      this.commandData = value.data.commandes;
+      this.allCommands = value.data.commandes;
+      this.filteredCommands = [...this.allCommands];
+      this.commandData = this.displayedCommands; // Pour le template
       console.log('commandData');
       console.log(this.commandData);
       this.isLoading = false;
