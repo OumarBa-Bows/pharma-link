@@ -1,94 +1,117 @@
-<header class="page-header">
-  <h1>📦 {{ 'commands.details.title' | translate }}</h1>
-</header>
-
-<main class="page-content">
-  @if (command) {
-  <div class="command-detail-container">
-    <h2>{{ 'commands.details.commandId' | translate }} {{ command.id }}</h2>
-
-    <div class="detail-grid">
-      <div>
-        <strong>{{ 'commands.details.code' | translate }} :</strong>
-        {{ command.code }}
-      </div>
-      <div class="status-badge" [ngClass]="command.status.toLowerCase()">
-        <strong>{{ 'commands.details.status'|translate }} :</strong>
-        {{ getStatusLabel(command.status) }}
-      </div>
-      <div>
-        <strong>{{ 'commands.details.reference'| translate }} :</strong>
-        {{ command.commandReference }}
-      </div>
-      <div>
-        <strong>{{ 'commands.details.referenceInvoice'|translate }} :</strong>
-        {{ command.invoiceReference }}
-      </div>
-      <div>
-        <strong>{{ 'commands.details.prixTotal' | translate}} :</strong>
-        {{ command.totalPrice | currency:'EUR' }}
-      </div>
-      <div>
-        <strong>{{ 'commands.details.pharmacy' | translate}} :</strong>
-        {{ command.pharmacy?.name }}
-      </div>
-      <div>
-        <strong>{{ 'commands.details.distributor' | translate}} :</strong>
-        {{ command.distributor?.name }}
-      </div>
-      <div>
-        <strong>{{ 'commands.details.distributorPrincipal' | translate}} :</strong>
-        {{ command.mainDistributor?.name }}
-      </div>
-      <div>
-        <strong>{{ 'commands.details.date' | translate}} :</strong>
-        {{ command.date | date:'short' }}
+<div class="page-wrapper">
+  <div class="page-header">
+    <div class="header-content">
+      <button class="btn-back-header" (click)="goBack()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <div class="header-title">
+        <h1>{{ 'commands.details.title' | translate }}</h1>
       </div>
     </div>
+  </div>
 
-    <h3 class="mt-4">🧾 {{'commands.details.article.title' | translate}}</h3>
+  <main class="page-content">
+    @if (command) {
+    <div class="command-detail-container">
+      <!-- Command Info Card -->
+      <div class="info-card">
+        <div class="card-header">
+          <h2>{{ 'commands.details.commandId' | translate }} {{ command.code }}</h2>
+          <span class="status-badge" [ngClass]="command.status.toLowerCase()">{{ getStatusLabel(command.status) }}</span>
+        </div>
 
-    @if (command.details?.length > 0) {
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>{{ 'commands.details.article.article' | translate }}</th>
-            <th>{{ 'commands.details.article.code' | translate }}</th>
-            <th>{{ 'commands.details.article.expirationDate' | translate }}</th>
-            <th>{{ 'commands.details.article.batchNumber' | translate }}</th>
-            <th>{{ 'commands.details.article.quantity' | translate }}</th>
-            <th>{{ 'commands.details.article.unitPrice' | translate }}</th>
-            <th>{{ 'commands.details.article.total' | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (detail of command.details; track detail.id) {
-          <tr>
-            <td>{{ detail.article?.name }}</td>
-            <td>{{ detail.article?.reference }}</td>
-            <td>{{ detail.expirationDate | date:'shortDate' }}</td>
-            <td>{{ detail.batchNumber }}</td>
-            <td>{{ detail.quantity }}</td>
-            <td>{{ detail.article?.price | currency:'EUR' }}</td>
-            <td>{{ (detail.article?.price ?? 0) * detail.quantity | currency:'EUR' }}</td>
-          </tr>
-          }
-        </tbody>
-      </table>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">{{ 'commands.details.date' | translate }}</span>
+            <span class="info-value">{{ command.date | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">{{ 'commands.details.prixTotal' | translate }}</span>
+            <span class="info-value price">{{ command.totalprice }} MRU</span>
+          </div>
+          <div class="info-item full-width">
+            <span class="info-label">{{ 'commands.details.pharmacy' | translate }}</span>
+            <span class="info-value">
+              {{ command.pharmacy_name }}
+              <span class="phone">{{ command.pharmacy_phone }}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Composition Table -->
+      <div class="composition-card">
+        <div class="card-header clickable" (click)="toggleComposition()">
+          <div class="header-left">
+            <h3>{{ 'commands.details.article.title' | translate }}</h3>
+            <span class="item-count">{{ 'commands.details.nombre' | translate }}{{ command.composition?.length || 0 }}</span>
+          </div>
+          <div class="toggle-section">
+            <span class="toggle-text">
+              {{ isCompositionVisible ? ('commands.details.voirMoins' | translate) : ('commands.details.voirPlus' | translate) }}
+            </span>
+            <button class="toggle-btn" [class.rotated]="isCompositionVisible">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        @if (isCompositionVisible) { @if (command.composition?.length > 0) {
+        <div class="table-container">
+          <table class="modern-table">
+            <thead>
+              <tr>
+                <th>{{ 'commands.details.article.article' | translate }}</th>
+                <th>{{ 'commands.details.reference' | translate }}</th>
+                <th class="text-center">{{ 'commands.details.article.quantity' | translate }}</th>
+                <th class="text-right">{{ 'commands.details.article.unitPrice' | translate }}</th>
+                <th class="text-right">{{ 'commands.details.article.total' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of command.composition; track item.command_detail_id) {
+              <tr>
+                <td class="article-name">{{ item.article_name }}</td>
+                <td class="article-ref">{{ item.article_reference }}</td>
+                <td class="text-center quantity">{{ item.quantity }}</td>
+                <td class="text-right">{{ item.article_price }} MRU</td>
+                <td class="text-right total">{{ item.article_price * item.quantity }} MRU</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        } @else {
+        <div class="empty-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <path d="M3 9h18M9 21V9" />
+          </svg>
+          <p>{{ 'commands.details.article.noArticle' | translate }}</p>
+        </div>
+        } }
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="btn btn-secondary" (click)="goBack()">{{ 'commands.details.article.backToCommands' | translate }}</button>
+        <button class="btn btn-primary" (click)="openModal()">{{ 'commands.details.article.changeStatus' | translate }}</button>
+      </div>
     </div>
     } @else {
-    <p>{{'commands.details.article.noArticle' | translate}}</p>
-    }
-    <div class="details-buttons">
-      <button class="btn-back" (click)="goBack()">← {{'commands.details.article.backToCommands' | translate}}</button>
-      <button class="chang-status-button" (click)="openModal()">{{'commands.details.article.changeStatus' | translate}}</button>
+    <div class="empty-state-page">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+        <line x1="12" y1="9" x2="12" y2="13" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </svg>
+      <p>{{ 'commands.details.noCommand' | translate }}</p>
+      <button class="btn btn-secondary" (click)="goBack()">{{ 'commands.details.article.backToCommands' | translate }}</button>
     </div>
-  </div>
-  } @else {
-  <div class="command-detail-container">
-    <p>{{ 'commands.details.noCommand' | translate }}</p>
-    <button class="btn-back" (click)="goBack()">{{ 'commands.details.article.backToCommands' | translate }}</button>
-  </div>
-  }
-</main>
+    }
+  </main>
+</div>

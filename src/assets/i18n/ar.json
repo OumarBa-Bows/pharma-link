@@ -358,9 +358,12 @@
       "cancel": "إلغاء",
       "validate": "تأكيد",
       "statusUpdateSuccess": "تم تحديث الحالة بنجاح",
+      "nombre": "العدد الإجمالي : ",
+      "voirPlus": "عرض المزيد",
+      "voirMoins": "عرض أقل",
       "article": {
         "title": "الأدوية",
-        "article": "مقالة",
+        "article": "الأدوية",
         "code": "الرمز",
         "expirationDate": "تاريخ الانتهاء",
         "batchNumber": "رقم الدفعة",

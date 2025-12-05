@@ -11,7 +11,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-command-detail',
-  imports: [CurrencyPipe, DatePipe, NgClass, TranslatePipe],
+  imports: [DatePipe, NgClass, TranslatePipe],
   templateUrl: './command-detail.html',
   standalone: true,
   styleUrl: './command-detail.scss',
@@ -19,6 +19,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 })
 export class CommandDetail implements OnInit {
   command: any;
+  isCompositionVisible = false;
   private ngbModal = inject(NgbModal);
   private commandId: number;
   private commandService = inject(CommandService);
@@ -70,7 +71,8 @@ export class CommandDetail implements OnInit {
 
   getCommandById() {
     this.commandService.getById(this.commandId).subscribe((res) => {
-      this.command = res.data.command as Command;
+      console.log(res);
+      this.command = res.data.command;
     });
   }
 
@@ -84,5 +86,9 @@ export class CommandDetail implements OnInit {
 
   getStatusLabel(status: string): string {
     return this.translateService.instant(`commands.status.${status.toLowerCase()}`);
+  }
+
+  toggleComposition(): void {
+    this.isCompositionVisible = !this.isCompositionVisible;
   }
 }

@@ -359,6 +359,9 @@
       "cancel": "Annuler",
       "validate": "Valider",
       "statusUpdateSuccess": "Statut mis à jour avec succès",
+      "nombre": "Nombre total : ",
+      "voirPlus": "Voir plus",
+      "voirMoins": "Voir moins",
       "article": {
         "title": "Articles",
         "article": "Article",

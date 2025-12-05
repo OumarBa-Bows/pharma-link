@@ -1,38 +1,42 @@
-
-
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import { HttpClient } from '@angular/common/http';
+import { Observable, from, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { createBrowserClient } from '../../Utils/supabase';
 
 @Injectable()
-export class CommandService{
+export class CommandService {
   env = environment;
-   private ressource = `${this.env.apiUrl}/`;
+  private ressource = `${this.env.apiUrl}/`;
+  private supabase = createBrowserClient();
 
-   constructor(private httpClient : HttpClient) {
-   }
+  constructor(private httpClient: HttpClient) {}
 
-   getCommandByDistributor(distributorId: number): Observable<any>{
-    const data = {distributorId : 1}
-    return  this.httpClient.post<any>(`${this.ressource}`+"commands/get/by-distributor", data);
-   }
+  getCommandByDistributor(distributorId: number): Observable<any> {
+    const data = { distributorId: 1 };
+    return this.httpClient.post<any>(`${this.ressource}` + 'commands/get/by-distributor', data);
+  }
 
-   getById(id: number): Observable<any>{
-     return this.httpClient.post<any>(`${this.ressource}`+"commands/get/by-id", {id: id})
-   }
+  getById(id: number): Observable<any> {
+    return from(this.supabase.from('command_view').select('*').eq('id', id).single()).pipe(
+      map((response) => ({
+        data: { command: response.data },
+        error: response.error
+      }))
+    );
+  }
 
-   delete(id: number):Observable<any>{
-     return this.httpClient.post<any>(`${this.ressource}`+"commands/get/delete", id)
-   }
+  delete(id: number): Observable<any> {
+    return this.httpClient.post<any>(`${this.ressource}` + 'commands/get/delete', id);
+  }
 
-   updateStatus(id: number, status: string):Observable<any>{
-     const data = {id: id, status: status}
-     return this.httpClient.post<any>(`${this.ressource}`+"commands/status-update", data)
-   }
+  updateStatus(id: number, status: string): Observable<any> {
+    const data = { id: id, status: status };
+    return this.httpClient.post<any>(`${this.ressource}` + 'commands/status-update', data);
+  }
 
-   updateCommand(command: any):Observable<any>{
-     const data = {command: command}
-     return this.httpClient.post<any>(`${this.ressource}`+"commands/update/command", data)
-   }
+  updateCommand(command: any): Observable<any> {
+    const data = { command: command };
+    return this.httpClient.post<any>(`${this.ressource}` + 'commands/update/command', data);
+  }
 }
