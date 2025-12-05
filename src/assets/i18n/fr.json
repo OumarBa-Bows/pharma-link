@@ -164,6 +164,7 @@
       "view": "Voir",
       "statuses": {
         "PENDING": "En attente",
+        "VALIDATED": "Validé",
         "CONFIRMED": "Confirmé",
         "SHIPPED": "Expédié",
         "DELIVERED": "Livré",

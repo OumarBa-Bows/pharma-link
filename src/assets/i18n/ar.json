@@ -163,6 +163,7 @@
       "view": "عرض",
       "statuses": {
         "PENDING": "قيد الانتظار",
+        "VALIDATED": "موثق",
         "CONFIRMED": "مؤكد",
         "SHIPPED": "تم الشحن",
         "DELIVERED": "تم التسليم",

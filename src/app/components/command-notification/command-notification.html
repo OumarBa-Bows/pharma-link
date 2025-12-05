@@ -17,7 +17,7 @@
 
         <div class="notif-status" [ngClass]="notif.status.toLowerCase()">{{ getStatusTranslation(notif.status) }}</div>
 
-        <div class="notif-date">{{ notif.date | date:'short' }}</div>
+        <div class="notif-date">{{ notif.date | date:'dd/MM/yyyy HH:mm' }}</div>
       </div>
       @if (!notif.viewed){
       <div class="notif-unread-dot"></div>
