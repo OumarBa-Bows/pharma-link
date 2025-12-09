@@ -64,7 +64,7 @@
   "articles": {
     "article-list": {
       "title": "قائمة الأدوية",
-      "create-new-article": "إنشاء مقال جديد",
+      "create-new-article": "إنشاء دواء جديد",
       "delete": {
         "confirmDelete": "هل أنت متأكد من رغبتك في حذف هذا الدواء؟",
         "successMessage": "تم حذف الدواء بنجاح",
@@ -78,7 +78,7 @@
       }
     },
     "article-create": {
-      "title": "إنشاء مقال",
+      "title": "إنشاء دواء",
       "successMessage": "تم إنشاء الدواء بنجاح!",
       "errorMessage": "حدث خطأ أثناء إنشاء الدواء",
       "fileSizeError": "يجب ألا يتجاوز حجم الملف 1 ميجابايت",
@@ -91,7 +91,7 @@
       "descriptionPlaceholder": "وصف الدواء"
     },
     "article-update": {
-      "title": "تعديل مقال",
+      "title": "تعديل دواء",
       "successMessage": "تم تحديث الدواء بنجاح!",
       "errorMessage": "حدث خطأ أثناء تحديث الدواء",
       "loadError": "حدث خطأ أثناء تحميل الدواء",
@@ -102,14 +102,22 @@
       "expiryDate": "تاريخ الانتهاء",
       "barcode": "الباركود",
       "barcodePlaceholder": "رمز الباركود",
-      "descriptionPlaceholder": "وصف المقال"
+      "descriptionPlaceholder": "وصف الدواء"
     },
     "importModal": {
-      "title": "استيراد الأدوية (Excel)",
-      "description": "حدد ملف Excel (.xls, .xlsx) يحتوي على الأدوية المراد استيرادها.",
+      "title": "استيراد الدواءات (Excel)",
+      "description": "حدد ملف Excel (.xls، .xlsx) يحتوي على الدواءات المراد استيرادها.",
       "selectedFile": "الملف المحدد",
       "import": "استيراد"
-    }
+    },
+    "isPublished": "منشور",
+    "publish": "نشر",
+    "unpublish": "إلغاء النشر",
+    "confirmPublish": "هل أنت متأكد من رغبتك في نشر هذا الدواء؟",
+    "confirmUnpublish": "هل أنت متأكد من رغبتك في إلغاء نشر هذا الدواء؟",
+    "publishSuccess": "تم نشر الدواء بنجاح",
+    "unpublishSuccess": "تم إلغاء نشر الدواء بنجاح",
+    "publishError": "خطأ في تغيير حالة النشر"
   },
   "table": {
     "selectAll": "تحديد الكل",
@@ -139,7 +147,7 @@
     "home": "الصفحة الرئيسية",
     "about": "حول",
     "contact": "اتصال",
-    "article-title": "إنشاء مقال",
+    "article-title": "إنشاء دواء",
     "administration": "الإدارة",
     "categories": "الفئات",
     "language": "اللغة"
@@ -371,7 +379,7 @@
         "quantity": "الكمية",
         "unitPrice": "سعر الوحدة",
         "total": "الإجمالي",
-        "noArticle": "لا توجد مقالات في هذا الطلب",
+        "noArticle": "لا توجد دواءات في هذا الطلب",
         "backToCommands": "العودة إلى الطلبات",
         "changeStatus": "تغيير الحالة"
       },

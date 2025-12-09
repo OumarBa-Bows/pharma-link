@@ -40,7 +40,7 @@
               @for (col of columns; track $index) {
                 <th>{{ col.header }}</th>
               }
-              @if (showEdit || showDelete || showDetails) {
+              @if (showEdit || showDelete || showDetails || showPublishToggle) {
                 <th>{{ 'buttons-action.title' | translate }}</th>
               }
             </tr>
@@ -74,7 +74,7 @@
                     <td>{{ row[col.field] }}</td>
                   }
                 }
-                @if (showEdit || showDelete || showDetails) {
+                @if (showEdit || showDelete || showDetails || showPublishToggle) {
                   <td>
                     @if (showEdit) {
                       <button
@@ -89,7 +89,7 @@
                     @if (showDelete) {
                       <button
                         type="button"
-                        class="btn btn-sm btn-outline-danger"
+                        class="btn btn-sm btn-outline-danger me-2"
                         (click)="onDelete(row)"
                         title="{{ 'buttons-action.delete' | translate }}"
                       >
@@ -99,11 +99,21 @@
                     @if (showDetails) {
                       <button
                         type="button"
-                        class="btn btn-sm btn-outline-info"
+                        class="btn btn-sm btn-outline-info me-2"
                         (click)="onShowDetails(row)"
                         title="{{ 'buttons-action.showDetails' | translate }}"
                       >
                         <i class="fa fa-eye"></i>
+                      </button>
+                    }
+                    @if (showPublishToggle) {
+                      <button
+                        type="button"
+                        [class]="!row.isPublished ? 'btn btn-sm btn-outline-success' : 'btn btn-sm btn-outline-secondary'"
+                        (click)="onTogglePublish(row)"
+                        [title]="row.isPublished ? ('articles.unpublish' | translate) : ('articles.publish' | translate)"
+                      >
+                        <i [class]="!row.isPublished ? 'fa fa-check-circle text-success' : 'fa fa-times-circle text-secondary'"></i>
                       </button>
                     }
                   </td>

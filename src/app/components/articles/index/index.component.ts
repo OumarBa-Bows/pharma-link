@@ -67,7 +67,20 @@ export class IndexComponent {
     { header: 'Nom', field: 'name' },
     { header: 'Référence', field: 'reference' },
     { header: 'Prix', field: 'price' },
-    { header: 'Catégorie', field: 'category' }
+    { header: 'Catégorie', field: 'category' },
+    {
+      header: 'Publié',
+      field: 'isPublished',
+      type: 'enum',
+      enumMap: {
+        true: 'Oui',
+        false: 'Non'
+      },
+      badgeColors: {
+        true: 'bg-success text-white',
+        false: 'bg-secondary text-white'
+      }
+    }
   ];
 
   newSubscription: Subscription;
@@ -94,7 +107,20 @@ export class IndexComponent {
       { header: this.translateService.instant('common.name'), field: 'name' },
       { header: this.translateService.instant('common.reference'), field: 'reference' },
       { header: this.translateService.instant('common.price'), field: 'price' },
-      { header: this.translateService.instant('common.category'), field: 'category' }
+      { header: this.translateService.instant('common.category'), field: 'category' },
+      {
+        header: this.translateService.instant('articles.isPublished'),
+        field: 'isPublished',
+        type: 'enum',
+        enumMap: {
+          true: this.translateService.instant('common.yes'),
+          false: this.translateService.instant('common.no')
+        },
+        badgeColors: {
+          true: 'bg-success text-white',
+          false: 'bg-secondary text-white'
+        }
+      }
     ];
   }
 
@@ -159,6 +185,43 @@ export class IndexComponent {
     modalRef.result.then((result) => {
       if (result) {
         this.onDelete(row);
+      }
+    });
+  }
+
+  togglePublish(row: any) {
+    const modalRef = this.modalService.open(ConfirmationModalComponent, {
+      size: 'md',
+      centered: true,
+      backdrop: 'static'
+    });
+
+    const isPublished = row['isPublished'];
+    const confirmMessage = isPublished
+      ? this.translateService.instant('articles.confirmUnpublish')
+      : this.translateService.instant('articles.confirmPublish');
+
+    modalRef.componentInstance.msg = confirmMessage;
+
+    modalRef.result.then((result) => {
+      if (result) {
+        this.isLoading = true;
+        this.apiService.getData(`articles/set/publish/${row['id']}`).subscribe({
+          next: (response) => {
+            console.log('Article publish status toggled:', response);
+            const newStatus = !isPublished;
+            const message = newStatus
+              ? this.translateService.instant('articles.publishSuccess')
+              : this.translateService.instant('articles.unpublishSuccess');
+            this.notificationService.showSuccess(message);
+            this.getArticles(); // Rafraîchir la liste
+          },
+          error: (error) => {
+            this.isLoading = false;
+            console.error('Erreur lors du changement de statut de publication:', error);
+            this.notificationService.showError(this.translateService.instant('articles.publishError'));
+          }
+        });
       }
     });
   }

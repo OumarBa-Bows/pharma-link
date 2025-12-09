@@ -109,7 +109,15 @@
       "description": "Sélectionnez un fichier Excel (.xls, .xlsx) contenant les articles à importer.",
       "selectedFile": "Fichier sélectionné",
       "import": "Importer"
-    }
+    },
+    "isPublished": "Publié",
+    "publish": "Publier",
+    "unpublish": "Dépublier",
+    "confirmPublish": "Êtes-vous sûr de vouloir publier cet article ?",
+    "confirmUnpublish": "Êtes-vous sûr de vouloir dépublier cet article ?",
+    "publishSuccess": "Article publié avec succès",
+    "unpublishSuccess": "Article dépublié avec succès",
+    "publishError": "Erreur lors du changement de statut de publication"
   },
 
   "table": {

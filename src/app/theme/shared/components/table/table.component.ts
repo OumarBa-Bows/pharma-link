@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { CardComponent } from '../card/card.component';
 import { SharedModule } from '../../shared.module';
 import { TranslatePipe } from '@ngx-translate/core';
-import {DatePipe} from "@angular/common";
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-table',
@@ -21,12 +21,13 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() showImport = false;
   @Input() showSelected = false;
   @Input() showStatus = false;
+  @Input() showPublishToggle = false;
 
   @Output() edit = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
   @Output() selectionChange = new EventEmitter<any[]>();
   @Output() showDetatail = new EventEmitter<any>();
-
+  @Output() togglePublish = new EventEmitter<any>();
 
   @Input() page = 1;
   @Input() pageSize = 10;
@@ -44,7 +45,7 @@ export class TableComponent implements OnInit, OnChanges {
   @Input()
   showAddButton = true;
   @Input()
-  showDetails=  false;
+  showDetails = false;
 
   get totalPages(): number {
     return Math.ceil(this.total / this.pageSize);
@@ -114,7 +115,11 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   onShowDetails(row: any) {
-    this.showDetatail.emit(row)
+    this.showDetatail.emit(row);
+  }
+
+  onTogglePublish(row: any) {
+    this.togglePublish.emit(row);
   }
 
   get pages(): number[] {
@@ -144,10 +149,8 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   goToPage(p: number) {
-  if (p < 1 || p > this.totalPages) return;
-  this.currentPage = p;
-  this.pageChange.emit(p);
-}
-
-
+    if (p < 1 || p > this.totalPages) return;
+    this.currentPage = p;
+    this.pageChange.emit(p);
+  }
 }
