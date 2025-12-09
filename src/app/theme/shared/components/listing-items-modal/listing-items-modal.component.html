@@ -1,0 +1,39 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ title | translate }}</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+</div>
+<div class="modal-body">
+  @if (items && items.length > 0) {
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>{{ 'common.name' | translate }}</th>
+            <th>{{ 'common.reference' | translate }}</th>
+            <th>{{ 'common.price' | translate }}</th>
+            <th>{{ 'listings.availableQuantity' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of items; track item.id) {
+            <tr>
+              <td>{{ item.name }}</td>
+              <td>{{ item.reference }}</td>
+              <td>{{ item.price }} MRU</td>
+              <td>{{ item.availableQuantity }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="text-center py-4">
+      <p class="text-muted">{{ 'listings.noArticles' | translate }}</p>
+    </div>
+  }
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="closeModal()">
+    {{ 'common.close' | translate }}
+  </button>
+</div>

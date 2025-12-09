@@ -67,6 +67,7 @@ export class IndexComponent {
     { header: 'Nom', field: 'name' },
     { header: 'Référence', field: 'reference' },
     { header: 'Prix', field: 'price' },
+    { header: 'Stock disponible', field: 'availableQuantity' },
     { header: 'Catégorie', field: 'category' },
     {
       header: 'Publié',
@@ -107,6 +108,7 @@ export class IndexComponent {
       { header: this.translateService.instant('common.name'), field: 'name' },
       { header: this.translateService.instant('common.reference'), field: 'reference' },
       { header: this.translateService.instant('common.price'), field: 'price' },
+      { header: this.translateService.instant('listings.availableQuantity'), field: 'availableQuantity' },
       { header: this.translateService.instant('common.category'), field: 'category' },
       {
         header: this.translateService.instant('articles.isPublished'),

@@ -49,6 +49,7 @@ export class CommandesComponent implements OnInit {
     // { header: this.translateService.instant('commands.columns.commandReference'), field: 'commandreference' },
     // { header: this.translateService.instant('commands.columns.invoiceReference'), field: 'invoicereference' },
     { header: this.translateService.instant('commands.columns.totalPrice'), field: 'totalprice' },
+    { header: this.translateService.instant('pharmacies.code'), field: 'pharmacyCode' },
     { header: this.translateService.instant('commands.columns.pharmacy'), field: 'pharmacy' }
   ];
   commandData: Command[] = [];
@@ -140,6 +141,7 @@ export class CommandesComponent implements OnInit {
       // { header: this.translateService.instant('commands.columns.commandReference'), field: 'commandreference' },
       // { header: this.translateService.instant('commands.columns.invoiceReference'), field: 'invoicereference' },
       { header: this.translateService.instant('commands.columns.totalPrice'), field: 'totalprice' },
+      { header: this.translateService.instant('pharmacies.code'), field: 'pharmacyCode' },
       { header: this.translateService.instant('commands.columns.pharmacy'), field: 'pharmacy' }
     ];
   }
@@ -148,7 +150,7 @@ export class CommandesComponent implements OnInit {
     this.langSubscription?.unsubscribe();
   }
 
-  showDetail(command: any) {
+  showDetails(command: any) {
     this.router.navigate(['/commands/details', command.id], { state: { data: command } });
   }
 }

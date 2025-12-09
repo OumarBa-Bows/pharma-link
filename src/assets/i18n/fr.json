@@ -33,7 +33,7 @@
       "admin": "Administrateur système",
       "article": "Gestionnaire des articles",
       "user": "Gestionnaire des utilisateurs",
-      "pharmacy": "Gestionnaire des pharmacies",
+      "pharmacy": "Gestionnaire des clients",
       "commande": "Gestionnaire des commandes",
       "editor": "Éditeur",
       "viewer": "Lecteur"
@@ -136,7 +136,7 @@
     "users": "Utilisateurs",
     "articles": "Articles",
     "listings": "Listings",
-    "pharmacies": "Pharmacies",
+    "pharmacies": "Clients",
     "commands": "Commandes",
     "notifications": "Notifications",
     "profile": "Profile",
@@ -156,8 +156,8 @@
   "dashboard": {
     "title": "Tableau de bord",
     "kpis": {
-      "totalPharmacies": "Total des pharmacies",
-      "activePharmacies": "Pharmacies actives",
+      "totalPharmacies": "Total des clients",
+      "activePharmacies": "Clients actifs",
       "pendingApprovals": "Approbations en attente",
       "active": "actif"
     },
@@ -165,7 +165,7 @@
       "title": "Commandes récentes",
       "columns": {
         "code": "Code",
-        "pharmacy": "Pharmacie",
+        "pharmacy": "Client",
         "status": "Statut",
         "date": "Date"
       },
@@ -180,7 +180,7 @@
       }
     },
     "recentPharmacies": {
-      "title": "Pharmacies récentes",
+      "title": "Clients récents",
       "columns": {
         "name": "Nom",
         "zone": "Zone",
@@ -281,6 +281,9 @@
     "namePlaceholder": "Nom du listing",
     "descriptionPlaceholder": "Description du listing",
     "articles": "Articles",
+    "articlesList": "Liste des articles",
+    "availableQuantity": "Quantité disponible",
+    "noArticles": "Aucun article dans ce listing",
     "loadingArticles": "Chargement des articles...",
     "searchArticles": "Rechercher par nom ou code...",
     "createSuccess": "Listing créé avec succès!",
@@ -295,39 +298,44 @@
   },
   "pharmacies": {
     "pharmacy-list": {
-      "title": "Liste des pharmacies"
+      "title": "Liste des clients"
     },
     "pharmacy-update": {
-      "title": "Modifier une pharmacie"
+      "title": "Modifier un client"
     },
-    "search-placeholder": "Rechercher une pharmacie...",
-    "code": "Code",
-    "codePlaceholder": "Code de la pharmacie",
+    "search-placeholder": "Rechercher un client...",
+    "code": "Code du client",
+    "codePlaceholder": "Code du client",
     "phone": "Téléphone",
-    "phonePlaceholder": "Téléphone de la pharmacie",
+    "phonePlaceholder": "Téléphone du client",
     "address": "Adresse",
-    "addressPlaceholder": "Adresse de la pharmacie",
+    "addressPlaceholder": "Adresse du client",
     "type": "Type",
     "selectType": "Sélectionnez un type",
-    "pharmacy": "Pharmacie",
+    "pharmacy": "Client",
     "depot": "Dépôt",
+    "depotPharmaceutique": "Dépôt pharmaceutique",
+    "clinique": "Clinique",
+    "hopital": "Hôpital",
+    "pointDeSante": "Point de santé",
+    "centreHospitalier": "Centre hospitalier",
     "status": "Statut",
     "selectStatus": "Sélectionnez un statut",
     "active": "Actif",
     "blocked": "Bloqué",
     "pending": "En attente",
-    "namePlaceholder": "Nom de la pharmacie",
+    "namePlaceholder": "Nom du client",
     "managerName": "Nom du gérant",
     "managerNamePlaceholder": "Nom du gérant",
     "managerPhone": "Téléphone du gérant",
     "managerPhonePlaceholder": "Téléphone du gérant",
-    "doctorName": "Nom du docteur",
-    "doctorNamePlaceholder": "Nom du docteur",
-    "doctorPhone": "Téléphone du docteur",
-    "doctorPhonePlaceholder": "Téléphone du docteur",
-    "updateSuccess": "Pharmacie mise à jour avec succès!",
-    "importTitle": "Importer des pharmacies (Excel)",
-    "importDescription": "Sélectionnez un fichier Excel (.xls, .xlsx) contenant les pharmacies à importer.",
+    "doctorName": "Nom du responsable technique",
+    "doctorNamePlaceholder": "Nom du responsable technique",
+    "doctorPhone": "Téléphone du responsable technique",
+    "doctorPhonePlaceholder": "Téléphone du responsable technique",
+    "updateSuccess": "Client mis à jour avec succès!",
+    "importTitle": "Importer des clients (Excel)",
+    "importDescription": "Sélectionnez un fichier Excel (.xls, .xlsx) contenant les clients à importer.",
     "importSuccess": "Import effectué avec succès",
     "importError": "Une erreur s'est produite lors de l'import"
   },
@@ -343,7 +351,7 @@
       "commandReference": "Référence commande",
       "invoiceReference": "Référence facture",
       "totalPrice": "Prix total",
-      "pharmacy": "Pharmacie"
+      "pharmacy": "Client"
     },
     "status": {
       "pending": "En attente",
@@ -360,7 +368,7 @@
       "reference": "Référence",
       "referenceInvoice": "Référence facture",
       "prixTotal": "Prix total",
-      "pharmacy": "Pharmacie",
+      "pharmacy": "Client",
       "distributor": "Distributeur",
       "distributorPrincipal": "Distributeur principal",
       "date": "Date",
@@ -371,6 +379,8 @@
       "nombre": "Nombre total : ",
       "voirPlus": "Voir plus",
       "voirMoins": "Voir moins",
+      "lowStockTooltip": "Alerte stock : Articles nécessitant un réapprovisionnement (quantité disponible \u2264 20 unités)",
+      "lowStockLabel": "Stock critique",
       "article": {
         "title": "Articles",
         "article": "Article",
@@ -382,7 +392,17 @@
         "total": "Total",
         "noArticle": "Aucun article dans cette commande",
         "backToCommands": "Retour aux commandes",
-        "changeStatus": "Changer le statut"
+        "changeStatus": "Changer le statut",
+        "deleteArticle": "Supprimer l'article",
+        "confirmDeleteArticle": "Êtes-vous sûr de vouloir supprimer l'article '{{article}}' de cette commande ?",
+        "deleteSuccess": "Article supprimé avec succès ✅",
+        "deleteError": "Erreur lors de la suppression de l'article ❌",
+        "editQuantity": "Modifier la quantité",
+        "currentQuantity": "Quantité actuelle",
+        "newQuantity": "Nouvelle quantité",
+        "quantityHint": "Entrez la nouvelle quantité souhaitée",
+        "updateSuccess": "Quantité mise à jour avec succès ✅",
+        "updateError": "Erreur lors de la mise à jour de la quantité ❌"
       },
       "statusChange": {
         "title": "Changer le statut",

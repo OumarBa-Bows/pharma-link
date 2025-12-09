@@ -1,0 +1,41 @@
+<div class="modal-header">
+  <h5 class="modal-title">{{ 'commands.details.article.editQuantity' | translate }}</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="cancel()"></button>
+</div>
+
+<div class="modal-body">
+  <div class="article-info mb-3">
+    <p class="mb-2">
+      <strong>{{ 'commands.details.article.article' | translate }}:</strong>
+      {{ articleName }}
+    </p>
+    <p class="mb-2">
+      <strong>{{ 'listings.availableQuantity' | translate }}:</strong>
+      {{ availableQuantity }}
+    </p>
+    <p class="mb-0">
+      <strong>{{ 'commands.details.article.currentQuantity' | translate }}:</strong>
+      {{ currentQuantity }}
+    </p>
+  </div>
+
+  <div class="form-group">
+    <label for="quantity" class="form-label">
+      {{ 'commands.details.article.newQuantity' | translate }}
+      <span class="text-danger">*</span>
+    </label>
+    <input type="number" class="form-control" id="quantity" [(ngModel)]="newQuantity" [min]="1" [max]="availableQuantity" required />
+    <small class="form-text text-muted">
+      {{ 'commands.details.article.quantityHint' | translate }}
+    </small>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="cancel()">
+    {{ 'common.cancel' | translate }}
+  </button>
+  <button type="button" class="btn btn-primary" (click)="confirm()" [disabled]="!newQuantity || newQuantity <= 0">
+    {{ 'common.save' | translate }}
+  </button>
+</div>

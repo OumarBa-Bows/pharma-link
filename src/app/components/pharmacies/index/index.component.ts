@@ -70,7 +70,20 @@ export class IndexComponent {
     { header: 'Nom', field: 'name' },
     { header: 'Telephone', field: 'phone' },
     { header: 'Adresse', field: 'address' },
-    { header: 'Type', field: 'customerType', type: 'enum', enumMap: { PHARMACY: 'Pharmacie', DEPOT: 'Depot' } },
+    {
+      header: 'Type',
+      field: 'customerType',
+      type: 'enum',
+      enumMap: {
+        PHARMACY: 'Pharmacie',
+        DEPOT: 'Depot',
+        DEPOT_PHARMACEUTIQUE: 'Dépôt pharmaceutique',
+        CLINIQUE: 'Clinique',
+        HOPITAL: 'Hôpital',
+        POINT_DE_SANTE: 'Point de santé',
+        CENTRE_HOSPITALIER: 'Centre hospitalier'
+      }
+    },
     { header: 'Statut', field: 'state', type: 'enum', enumMap: { ACTIVE: 'Actif', BLOCKED: 'Bloqué', PENDING: 'En attente' } }
   ];
 
@@ -102,7 +115,12 @@ export class IndexComponent {
         type: 'enum',
         enumMap: {
           PHARMACY: this.translateService.instant('pharmacies.pharmacy'),
-          DEPOT: this.translateService.instant('pharmacies.depot')
+          DEPOT: this.translateService.instant('pharmacies.depot'),
+          DEPOT_PHARMACEUTIQUE: this.translateService.instant('pharmacies.depotPharmaceutique'),
+          CLINIQUE: this.translateService.instant('pharmacies.clinique'),
+          HOPITAL: this.translateService.instant('pharmacies.hopital'),
+          POINT_DE_SANTE: this.translateService.instant('pharmacies.pointDeSante'),
+          CENTRE_HOSPITALIER: this.translateService.instant('pharmacies.centreHospitalier')
         }
       },
       {

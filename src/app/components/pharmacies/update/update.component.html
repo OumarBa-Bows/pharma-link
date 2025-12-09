@@ -47,8 +47,11 @@
             <label for="customerType" class="form-label">{{ 'pharmacies.type' | translate }}</label>
             <select class="form-select" id="customerType" formControlName="customerType">
               <option value="">{{ 'pharmacies.selectType' | translate }}</option>
-              <option value="PHARMACY">{{ 'pharmacies.pharmacy' | translate }}</option>
-              <option value="DEPOT">{{ 'pharmacies.depot' | translate }}</option>
+              <option value="DEPOT_PHARMACEUTIQUE">{{ 'pharmacies.depotPharmaceutique' | translate }}</option>
+              <option value="CLINIQUE">{{ 'pharmacies.clinique' | translate }}</option>
+              <option value="HOPITAL">{{ 'pharmacies.hopital' | translate }}</option>
+              <option value="POINT_DE_SANTE">{{ 'pharmacies.pointDeSante' | translate }}</option>
+              <option value="CENTRE_HOSPITALIER">{{ 'pharmacies.centreHospitalier' | translate }}</option>
             </select>
           </div>
         </div>

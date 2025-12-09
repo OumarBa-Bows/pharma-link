@@ -39,4 +39,12 @@ export class CommandService {
     const data = { command: command };
     return this.httpClient.post<any>(`${this.ressource}` + 'commands/update/command', data);
   }
+
+  updateCommandArticleQuantity(data: any): Observable<any> {
+    return this.httpClient.post<any>(`${this.ressource}` + 'commands/update-article-quantity', data);
+  }
+
+  removeCommandArticle(data: any): Observable<any> {
+    return this.httpClient.post<any>(`${this.ressource}` + 'commands/remove-article-item', data);
+  }
 }

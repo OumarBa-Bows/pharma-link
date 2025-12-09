@@ -10,6 +10,7 @@ import { ConfirmationModalComponent } from 'src/app/theme/shared/components/conf
 import { ToastService } from 'src/app/services/apis/toast.service';
 import { NotificationService } from 'src/app/services/notifications/notification.service';
 import { ImportModalComponent } from 'src/app/theme/shared/components/import-modal/import-modal.component';
+import { ListingItemsModalComponent } from 'src/app/theme/shared/components/listing-items-modal/listing-items-modal.component';
 
 @Component({
   selector: 'app-index',
@@ -26,6 +27,7 @@ export class IndexComponent {
 
   allListings: any[] = []; // Liste complète des listings
   filteredListings: any[] = []; // Liste filtrée pour l'affichage
+  listingItems: any;
 
   onAddNew() {
     this.router.navigateByUrl('/listings/create');
@@ -186,5 +188,30 @@ export class IndexComponent {
       .catch(() => {
         // Modal dismissed
       });
+  }
+
+  onShowDetails(row: any) {
+    console.log('Afficher les détails du listing :', row);
+    this.isLoading = true;
+    this.apiService.getData(`listings/show/items/${row['id']}`).subscribe({
+      next: (response: any) => {
+        console.log('Listing items fetched successfully:', response);
+        const items = response.data.listingDetails;
+        this.isLoading = false;
+
+        const modalRef = this.modalService.open(ListingItemsModalComponent, {
+          size: 'lg',
+          centered: true,
+          backdrop: 'static'
+        });
+        modalRef.componentInstance.items = items;
+        modalRef.componentInstance.title = 'listings.articlesList';
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Error fetching listing items:', error);
+        this.notificationService.showError(this.translateService.instant('common.error'));
+      }
+    });
   }
 }

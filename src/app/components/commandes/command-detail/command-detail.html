@@ -1,4 +1,15 @@
 <div class="page-wrapper">
+  <!-- Loading Spinner Overlay -->
+  @if (isLoading) {
+  <div class="loading-overlay">
+    <div class="spinner-container">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </div>
+  }
+
   <div class="page-header">
     <div class="header-content">
       <button class="btn-back-header" (click)="goBack()">
@@ -29,7 +40,11 @@
           </div>
           <div class="info-item">
             <span class="info-label">{{ 'commands.details.prixTotal' | translate }}</span>
-            <span class="info-value price">{{ command.totalprice }} MRU</span>
+            <span class="info-value price">{{ command.totalprice | number:'1.2-2' }} MRU</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">{{ 'pharmacies.code' | translate }}</span>
+            <span class="info-value">{{ command.pharmacy_code }}</span>
           </div>
           <div class="info-item full-width">
             <span class="info-label">{{ 'commands.details.pharmacy' | translate }}</span>
@@ -46,7 +61,15 @@
         <div class="card-header clickable" (click)="toggleComposition()">
           <div class="header-left">
             <h3>{{ 'commands.details.article.title' | translate }}</h3>
-            <span class="item-count">{{ 'commands.details.nombre' | translate }}{{ command.composition?.length || 0 }}</span>
+            <span class="item-count">
+              {{ 'commands.details.nombre' | translate }}{{ command.composition?.length || 0 }}&nbsp; @if (getLowStockCount() > 0) {
+              <span class="low-stock-badge" [title]="'commands.details.lowStockTooltip' | translate">
+                <span class="badge-label">{{ 'commands.details.lowStockLabel' | translate }}</span>
+                <i class="feather icon-alert-triangle"></i>
+                {{ getLowStockCount() }}
+              </span>
+              }
+            </span>
           </div>
           <div class="toggle-section">
             <span class="toggle-text">
@@ -68,18 +91,39 @@
                 <th>{{ 'commands.details.article.article' | translate }}</th>
                 <th>{{ 'commands.details.reference' | translate }}</th>
                 <th class="text-center">{{ 'commands.details.article.quantity' | translate }}</th>
+                <th class="text-center">{{ 'listings.availableQuantity' | translate }}</th>
                 <th class="text-right">{{ 'commands.details.article.unitPrice' | translate }}</th>
                 <th class="text-right">{{ 'commands.details.article.total' | translate }}</th>
+                <th class="text-center">{{ 'buttons-action.title' | translate }}</th>
               </tr>
             </thead>
             <tbody>
-              @for (item of command.composition; track item.command_detail_id) {
-              <tr>
+              @for (item of getSortedComposition(); track item.command_detail_id) {
+              <tr [class.low-stock]="item.article_availableQuantity < 20">
                 <td class="article-name">{{ item.article_name }}</td>
                 <td class="article-ref">{{ item.article_reference }}</td>
                 <td class="text-center quantity">{{ item.quantity }}</td>
-                <td class="text-right">{{ item.article_price }} MRU</td>
-                <td class="text-right total">{{ item.article_price * item.quantity }} MRU</td>
+                <td class="text-center quantity">{{ item.article_availableQuantity }}</td>
+                <td class="text-right">{{ item.article_price | number:'1.2-2' }} MRU</td>
+                <td class="text-right total">{{ (item.article_price * item.quantity) | number:'1.2-2' }} MRU</td>
+                <td class="text-center">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary me-2"
+                    (click)="onEditItem(item)"
+                    title="{{ 'buttons-action.edit' | translate }}"
+                  >
+                    <i class="feather icon-edit-2"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="onDeleteItem(item)"
+                    title="{{ 'buttons-action.delete' | translate }}"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
               </tr>
               }
             </tbody>

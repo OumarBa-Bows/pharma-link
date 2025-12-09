@@ -33,7 +33,7 @@
       "admin": "System Administrator",
       "article": "Articles Manager",
       "user": "Users Manager",
-      "pharmacy": "Pharmacies Manager",
+      "pharmacy": "Clients Manager",
       "commande": "Orders Manager",
       "editor": "Editor",
       "viewer": "Viewer"
@@ -180,11 +180,11 @@
       }
     },
     "recentPharmacies": {
-      "title": "Recent Pharmacies",
+      "title": "Recent clients",
       "columns": {
         "name": "Name",
         "zone": "Zone",
-        "created": "Created"
+        "created": "Created on"
       },
       "open": "Open"
     }
@@ -281,6 +281,9 @@
     "namePlaceholder": "Listing name",
     "descriptionPlaceholder": "Listing description",
     "articles": "Articles",
+    "articlesList": "Articles list",
+    "availableQuantity": "Available quantity",
+    "noArticles": "No articles in this listing",
     "loadingArticles": "Loading articles...",
     "searchArticles": "Search by name or code...",
     "createSuccess": "Listing created successfully!",
@@ -295,39 +298,44 @@
   },
   "pharmacies": {
     "pharmacy-list": {
-      "title": "Pharmacy List"
+      "title": "Client List"
     },
     "pharmacy-update": {
-      "title": "Edit Pharmacy"
+      "title": "Edit Client"
     },
-    "search-placeholder": "Search a pharmacy...",
-    "code": "Code",
-    "codePlaceholder": "Pharmacy code",
+    "search-placeholder": "Search a client...",
+    "code": "Client code",
+    "codePlaceholder": "Client code",
     "phone": "Phone",
-    "phonePlaceholder": "Pharmacy phone",
+    "phonePlaceholder": "Client phone",
     "address": "Address",
-    "addressPlaceholder": "Pharmacy address",
+    "addressPlaceholder": "Client address",
     "type": "Type",
     "selectType": "Select a type",
-    "pharmacy": "Pharmacy",
+    "pharmacy": "Client",
     "depot": "Depot",
+    "depotPharmaceutique": "Pharmaceutical depot",
+    "clinique": "Clinic",
+    "hopital": "Hospital",
+    "pointDeSante": "Health center",
+    "centreHospitalier": "Hospital center",
     "status": "Status",
     "selectStatus": "Select a status",
     "active": "Active",
     "blocked": "Blocked",
     "pending": "Pending",
-    "namePlaceholder": "Pharmacy name",
+    "namePlaceholder": "Client name",
     "managerName": "Manager name",
     "managerNamePlaceholder": "Manager name",
     "managerPhone": "Manager phone",
     "managerPhonePlaceholder": "Manager phone",
-    "doctorName": "Doctor name",
-    "doctorNamePlaceholder": "Doctor name",
-    "doctorPhone": "Doctor phone",
-    "doctorPhonePlaceholder": "Doctor phone",
-    "updateSuccess": "Pharmacy updated successfully!",
-    "importTitle": "Import Pharmacies (Excel)",
-    "importDescription": "Select an Excel file (.xls, .xlsx) containing the pharmacies to import.",
+    "doctorName": "Technical manager name",
+    "doctorNamePlaceholder": "Technical manager name",
+    "doctorPhone": "Technical manager phone",
+    "doctorPhonePlaceholder": "Technical manager phone",
+    "updateSuccess": "Client updated successfully!",
+    "importTitle": "Import Clients (Excel)",
+    "importDescription": "Select an Excel file (.xls, .xlsx) containing the clients to import.",
     "importSuccess": "Import completed successfully",
     "importError": "An error occurred during import"
   },
@@ -343,7 +351,7 @@
       "commandReference": "Order reference",
       "invoiceReference": "Invoice reference",
       "totalPrice": "Total price",
-      "pharmacy": "Pharmacy"
+      "pharmacy": "Client"
     },
     "status": {
       "pending": "Pending",
@@ -360,7 +368,7 @@
       "reference": "Reference",
       "referenceInvoice": "Invoice reference",
       "prixTotal": "Total price",
-      "pharmacy": "Pharmacy",
+      "pharmacy": "Client",
       "distributor": "Distributor",
       "distributorPrincipal": "Main distributor",
       "date": "Date",
@@ -371,6 +379,8 @@
       "nombre": "Total number: ",
       "voirPlus": "Show more",
       "voirMoins": "Show less",
+      "lowStockTooltip": "Stock Alert: Items requiring replenishment (available quantity \u2264 20 units)",
+      "lowStockLabel": "Critical Stock",
       "article": {
         "title": "Articles",
         "article": "Article",
@@ -382,7 +392,17 @@
         "total": "Total",
         "noArticle": "No article in this order",
         "backToCommands": "Back to orders",
-        "changeStatus": "Change status"
+        "changeStatus": "Change status",
+        "deleteArticle": "Delete article",
+        "confirmDeleteArticle": "Are you sure you want to delete the article '{{article}}' from this order?",
+        "deleteSuccess": "Article deleted successfully ✅",
+        "deleteError": "Error deleting article ❌",
+        "editQuantity": "Edit quantity",
+        "currentQuantity": "Current quantity",
+        "newQuantity": "New quantity",
+        "quantityHint": "Enter the new desired quantity",
+        "updateSuccess": "Quantity updated successfully ✅",
+        "updateError": "Error updating quantity ❌"
       },
       "statusChange": {
         "title": "Change Status",

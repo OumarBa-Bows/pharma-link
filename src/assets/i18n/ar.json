@@ -33,7 +33,7 @@
       "admin": "مدير النظام",
       "article": "مدير الأدوية",
       "user": "مدير المستخدمين",
-      "pharmacy": "مدير الصيدليات",
+      "pharmacy": "مدير العملاء",
       "commande": "مدير الطلبات",
       "editor": "محرر",
       "viewer": "قارئ"
@@ -135,7 +135,7 @@
     "users": "المستخدمون",
     "articles": "الأدوية",
     "listings": "القوائم",
-    "pharmacies": "الصيدليات",
+    "pharmacies": "العملاء",
     "commands": "الطلبات",
     "notifications": "الإشعارات",
     "profile": "الملف الشخصي",
@@ -155,8 +155,8 @@
   "dashboard": {
     "title": "لوحة القيادة",
     "kpis": {
-      "totalPharmacies": "إجمالي الصيدليات",
-      "activePharmacies": "الصيدليات النشطة",
+      "totalPharmacies": "إجمالي العملاء",
+      "activePharmacies": "العملاء النشطة",
       "pendingApprovals": "الموافقات المعلقة",
       "active": "نشط"
     },
@@ -179,11 +179,11 @@
       }
     },
     "recentPharmacies": {
-      "title": "الصيدليات الأخيرة",
+      "title": "العملاء الأخيرة",
       "columns": {
         "name": "الاسم",
         "zone": "المنطقة",
-        "created": "تاريخ الإنشاء"
+        "created": "أنشئ في"
       },
       "open": "فتح"
     }
@@ -280,6 +280,9 @@
     "namePlaceholder": "اسم القائمة",
     "descriptionPlaceholder": "وصف القائمة",
     "articles": "الأدوية",
+    "articlesList": "قائمة الأدوية",
+    "availableQuantity": "الكمية المتاحة",
+    "noArticles": "لا توجد مقالات في هذه القائمة",
     "loadingArticles": "تحميل الأدوية...",
     "searchArticles": "ابحث بالاسم أو الرمز...",
     "createSuccess": "تم إنشاء القائمة بنجاح!",
@@ -294,39 +297,44 @@
   },
   "pharmacies": {
     "pharmacy-list": {
-      "title": "قائمة الصيدليات"
+      "title": "قائمة العملاء"
     },
     "pharmacy-update": {
-      "title": "تعديل صيدلية"
+      "title": "تعديل عميل"
     },
-    "search-placeholder": "بحث عن صيدلية...",
-    "code": "الرمز",
-    "codePlaceholder": "رمز الصيدلية",
+    "search-placeholder": "بحث عن عميل...",
+    "code": "رمز العميل",
+    "codePlaceholder": "رمز العميل",
     "phone": "الهاتف",
-    "phonePlaceholder": "هاتف الصيدلية",
+    "phonePlaceholder": "هاتف العميل",
     "address": "العنوان",
-    "addressPlaceholder": "عنوان الصيدلية",
+    "addressPlaceholder": "عنوان العميل",
     "type": "النوع",
     "selectType": "حدد نوعًا",
-    "pharmacy": "صيدلية",
+    "pharmacy": "عميل",
     "depot": "مستودع",
+    "depotPharmaceutique": "مستودع صيدلاني",
+    "clinique": "عيادة",
+    "hopital": "مستشفى",
+    "pointDeSante": "مركز صحي",
+    "centreHospitalier": "مركز استشفائي",
     "status": "الحالة",
     "selectStatus": "حدد حالة",
     "active": "نشط",
     "blocked": "محظور",
     "pending": "قيد الانتظار",
-    "namePlaceholder": "اسم الصيدلية",
+    "namePlaceholder": "اسم العميل",
     "managerName": "اسم المدير",
     "managerNamePlaceholder": "اسم المدير",
     "managerPhone": "هاتف المدير",
     "managerPhonePlaceholder": "هاتف المدير",
-    "doctorName": "اسم الطبيب",
-    "doctorNamePlaceholder": "اسم الطبيب",
-    "doctorPhone": "هاتف الطبيب",
-    "doctorPhonePlaceholder": "هاتف الطبيب",
-    "updateSuccess": "تم تحديث الصيدلية بنجاح!",
-    "importTitle": "استيراد الصيدليات (Excel)",
-    "importDescription": "حدد ملف Excel (.xls، .xlsx) يحتوي على الصيدليات للاستيراد.",
+    "doctorName": "اسم المسؤول التقني",
+    "doctorNamePlaceholder": "اسم المسؤول التقني",
+    "doctorPhone": "هاتف المسؤول التقني",
+    "doctorPhonePlaceholder": "هاتف المسؤول التقني",
+    "updateSuccess": "تم تحديث العميل بنجاح!",
+    "importTitle": "استيراد العملاء (Excel)",
+    "importDescription": "حدد ملف Excel (.xls، .xlsx) يحتوي على العملاء للاستيراد.",
     "importSuccess": "تم الاستيراد بنجاح",
     "importError": "حدث خطأ أثناء الاستيراد"
   },
@@ -342,7 +350,7 @@
       "commandReference": "مرجع الطلب",
       "invoiceReference": "مرجع الفاتورة",
       "totalPrice": "السعر الإجمالي",
-      "pharmacy": "الصيدلية"
+      "pharmacy": "العميل"
     },
     "status": {
       "pending": "قيد الانتظار",
@@ -359,7 +367,7 @@
       "reference": "المرجع",
       "referenceInvoice": "مرجع الفاتورة",
       "prixTotal": "السعر الإجمالي",
-      "pharmacy": "الصيدلية",
+      "pharmacy": "العميل",
       "distributor": "الموزع",
       "distributorPrincipal": "الموزع الرئيسي",
       "date": "التاريخ",
@@ -367,9 +375,11 @@
       "cancel": "إلغاء",
       "validate": "تأكيد",
       "statusUpdateSuccess": "تم تحديث الحالة بنجاح",
-      "nombre": "العدد الإجمالي : ",
+      "nombre": "العدد الإجمالي: ",
       "voirPlus": "عرض المزيد",
       "voirMoins": "عرض أقل",
+      "lowStockTooltip": "تنبيه مخزون: منتجات تحتاج إلى إعادة تموين (الكمية المتاحة \u2264 20 وحدة)",
+      "lowStockLabel": "مخزون حرج",
       "article": {
         "title": "الأدوية",
         "article": "الأدوية",
@@ -381,7 +391,17 @@
         "total": "الإجمالي",
         "noArticle": "لا توجد دواءات في هذا الطلب",
         "backToCommands": "العودة إلى الطلبات",
-        "changeStatus": "تغيير الحالة"
+        "changeStatus": "تغيير الحالة",
+        "deleteArticle": "حذف الدواء",
+        "confirmDeleteArticle": "هل أنت متأكد من حذف الدواء '{{article}}' من هذا الطلب؟",
+        "deleteSuccess": "تم حذف الدواء بنجاح ✅",
+        "deleteError": "خطأ في حذف الدواء ❌",
+        "editQuantity": "تعديل الكمية",
+        "currentQuantity": "الكمية الحالية",
+        "newQuantity": "الكمية الجديدة",
+        "quantityHint": "أدخل الكمية الجديدة المطلوبة",
+        "updateSuccess": "تم تحديث الكمية بنجاح ✅",
+        "updateError": "خطأ في تحديث الكمية ❌"
       },
       "statusChange": {
         "title": "تغيير الحالة",
