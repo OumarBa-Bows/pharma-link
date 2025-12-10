@@ -9,7 +9,8 @@
     "view": "View",
     "save": "Save",
     "cancel": "Cancel",
-    "back": "Back"
+    "back": "Back",
+    "close": "Close"
   },
   "users": {
     "user-list": {
@@ -110,6 +111,11 @@
       "selectedFile": "Selected file",
       "import": "Import"
     },
+    "name": "Name",
+    "reference": "Reference",
+    "price": "Price",
+    "stock": "Stock",
+    "category": "Category",
     "isPublished": "Published",
     "publish": "Publish",
     "unpublish": "Unpublish",
@@ -122,7 +128,8 @@
 
   "table": {
     "selectAll": "Select All",
-    "total": "Total"
+    "total": "Total",
+    "page": "Page"
   },
   "notifications": {
     "title": "Notifications",

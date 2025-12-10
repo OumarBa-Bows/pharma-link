@@ -9,7 +9,8 @@
     "view": "عرض",
     "save": "حفظ",
     "cancel": "إلغاء",
-    "back": "رجوع"
+    "back": "رجوع",
+    "close": "إغلاق"
   },
   "users": {
     "user-list": {
@@ -121,7 +122,8 @@
   },
   "table": {
     "selectAll": "تحديد الكل",
-    "total": "المجموع"
+    "total": "المجموع",
+    "page": "صفحة"
   },
   "notifications": {
     "title": "الإشعارات",

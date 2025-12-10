@@ -6,3 +6,119 @@
 .margin-right {
   margin-right: 0;
 }
+
+.card-header-custom {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.table-header-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .table-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .low-stock-badge {
+    background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(244, 67, 54, 0.3);
+    animation: pulse-badge 2s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: help;
+
+    .badge-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      opacity: 0.95;
+    }
+
+    i {
+      font-size: 0.8rem;
+    }
+  }
+}
+
+::ng-deep {
+  .table-hover tbody tr.low-stock {
+    background-color: #ffebee !important;
+
+    &:hover {
+      background-color: #ffcdd2 !important;
+    }
+
+    td {
+      background-color: transparent !important;
+    }
+  }
+}
+
+@keyframes pulse-badge {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 2px 6px rgba(244, 67, 54, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(244, 67, 54, 0.5);
+  }
+}
+
+.pagination-wrapper {
+  margin-top: 1.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid #dee2e6;
+
+  .pagination {
+    margin-bottom: 0.5rem;
+
+    .page-link {
+      cursor: pointer;
+      color: #4680ff;
+      border: 1px solid #dee2e6;
+      padding: 0.5rem 0.75rem;
+      margin: 0 2px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+
+      &:hover:not(.disabled) {
+        background-color: #e7f1ff;
+        border-color: #4680ff;
+      }
+
+      i {
+        font-size: 0.875rem;
+      }
+    }
+
+    .page-item.active .page-link {
+      background-color: #4680ff;
+      border-color: #4680ff;
+      color: white;
+      font-weight: 600;
+    }
+
+    .page-item.disabled .page-link {
+      cursor: not-allowed;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+
+  .pagination-info {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+}

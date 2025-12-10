@@ -10,6 +10,7 @@ import { ConfirmationModalComponent } from 'src/app/theme/shared/components/conf
 import { ToastService } from 'src/app/services/apis/toast.service';
 import { NotificationService } from 'src/app/services/notifications/notification.service';
 import { ImportModalComponent } from 'src/app/theme/shared/components/import-modal/import-modal.component';
+import { LowStockModalComponent } from '../low-stock-modal/low-stock-modal.component';
 
 @Component({
   selector: 'app-index',
@@ -21,6 +22,8 @@ export class IndexComponent {
   search = '';
   page = 1;
   pageSize = 20;
+  currentPage = 1;
+  pagesToShow = 5;
   private modalService = inject(NgbModal);
   private notificationService = inject(NotificationService);
   private translateService = inject(TranslateService);
@@ -128,6 +131,52 @@ export class IndexComponent {
 
   onSelectionChange(rows: any[]) {
     console.log('Lignes sélectionnées :', rows);
+  }
+
+  getLowStockCount(): number {
+    return this.displayedArticles.filter((article) => article.availableQuantity <= 20).length;
+  }
+
+  openLowStockModal() {
+    const lowStockArticles = this.displayedArticles.filter((article) => article.availableQuantity <= 20);
+    const modalRef = this.modalService.open(LowStockModalComponent, {
+      size: 'lg',
+      centered: true,
+      backdrop: 'static'
+    });
+    modalRef.componentInstance.lowStockArticles = lowStockArticles;
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.displayedArticles.length / this.pageSize);
+  }
+
+  get pagedArticles() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return this.displayedArticles.slice(start, end);
+  }
+
+  get pages(): number[] {
+    const half = Math.floor(this.pagesToShow / 2);
+    let start = Math.max(1, this.currentPage - half);
+    let end = Math.min(this.totalPages, start + this.pagesToShow - 1);
+
+    if (end - start < this.pagesToShow - 1) {
+      start = Math.max(1, end - this.pagesToShow + 1);
+    }
+
+    const pagesArray = [];
+    for (let i = start; i <= end; i++) {
+      pagesArray.push(i);
+    }
+    return pagesArray;
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
   }
 
   getArticles() {

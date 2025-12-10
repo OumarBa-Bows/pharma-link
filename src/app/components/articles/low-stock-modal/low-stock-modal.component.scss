@@ -1,0 +1,39 @@
+.modal-header {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe9e9 100%);
+  border-bottom: 2px solid #ffcdd2;
+
+  .modal-title {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: #c62828;
+  }
+}
+
+.modal-body {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.low-stock-row {
+  background-color: #ffebee;
+
+  &:hover {
+    background-color: #ffcdd2;
+  }
+}
+
+.table-sm {
+  font-size: 0.875rem;
+
+  th {
+    background-color: #f5f5f5;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+  }
+}
+
+.badge {
+  font-size: 0.875rem;
+  padding: 0.35rem 0.65rem;
+}

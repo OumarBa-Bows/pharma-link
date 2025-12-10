@@ -3,21 +3,142 @@
     <app-spinner></app-spinner>
   }
 </div>
-<app-table
-  title="{{ 'articles.article-list.title' | translate }}"
-  [columns]="columns"
-  [data]="displayedArticles"
-  (selectionChange)="onSelectionChange($event)"
-  (edit)="onEdit($event)"
-  (delete)="deleteArticle($event)"
-  (import)="importArticle($event)"
-  (togglePublish)="togglePublish($event)"
-  [showEdit]="true"
-  [showDelete]="true"
-  [showImport]="true"
-  [showPublishToggle]="true"
-  [total]="displayedArticles.length"
-  (addNew)="onAddNew()"
-  (search)="onSearch($event)"
-  [searchPlaceholder]="'common.search' | translate"
-></app-table>
+
+<div class="row">
+  <div class="col-xl-12">
+    <app-card [options]="false" cardTitle="{{ 'articles.article-list.title' | translate }}" blockClass="table-border-style">
+      <div class="card-header-custom">
+        <div class="table-header-wrapper">
+          <h2 class="table-title">{{ 'articles.article-list.title' | translate }}</h2>
+          @if (getLowStockCount() > 0) {
+            <span
+              class="low-stock-badge"
+              [title]="'commands.details.lowStockTooltip' | translate"
+              (click)="openLowStockModal()"
+              style="cursor: pointer"
+            >
+              <span class="badge-label">{{ 'commands.details.lowStockLabel' | translate }}</span>
+              <i class="feather icon-alert-triangle"></i>
+              {{ getLowStockCount() }}
+            </span>
+          }
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex gap-2">
+          <button class="btn btn-success" (click)="onAddNew()">
+            <i class="feather icon-plus me-1"></i>
+          </button>
+          <button class="btn btn-primary" (click)="importArticle($event)">
+            <i class="feather icon-upload me-1"></i>
+          </button>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <input
+            class="form-control"
+            style="width: 320px"
+            [placeholder]="'common.search' | translate"
+            (input)="onSearch($any($event.target).value)"
+          />
+          <div class="text-muted small">{{ 'table.total' | translate }}: {{ displayedArticles.length }}</div>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              @for (col of columns; track $index) {
+                <th>{{ col.header }}</th>
+              }
+              <th>{{ 'buttons-action.title' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (article of pagedArticles; track article.id) {
+              <tr [class.low-stock]="article.availableQuantity <= 20">
+                <td>{{ article.name }}</td>
+                <td>{{ article.reference }}</td>
+                <td>{{ article.price }}</td>
+                <td>{{ article.availableQuantity }}</td>
+                <td>{{ article.category }}</td>
+                <td>
+                  <span [class]="article.isPublished ? 'bg-success text-white' : 'bg-secondary text-white'" class="badge">
+                    {{ article.isPublished ? ('common.yes' | translate) : ('common.no' | translate) }}
+                  </span>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary me-2"
+                    (click)="onEdit(article)"
+                    [title]="'buttons-action.edit' | translate"
+                  >
+                    <i class="feather icon-edit-2"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-danger me-2"
+                    (click)="deleteArticle(article)"
+                    [title]="'buttons-action.delete' | translate"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </button>
+                  <button
+                    type="button"
+                    [class]="!article.isPublished ? 'btn btn-sm btn-outline-success' : 'btn btn-sm btn-outline-secondary'"
+                    (click)="togglePublish(article)"
+                    [title]="article.isPublished ? ('articles.unpublish' | translate) : ('articles.publish' | translate)"
+                  >
+                    <i [class]="!article.isPublished ? 'fa fa-check-circle text-success' : 'fa fa-times-circle text-secondary'"></i>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      @if (totalPages > 1) {
+        <div class="pagination-wrapper">
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mb-0">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="goToPage(1)" [attr.aria-disabled]="currentPage === 1">
+                  <i class="feather icon-chevrons-left"></i>
+                </a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="goToPage(currentPage - 1)" [attr.aria-disabled]="currentPage === 1">
+                  <i class="feather icon-chevron-left"></i>
+                </a>
+              </li>
+
+              @for (pageNum of pages; track pageNum) {
+                <li class="page-item" [class.active]="pageNum === currentPage">
+                  <a class="page-link" (click)="goToPage(pageNum)">{{ pageNum }}</a>
+                </li>
+              }
+
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" (click)="goToPage(currentPage + 1)" [attr.aria-disabled]="currentPage === totalPages">
+                  <i class="feather icon-chevron-right"></i>
+                </a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" (click)="goToPage(totalPages)" [attr.aria-disabled]="currentPage === totalPages">
+                  <i class="feather icon-chevrons-right"></i>
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <div class="pagination-info text-muted small text-center mt-2">
+            {{ 'table.page' | translate }} {{ currentPage }} / {{ totalPages }} ({{ displayedArticles.length }}
+            {{ 'articles.article-list.title' | translate | lowercase }})
+          </div>
+        </div>
+      }
+    </app-card>
+  </div>
+</div>

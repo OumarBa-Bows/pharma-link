@@ -1,0 +1,59 @@
+<div class="modal-header">
+  <h5 class="modal-title">
+    <i class="feather icon-alert-triangle text-danger me-2"></i>
+    {{ 'commands.details.lowStockLabel' | translate }}
+  </h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+</div>
+
+<div class="modal-body">
+  <div class="alert alert-warning mb-3">
+    <i class="feather icon-info me-2"></i>
+    {{ 'commands.details.lowStockTooltip' | translate }}
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr>
+          <th>{{ 'common.name' | translate }}</th>
+          <th>{{ 'common.reference' | translate }}</th>
+          <th>{{ 'common.price' | translate }}</th>
+          <th class="text-center">{{ 'listings.availableQuantity' | translate }}</th>
+          <th>{{ 'common.category' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (article of lowStockArticles; track article.id) {
+          <tr class="low-stock-row">
+            <td>{{ article.name }}</td>
+            <td>{{ article.reference }}</td>
+            <td>{{ article.price }}</td>
+            <td class="text-center">
+              <span class="badge bg-danger">{{ article.availableQuantity }}</span>
+            </td>
+            <td>{{ article.category }}</td>
+          </tr>
+        }
+        @if (lowStockArticles.length === 0) {
+          <tr>
+            <td colspan="5" class="text-center text-muted">
+              {{ 'common.no-data' | translate }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-3 text-muted small">
+    <strong>{{ 'table.total' | translate }}:</strong>
+    {{ lowStockArticles.length }} {{ 'articles.article-list.title' | translate | lowercase }}
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">
+    {{ 'buttons-action.close' | translate }}
+  </button>
+</div>
