@@ -81,8 +81,8 @@ export class CommandDetail implements OnInit {
       // Trier uniquement au premier chargement si pas encore trié
       if (this.sortedComposition.length === 0 && this.command?.composition) {
         this.sortedComposition = [...this.command.composition].sort((a, b) => {
-          const aLowStock = a.article_availableQuantity < 20;
-          const bLowStock = b.article_availableQuantity < 20;
+          const aLowStock = a.article_availableQuantity <= 20;
+          const bLowStock = b.article_availableQuantity <= 20;
           if (aLowStock && !bLowStock) return -1;
           if (!aLowStock && bLowStock) return 1;
           return 0;

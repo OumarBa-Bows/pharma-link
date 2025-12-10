@@ -99,7 +99,7 @@
             </thead>
             <tbody>
               @for (item of getSortedComposition(); track item.command_detail_id) {
-              <tr [class.low-stock]="item.article_availableQuantity < 20">
+              <tr [class.low-stock]="item.article_availableQuantity <= 20">
                 <td class="article-name">{{ item.article_name }}</td>
                 <td class="article-ref">{{ item.article_reference }}</td>
                 <td class="text-center quantity">{{ item.quantity }}</td>
