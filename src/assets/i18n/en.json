@@ -247,6 +247,7 @@
     "description": "Description",
     "actions": "Actions",
     "submit": "Submit",
+    "all": "All",
     "edit": "Edit",
     "delete": "Delete",
     "add": "Add",
@@ -255,6 +256,9 @@
     "view": "View",
     "save": "Save",
     "back": "Back",
+    "showing": "Showing",
+    "to": "to",
+    "of": "of",
     "confirmDelete": "Are you sure you want to delete this item?",
     "yes": "Yes",
     "no": "No",
@@ -272,6 +276,10 @@
     "import": "Import",
     "importFile": "Import file",
     "selectedFile": "Selected file"
+  },
+  "table": {
+    "page": "Page",
+    "total": "Total"
   },
   "listings": {
     "listing-list": {
@@ -307,6 +315,13 @@
     "pharmacy-list": {
       "title": "Client List"
     },
+    "pharmacy-create": {
+      "title": "Create Client",
+      "successMessage": "Client created successfully!",
+      "errorMessage": "Error creating client",
+      "phoneAlreadyExists": "This phone number is already in use",
+      "codeAlreadyExists": "This client code is already in use"
+    },
     "pharmacy-update": {
       "title": "Edit Client"
     },
@@ -340,6 +355,17 @@
     "doctorNamePlaceholder": "Technical manager name",
     "doctorPhone": "Technical manager phone",
     "doctorPhonePlaceholder": "Technical manager phone",
+    "city": "City",
+    "cityPlaceholder": "Client city",
+    "zipCode": "Zip code",
+    "zipCodePlaceholder": "Zip code",
+    "email": "Email",
+    "emailPlaceholder": "Client email",
+    "password": "Password",
+    "passwordPlaceholder": "Password",
+    "confirmPassword": "Confirm password",
+    "confirmPasswordPlaceholder": "Confirm password",
+    "passwordMismatch": "Passwords do not match",
     "updateSuccess": "Client updated successfully!",
     "importTitle": "Import Clients (Excel)",
     "importDescription": "Select an Excel file (.xls, .xlsx) containing the clients to import.",

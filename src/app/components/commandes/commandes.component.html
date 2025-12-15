@@ -1,20 +1,159 @@
-<div class="actions">
+<div class="row">
   @if (isLoading) {
     <app-spinner></app-spinner>
   }
+  <div class="col-xl-12">
+    <app-card [cardTitle]="'commands.commands-list.title' | translate" [options]="false" blockClass="table-border-style">
+      <!-- Onglets de filtrage par statut -->
+      <ul class="nav nav-tabs mb-3" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" [class.active]="selectedStatus === 'ALL'" (click)="filterByStatus('ALL')" type="button">
+            {{ 'common.all' | translate }} ({{ getStatusCount('ALL') }})
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" [class.active]="selectedStatus === 'PENDING'" (click)="filterByStatus('PENDING')" type="button">
+            {{ 'commands.status.pending' | translate }} ({{ getStatusCount('PENDING') }})
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" [class.active]="selectedStatus === 'VALIDATED'" (click)="filterByStatus('VALIDATED')" type="button">
+            {{ 'commands.status.validated' | translate }} ({{ getStatusCount('VALIDATED') }})
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" [class.active]="selectedStatus === 'SHIPPED'" (click)="filterByStatus('SHIPPED')" type="button">
+            {{ 'commands.status.shipped' | translate }} ({{ getStatusCount('SHIPPED') }})
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" [class.active]="selectedStatus === 'DELIVERED'" (click)="filterByStatus('DELIVERED')" type="button">
+            {{ 'commands.status.delivered' | translate }} ({{ getStatusCount('DELIVERED') }})
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" [class.active]="selectedStatus === 'CANCELLED'" (click)="filterByStatus('CANCELLED')" type="button">
+            {{ 'commands.status.cancelled' | translate }} ({{ getStatusCount('CANCELLED') }})
+          </button>
+        </li>
+      </ul>
+
+      <!-- Actions Header -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex gap-2">
+          <!-- Pas de bouton d'ajout pour les commandes -->
+        </div>
+        <div class="search-box" style="width: 300px">
+          <input
+            type="text"
+            class="form-control"
+            [placeholder]="'commands.commands-list.search-placeholder' | translate"
+            (input)="onSearch($event.target.value)"
+          />
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              @for (column of columns; track column.field) {
+                <th>{{ column.header }}</th>
+              }
+              <th>{{ 'common.actions' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (paginatedCommands.length === 0) {
+              <tr>
+                <td [attr.colspan]="columns.length + 1" class="text-center py-4">
+                  {{ 'common.no-data' | translate }}
+                </td>
+              </tr>
+            }
+            @for (command of paginatedCommands; track command.id) {
+              <tr>
+                @for (column of columns; track column.field) {
+                  <td>
+                    @if (column.type === 'date' && command[column.field]) {
+                      {{ command[column.field] | date: column.format || 'dd/MM/yyyy' }}
+                    } @else if (column.type === 'enum' && column.enumMap) {
+                      @if (column.field === 'status') {
+                        <span
+                          class="badge"
+                          [ngClass]="{
+                            'bg-success': command[column.field] === 'VALIDATED' || command[column.field] === 'DELIVERED',
+                            'bg-danger': command[column.field] === 'CANCELLED',
+                            'bg-warning': command[column.field] === 'PENDING',
+                            'bg-info': command[column.field] === 'SHIPPED'
+                          }"
+                        >
+                          {{ column.enumMap[command[column.field]] || command[column.field] }}
+                        </span>
+                      } @else {
+                        {{ column.enumMap[command[column.field]] || command[column.field] }}
+                      }
+                    } @else {
+                      {{ command[column.field] }}
+                    }
+                  </td>
+                }
+                <td>
+                  <button
+                    class="btn btn-sm btn-icon btn-primary me-2"
+                    (click)="showDetails(command)"
+                    [title]="'buttons-action.showDetails' | translate"
+                  >
+                    <i class="fa fa-eye"></i>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      @if (displayedCommands.length > 0) {
+        <div class="pagination-wrapper">
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mb-0">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="goToPage(1)" [attr.aria-disabled]="currentPage === 1">
+                  <i class="feather icon-chevrons-left"></i>
+                </a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="goToPage(currentPage - 1)" [attr.aria-disabled]="currentPage === 1">
+                  <i class="feather icon-chevron-left"></i>
+                </a>
+              </li>
+
+              @for (pageNum of pages; track pageNum) {
+                <li class="page-item" [class.active]="pageNum === currentPage">
+                  <a class="page-link" (click)="goToPage(pageNum)">{{ pageNum }}</a>
+                </li>
+              }
+
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" (click)="goToPage(currentPage + 1)" [attr.aria-disabled]="currentPage === totalPages">
+                  <i class="feather icon-chevron-right"></i>
+                </a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" (click)="goToPage(totalPages)" [attr.aria-disabled]="currentPage === totalPages">
+                  <i class="feather icon-chevrons-right"></i>
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <div class="text-center text-muted mt-3" style="font-size: 0.95rem">
+            Page {{ currentPage }} / {{ totalPages }} ({{ displayedCommands.length }}
+            {{ 'commands.commands-list.title' | translate | lowercase }})
+          </div>
+        </div>
+      }
+    </app-card>
+  </div>
 </div>
-<app-table
-  title="{{ 'commands.commands-list.title' | translate }}"
-  [columns]="columns"
-  [data]="displayedCommands"
-  (selectionChange)="onSelectionChange($event)"
-  (showDetatail)="showDetails($event)"
-  (search)="onSearch($event)"
-  [showAddButton]="false"
-  [showEdit]="false"
-  [showDelete]="false"
-  [showImport]="false"
-  [showDetails]="true"
-  [total]="displayedCommands?.length"
-  [searchPlaceholder]="'commands.commands-list.search-placeholder' | translate"
-></app-table>

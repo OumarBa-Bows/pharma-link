@@ -247,6 +247,7 @@
     "description": "Description",
     "actions": "Actions",
     "submit": "Soumettre",
+    "all": "Tous",
     "edit": "Modifier",
     "delete": "Supprimer",
     "add": "Ajouter",
@@ -255,6 +256,9 @@
     "view": "Voir",
     "save": "Enregistrer",
     "back": "Retour",
+    "showing": "Affichage de",
+    "to": "à",
+    "of": "sur",
     "confirmDelete": "Êtes-vous sûr de vouloir supprimer cet élément ?",
     "yes": "Oui",
     "no": "Non",
@@ -272,6 +276,10 @@
     "import": "Importer",
     "importFile": "Importer un fichier",
     "selectedFile": "Fichier sélectionné"
+  },
+  "table": {
+    "page": "Page",
+    "total": "Total"
   },
   "listings": {
     "listing-list": {
@@ -307,6 +315,13 @@
     "pharmacy-list": {
       "title": "Liste des clients"
     },
+    "pharmacy-create": {
+      "title": "Créer un client",
+      "successMessage": "Client créé avec succès!",
+      "errorMessage": "Erreur lors de la création du client",
+      "phoneAlreadyExists": "Ce numéro de téléphone est déjà utilisé",
+      "codeAlreadyExists": "Ce code client est déjà utilisé"
+    },
     "pharmacy-update": {
       "title": "Modifier un client"
     },
@@ -340,6 +355,17 @@
     "doctorNamePlaceholder": "Nom du responsable technique",
     "doctorPhone": "Téléphone du responsable technique",
     "doctorPhonePlaceholder": "Téléphone du responsable technique",
+    "city": "Ville",
+    "cityPlaceholder": "Ville du client",
+    "zipCode": "Code postal",
+    "zipCodePlaceholder": "Code postal",
+    "email": "Email",
+    "emailPlaceholder": "Email du client",
+    "password": "Mot de passe",
+    "passwordPlaceholder": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "confirmPasswordPlaceholder": "Confirmer le mot de passe",
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
     "updateSuccess": "Client mis à jour avec succès!",
     "importTitle": "Importer des clients (Excel)",
     "importDescription": "Sélectionnez un fichier Excel (.xls, .xlsx) contenant les clients à importer.",

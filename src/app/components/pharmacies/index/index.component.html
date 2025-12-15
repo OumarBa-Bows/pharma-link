@@ -1,19 +1,151 @@
-<div class="actions">
+<div class="row">
   @if (isLoading) {
     <app-spinner></app-spinner>
   }
+  <div class="col-xl-12">
+    <app-card [cardTitle]="'pharmacies.pharmacy-list.title' | translate" [options]="false" blockClass="table-border-style">
+      <!-- Onglets de filtrage par statut -->
+      <ul class="nav nav-tabs mb-3" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" [class.active]="selectedStatus === 'ALL'" (click)="filterByStatus('ALL')" type="button">
+            {{ 'common.all' | translate }} ({{ getStatusCount('ALL') }})
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" [class.active]="selectedStatus === 'PENDING'" (click)="filterByStatus('PENDING')" type="button">
+            {{ 'pharmacies.pending' | translate }} ({{ getStatusCount('PENDING') }})
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" [class.active]="selectedStatus === 'ACTIVE'" (click)="filterByStatus('ACTIVE')" type="button">
+            {{ 'pharmacies.active' | translate }} ({{ getStatusCount('ACTIVE') }})
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" [class.active]="selectedStatus === 'BLOCKED'" (click)="filterByStatus('BLOCKED')" type="button">
+            {{ 'pharmacies.blocked' | translate }} ({{ getStatusCount('BLOCKED') }})
+          </button>
+        </li>
+      </ul>
+
+      <!-- Actions Header -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary" (click)="onAddNew()">
+            <i class="fa fa-plus"></i>
+            {{ 'buttons-action.add' | translate }}
+          </button>
+        </div>
+        <div class="search-box" style="width: 300px">
+          <input
+            type="text"
+            class="form-control"
+            [placeholder]="'pharmacies.search-placeholder' | translate"
+            (input)="onSearch($event.target.value)"
+          />
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              @for (column of columns; track column.field) {
+                <th>{{ column.header }}</th>
+              }
+              <th>{{ 'common.actions' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (paginatedPharmacies.length === 0) {
+              <tr>
+                <td [attr.colspan]="columns.length + 1" class="text-center py-4">
+                  {{ 'common.no-data' | translate }}
+                </td>
+              </tr>
+            }
+            @for (pharmacy of paginatedPharmacies; track pharmacy.id) {
+              <tr>
+                @for (column of columns; track column.field) {
+                  <td>
+                    @if (column.type === 'date' && pharmacy[column.field]) {
+                      {{ pharmacy[column.field] | date: column.format || 'dd/MM/yyyy' }}
+                    } @else if (column.type === 'enum' && column.enumMap) {
+                      @if (column.field === 'state') {
+                        <span
+                          class="badge"
+                          [ngClass]="{
+                            'bg-success': pharmacy[column.field] === 'ACTIVE',
+                            'bg-danger': pharmacy[column.field] === 'BLOCKED',
+                            'bg-warning': pharmacy[column.field] === 'PENDING'
+                          }"
+                        >
+                          {{ column.enumMap[pharmacy[column.field]] || pharmacy[column.field] }}
+                        </span>
+                      } @else {
+                        {{ column.enumMap[pharmacy[column.field]] || pharmacy[column.field] }}
+                      }
+                    } @else {
+                      {{ pharmacy[column.field] }}
+                    }
+                  </td>
+                }
+                <td>
+                  <button
+                    class="btn btn-sm btn-icon btn-primary me-2"
+                    (click)="onEdit(pharmacy)"
+                    [title]="'buttons-action.edit' | translate"
+                  >
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      @if (displayedPharmacies.length > 0) {
+        <div class="pagination-wrapper">
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mb-0">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="goToPage(1)" [attr.aria-disabled]="currentPage === 1">
+                  <i class="feather icon-chevrons-left"></i>
+                </a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="goToPage(currentPage - 1)" [attr.aria-disabled]="currentPage === 1">
+                  <i class="feather icon-chevron-left"></i>
+                </a>
+              </li>
+
+              @for (pageNum of pages; track pageNum) {
+                <li class="page-item" [class.active]="pageNum === currentPage">
+                  <a class="page-link" (click)="goToPage(pageNum)">{{ pageNum }}</a>
+                </li>
+              }
+
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" (click)="goToPage(currentPage + 1)" [attr.aria-disabled]="currentPage === totalPages">
+                  <i class="feather icon-chevron-right"></i>
+                </a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" (click)="goToPage(totalPages)" [attr.aria-disabled]="currentPage === totalPages">
+                  <i class="feather icon-chevrons-right"></i>
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <div class="text-center text-muted mt-3" style="font-size: 0.95rem">
+            Page {{ currentPage }} / {{ totalPages }} ({{ displayedPharmacies.length }}
+            {{ 'pharmacies.pharmacy-list.title' | translate | lowercase }})
+          </div>
+        </div>
+      }
+    </app-card>
+  </div>
 </div>
-<app-table
-  title="{{ 'pharmacies.pharmacy-list.title' | translate }}"
-  [columns]="columns"
-  [data]="displayedPharmacies"
-  (selectionChange)="onSelectionChange($event)"
-  (edit)="onEdit($event)"
-  [showEdit]="true"
-  [showDelete]="false"
-  [total]="displayedPharmacies.length"
-  (addNew)="onAddNew()"
-  [showAddButton]="false"
-  (search)="onSearch($event)"
-  [searchPlaceholder]="'pharmacies.search-placeholder' | translate"
-></app-table>

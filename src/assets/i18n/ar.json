@@ -241,6 +241,7 @@
     "description": "الوصف",
     "actions": "الإجراءات",
     "submit": "إرسال",
+    "all": "الكل",
     "edit": "تعديل",
     "delete": "حذف",
     "add": "إضافة",
@@ -249,6 +250,9 @@
     "view": "عرض",
     "save": "حفظ",
     "back": "رجوع",
+    "showing": "عرض",
+    "to": "إلى",
+    "of": "من",
     "confirmDelete": "هل أنت متأكد من رغبتك في حذف هذا العنصر؟",
     "yes": "نعم",
     "no": "لا",
@@ -266,6 +270,10 @@
     "import": "استيراد",
     "importFile": "استيراد ملف",
     "selectedFile": "الملف المحدد"
+  },
+  "table": {
+    "page": "صفحة",
+    "total": "المجموع"
   },
   "listings": {
     "listing-list": {
@@ -301,6 +309,13 @@
     "pharmacy-list": {
       "title": "قائمة العملاء"
     },
+    "pharmacy-create": {
+      "title": "إنشاء عميل",
+      "successMessage": "تم إنشاء العميل بنجاح!",
+      "errorMessage": "حدث خطأ أثناء إنشاء العميل",
+      "phoneAlreadyExists": "رقم الهاتف هذا مستخدم بالفعل",
+      "codeAlreadyExists": "رمز العميل هذا مستخدم بالفعل"
+    },
     "pharmacy-update": {
       "title": "تعديل عميل"
     },
@@ -334,6 +349,17 @@
     "doctorNamePlaceholder": "اسم المسؤول التقني",
     "doctorPhone": "هاتف المسؤول التقني",
     "doctorPhonePlaceholder": "هاتف المسؤول التقني",
+    "city": "المدينة",
+    "cityPlaceholder": "مدينة العميل",
+    "zipCode": "الرمز البريدي",
+    "zipCodePlaceholder": "الرمز البريدي",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "البريد الإلكتروني للعميل",
+    "password": "كلمة المرور",
+    "passwordPlaceholder": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "confirmPasswordPlaceholder": "تأكيد كلمة المرور",
+    "passwordMismatch": "كلمات المرور غير متطابقة",
     "updateSuccess": "تم تحديث العميل بنجاح!",
     "importTitle": "استيراد العملاء (Excel)",
     "importDescription": "حدد ملف Excel (.xls، .xlsx) يحتوي على العملاء للاستيراد.",

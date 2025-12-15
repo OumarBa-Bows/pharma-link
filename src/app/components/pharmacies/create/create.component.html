@@ -1,1 +1,201 @@
-<p>create works!</p>
+<div class="row">
+  @if (isLoading) {
+    <app-spinner></app-spinner>
+  }
+  <div class="col-xl-12">
+    <button style="float: right" [routerLink]="['/pharmacy/index']" class="btn btn-danger mb-4">
+      <i class="fa fa-arrow-left"></i>
+      {{ 'buttons-action.back' | translate }}
+    </button>
+  </div>
+  <div class="col-xl-12">
+    <app-card cardTitle="{{ 'pharmacies.pharmacy-create.title' | translate }}" [options]="false" blockClass="table-border-style">
+      <form [formGroup]="pharmacyForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="code" class="form-label">{{ 'pharmacies.code' | translate }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="code"
+              formControlName="code"
+              [placeholder]="'pharmacies.codePlaceholder' | translate"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="state" class="form-label">{{ 'pharmacies.status' | translate }}</label>
+            <select class="form-select" name="state" id="state" formControlName="state">
+              <option value="">{{ 'pharmacies.selectStatus' | translate }}</option>
+              <option value="PENDING">{{ 'pharmacies.pending' | translate }}</option>
+              <option value="ACTIVE">{{ 'pharmacies.active' | translate }}</option>
+              <option value="BLOCKED">{{ 'pharmacies.blocked' | translate }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="name" class="form-label">{{ 'common.name' | translate }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              formControlName="name"
+              [placeholder]="'pharmacies.namePlaceholder' | translate"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="customerType" class="form-label">{{ 'pharmacies.type' | translate }}</label>
+            <select class="form-select" id="customerType" formControlName="customerType">
+              <option value="">{{ 'pharmacies.selectType' | translate }}</option>
+              <option value="DEPOT_PHARMACEUTIQUE">{{ 'pharmacies.depotPharmaceutique' | translate }}</option>
+              <option value="CLINIQUE">{{ 'pharmacies.clinique' | translate }}</option>
+              <option value="HOPITAL">{{ 'pharmacies.hopital' | translate }}</option>
+              <option value="POINT_DE_SANTE">{{ 'pharmacies.pointDeSante' | translate }}</option>
+              <option value="CENTRE_HOSPITALIER">{{ 'pharmacies.centreHospitalier' | translate }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="phone" class="form-label">{{ 'pharmacies.phone' | translate }}</label>
+            <input
+              type="number"
+              class="form-control"
+              id="phone"
+              formControlName="phone"
+              [placeholder]="'pharmacies.phonePlaceholder' | translate"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="address" class="form-label">{{ 'pharmacies.address' | translate }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="address"
+              formControlName="address"
+              [placeholder]="'pharmacies.addressPlaceholder' | translate"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="city" class="form-label">{{ 'pharmacies.city' | translate }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="city"
+              formControlName="city"
+              [placeholder]="'pharmacies.cityPlaceholder' | translate"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="zipCode" class="form-label">{{ 'pharmacies.zipCode' | translate }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="zipCode"
+              formControlName="zipCode"
+              [placeholder]="'pharmacies.zipCodePlaceholder' | translate"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="managerName" class="form-label">{{ 'pharmacies.managerName' | translate }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="managerName"
+              formControlName="managerName"
+              [placeholder]="'pharmacies.managerNamePlaceholder' | translate"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="managerPhone" class="form-label">{{ 'pharmacies.managerPhone' | translate }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="managerPhone"
+              formControlName="managerPhone"
+              [placeholder]="'pharmacies.managerPhonePlaceholder' | translate"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="doctorName" class="form-label">{{ 'pharmacies.doctorName' | translate }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="doctorName"
+              formControlName="doctorName"
+              [placeholder]="'pharmacies.doctorNamePlaceholder' | translate"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="doctorPhone" class="form-label">{{ 'pharmacies.doctorPhone' | translate }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="doctorPhone"
+              formControlName="doctorPhone"
+              [placeholder]="'pharmacies.doctorPhonePlaceholder' | translate"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <label for="email" class="form-label">{{ 'pharmacies.email' | translate }}</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              formControlName="email"
+              [placeholder]="'pharmacies.emailPlaceholder' | translate"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="password" class="form-label">{{ 'pharmacies.password' | translate }}</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              formControlName="password"
+              [placeholder]="'pharmacies.passwordPlaceholder' | translate"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="confirmPassword" class="form-label">{{ 'pharmacies.confirmPassword' | translate }}</label>
+            <input
+              type="password"
+              class="form-control"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              [placeholder]="'pharmacies.confirmPasswordPlaceholder' | translate"
+              [class.is-invalid]="pharmacyForm.hasError('passwordMismatch') && pharmacyForm.get('confirmPassword')?.touched"
+            />
+            @if (pharmacyForm.hasError('passwordMismatch') && pharmacyForm.get('confirmPassword')?.touched) {
+              <div class="text-danger mt-1" style="font-size: 0.875rem">
+                {{ 'pharmacies.passwordMismatch' | translate }}
+              </div>
+            }
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="pharmacyForm.invalid || isLoading">
+          @if (isLoading) {
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            {{ 'common.loading' | translate }}
+          } @else {
+            {{ 'common.save' | translate }}
+          }
+        </button>
+      </form>
+    </app-card>
+  </div>
+</div>

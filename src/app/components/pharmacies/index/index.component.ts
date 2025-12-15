@@ -19,54 +19,122 @@ export class IndexComponent {
   search = '';
   page = 1;
   pageSize = 20;
+  currentPage = 1;
+  pagesToShow = 5;
+  selectedStatus: string = 'ALL';
   private modalService = inject(NgbModal);
   private notificationService = inject(NotificationService);
 
   allPharmacies: any[] = []; // Liste complète des pharmacies
   filteredPharmacies: any[] = []; // Liste filtrée pour l'affichage
 
+  get displayedPharmacies() {
+    return this.filteredPharmacies.length > 0 || this.search || this.selectedStatus !== 'ALL'
+      ? this.filteredPharmacies
+      : this.allPharmacies;
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.displayedPharmacies.length / this.pageSize);
+  }
+
+  get paginatedPharmacies(): any[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return this.displayedPharmacies.slice(start, end);
+  }
+
+  get pages(): number[] {
+    const half = Math.floor(this.pagesToShow / 2);
+    let start = Math.max(1, this.currentPage - half);
+    let end = Math.min(this.totalPages, start + this.pagesToShow - 1);
+
+    if (end - start < this.pagesToShow - 1) {
+      start = Math.max(1, end - this.pagesToShow + 1);
+    }
+
+    const pagesArray = [];
+    for (let i = start; i <= end; i++) {
+      pagesArray.push(i);
+    }
+    return pagesArray;
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
   onAddNew() {
     this.router.navigateByUrl('/pharmacy/create');
   }
 
   onSearch(searchTerm: any) {
+    // Réinitialiser la pagination lors de la recherche
+    this.currentPage = 1;
+
     // Si la recherche est vide, afficher toutes les pharmacies
     if (!searchTerm || searchTerm.length === 0) {
       this.search = '';
-      this.filteredPharmacies = [...this.allPharmacies];
+      this.applyFilters();
       return;
     }
 
     this.search = searchTerm.toLowerCase();
-
-    // Filtrer les pharmacies par nom, téléphone, adresse, type et statut
-    this.filteredPharmacies = this.allPharmacies.filter((pharmacy) => {
-      const name = pharmacy.name?.toLowerCase() || '';
-      const phone = pharmacy.phone?.toLowerCase() || '';
-      const address = pharmacy.address?.toLowerCase() || '';
-      const customerType = pharmacy.customerType?.toLowerCase() || '';
-      const state = pharmacy.state?.toLowerCase() || '';
-
-      return (
-        name.includes(this.search) ||
-        phone.includes(this.search) ||
-        address.includes(this.search) ||
-        customerType.includes(this.search) ||
-        state.includes(this.search)
-      );
-    });
+    this.applyFilters();
 
     console.log(`[onSearch] Recherche: "${searchTerm}", Résultats: ${this.filteredPharmacies.length}/${this.allPharmacies.length}`);
+  }
+
+  filterByStatus(status: string) {
+    this.selectedStatus = status;
+    this.currentPage = 1;
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    let filtered = [...this.allPharmacies];
+
+    // Filtrer par statut
+    if (this.selectedStatus !== 'ALL') {
+      filtered = filtered.filter((pharmacy) => pharmacy.state === this.selectedStatus);
+    }
+
+    // Filtrer par recherche
+    if (this.search) {
+      filtered = filtered.filter((pharmacy) => {
+        const name = pharmacy.name?.toLowerCase() || '';
+        const phone = pharmacy.phone?.toLowerCase() || '';
+        const address = pharmacy.address?.toLowerCase() || '';
+        const customerType = pharmacy.customerType?.toLowerCase() || '';
+        const state = pharmacy.state?.toLowerCase() || '';
+
+        return (
+          name.includes(this.search) ||
+          phone.includes(this.search) ||
+          address.includes(this.search) ||
+          customerType.includes(this.search) ||
+          state.includes(this.search)
+        );
+      });
+    }
+
+    this.filteredPharmacies = filtered;
+  }
+
+  getStatusCount(status: string): number {
+    if (status === 'ALL') {
+      return this.allPharmacies.length;
+    }
+    return this.allPharmacies.filter((pharmacy) => pharmacy.state === status).length;
   }
 
   isLoading: boolean = false;
   pharmacies: any[] = []; // Propriété utilisée par le template pour afficher
 
-  get displayedPharmacies() {
-    return this.filteredPharmacies.length > 0 || this.search ? this.filteredPharmacies : this.allPharmacies;
-  }
-
   columns = [
+    { header: 'Date de création', field: 'createdAt', type: 'date', format: 'dd/MM/yyyy' },
     { header: 'Nom', field: 'name' },
     { header: 'Telephone', field: 'phone' },
     { header: 'Adresse', field: 'address' },
@@ -106,6 +174,7 @@ export class IndexComponent {
 
   updateColumns() {
     this.columns = [
+      { header: this.translateService.instant('common.createdAt'), field: 'createdAt', type: 'date', format: 'dd/MM/yyyy' },
       { header: this.translateService.instant('common.name'), field: 'name' },
       { header: this.translateService.instant('pharmacies.phone'), field: 'phone' },
       { header: this.translateService.instant('pharmacies.address'), field: 'address' },
