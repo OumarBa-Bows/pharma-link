@@ -269,7 +269,9 @@
     "image": "الصورة",
     "import": "استيراد",
     "importFile": "استيراد ملف",
-    "selectedFile": "الملف المحدد"
+    "selectedFile": "الملف المحدد",
+    "uploading": "جارٍ الاستيراد",
+    "pleaseWait": "يرجى الانتظار، الاستيراد قيد التقدم..."
   },
   "table": {
     "page": "صفحة",
@@ -286,9 +288,11 @@
     "listing-update": {
       "title": "تعديل قائمة"
     },
+    "title": "العنوان",
+    "titlePlaceholder": "أدخل عنوان القائمة",
     "endDate": "تاريخ الانتهاء",
     "namePlaceholder": "اسم القائمة",
-    "descriptionPlaceholder": "وصف القائمة",
+    "descriptionPlaceholder": "أدخل وصف القائمة",
     "articles": "الأدوية",
     "articlesList": "قائمة الأدوية",
     "availableQuantity": "الكمية المتاحة",

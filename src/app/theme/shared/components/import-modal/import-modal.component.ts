@@ -16,8 +16,14 @@ export class ImportModalComponent {
   @Input() accept = '*/*';
   @Input() confirmLabel = 'common.import';
   @Input() cancelLabel = 'common.cancel';
+  @Input() showExtraFields = false;
 
   file: File | null = null;
+  isUploading = false;
+  uploadProgress = 0;
+  listingTitle = '';
+  listingDescription = '';
+  listingEndDate = '';
 
   constructor(public activeModal: NgbActiveModal) {}
 
@@ -51,7 +57,13 @@ export class ImportModalComponent {
 
   onImport() {
     if (this.file) {
-      this.activeModal.close(this.file);
+      this.isUploading = true;
+      this.uploadProgress = 0;
+      // Ne pas fermer le modal ici, il sera fermé après la réponse de l'API
     }
+  }
+
+  setUploadProgress(progress: number) {
+    this.uploadProgress = Math.round(progress);
   }
 }

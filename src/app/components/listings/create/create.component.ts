@@ -31,7 +31,8 @@ export class CreateComponent implements OnInit {
     this.listingForm = this.fb.group({
       name: ['', Validators.required],
       description: [''],
-      articleIds: [[]]
+      end_date: ['', Validators.required],
+      articleIds: [[], Validators.required]
     });
   }
 

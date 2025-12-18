@@ -35,6 +35,7 @@ export class UpdateComponent implements OnInit {
       id: [''],
       name: ['', Validators.required],
       description: [''],
+      end_date: ['', Validators.required],
       articleIds: [[], Validators.required]
     });
     this.route.paramMap.subscribe((params) => {
@@ -152,6 +153,7 @@ export class UpdateComponent implements OnInit {
       id: this.listing?.id || '',
       name: this.listing?.name || '',
       description: this.listing?.description || '',
+      end_date: this.listing?.end_date || '',
       articleIds: selectedIds
     });
   }

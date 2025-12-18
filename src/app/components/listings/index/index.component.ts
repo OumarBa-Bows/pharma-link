@@ -155,39 +155,47 @@ export class IndexComponent {
     const modalRef = this.modalService.open(ImportModalComponent, {
       size: 'md',
       centered: true,
-      backdrop: 'static'
+      backdrop: 'static',
+      keyboard: false
     });
     // Configure modal for Excel files
     modalRef.componentInstance.title = 'listings.importTitle';
     modalRef.componentInstance.description = 'listings.importDescription';
     modalRef.componentInstance.accept =
       '.xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    modalRef.result
-      .then((file: File) => {
-        if (!file) return;
-        const formData = new FormData();
-        formData.append('file', file);
-        this.isLoading = true;
-        this.apiService.postData('listings/import', formData).subscribe({
-          next: (res) => {
-            console.log('Listings uploaded successfully:', res);
-            this.notificationService.showSuccess(this.translateService.instant('listings.importSuccess'));
-          },
-          error: (err) => {
-            this.isLoading = false;
-            var message = err?.error?.message;
-            console.error('Erreur import articles:', err);
-            this.notificationService.showError(message ?? this.translateService.instant('listings.importError'));
-          },
-          complete: () => {
-            this.isLoading = false;
-            this.getListings();
-          }
-        });
-      })
-      .catch(() => {
-        // Modal dismissed
+    modalRef.componentInstance.showExtraFields = true;
+
+    // Intercepter le clic sur le bouton d'import
+    modalRef.componentInstance.onImport = () => {
+      const file = modalRef.componentInstance.file;
+      const title = modalRef.componentInstance.listingTitle;
+      const description = modalRef.componentInstance.listingDescription;
+      const endDate = modalRef.componentInstance.listingEndDate;
+      if (!file || !title || !description || !endDate) return;
+
+      modalRef.componentInstance.isUploading = true;
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('end_date', endDate);
+
+      this.apiService.postData('listings/import', formData).subscribe({
+        next: (res) => {
+          console.log('Listings uploaded successfully:', res);
+          this.notificationService.showSuccess(this.translateService.instant('listings.importSuccess'));
+          modalRef.close();
+          this.getListings();
+        },
+        error: (err) => {
+          var message = err?.error?.message;
+          console.error('Erreur import listings:', err);
+          this.notificationService.showError(message ?? this.translateService.instant('listings.importError'));
+          modalRef.close();
+        }
       });
+    };
   }
 
   onShowDetails(row: any) {

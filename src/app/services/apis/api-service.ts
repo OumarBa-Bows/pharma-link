@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
@@ -15,6 +15,13 @@ export class ApiService {
 
   postData<T>(endpoint: string, data: any, options: object = {}): Observable<T> {
     return this.http.post<T>(`${this.api}/${endpoint}`, data, { ...options });
+  }
+
+  postDataWithProgress<T>(endpoint: string, data: any): Observable<HttpEvent<T>> {
+    return this.http.post<T>(`${this.api}/${endpoint}`, data, {
+      reportProgress: true,
+      observe: 'events'
+    });
   }
 
   putData<T>(endpoint: string, data: any, options: object = {}): Observable<T> {

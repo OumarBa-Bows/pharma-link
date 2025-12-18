@@ -275,7 +275,9 @@
     "image": "Image",
     "import": "Import",
     "importFile": "Import file",
-    "selectedFile": "Selected file"
+    "selectedFile": "Selected file",
+    "uploading": "Uploading",
+    "pleaseWait": "Please wait, upload in progress..."
   },
   "table": {
     "page": "Page",
@@ -292,9 +294,11 @@
     "listing-update": {
       "title": "Edit Listing"
     },
+    "title": "Title",
+    "titlePlaceholder": "Enter listing title",
     "endDate": "End date",
     "namePlaceholder": "Listing name",
-    "descriptionPlaceholder": "Listing description",
+    "descriptionPlaceholder": "Enter listing description",
     "articles": "Articles",
     "articlesList": "Articles list",
     "availableQuantity": "Available quantity",

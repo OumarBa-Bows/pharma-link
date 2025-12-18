@@ -11,6 +11,7 @@ import { ToastService } from 'src/app/services/apis/toast.service';
 import { NotificationService } from 'src/app/services/notifications/notification.service';
 import { ImportModalComponent } from 'src/app/theme/shared/components/import-modal/import-modal.component';
 import { LowStockModalComponent } from '../low-stock-modal/low-stock-modal.component';
+import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-index',
@@ -281,38 +282,39 @@ export class IndexComponent {
     const modalRef = this.modalService.open(ImportModalComponent, {
       size: 'md',
       centered: true,
-      backdrop: 'static'
+      backdrop: 'static',
+      keyboard: false
     });
     // Configure modal for Excel files
     modalRef.componentInstance.title = this.translateService.instant('articles.article-list.import.title');
     modalRef.componentInstance.description = this.translateService.instant('articles.article-list.import.description');
     modalRef.componentInstance.accept =
       '.xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    modalRef.result
-      .then((file: File) => {
-        if (!file) return;
-        const formData = new FormData();
-        formData.append('file', file);
-        this.isLoading = true;
-        this.apiService.postData('articles/upload', formData).subscribe({
-          next: (res) => {
-            console.log('Articles uploaded successfully:', res);
-            this.notificationService.showSuccess(this.translateService.instant('articles.article-list.import.successMessage'));
-          },
-          error: (err) => {
-            this.isLoading = false;
 
-            console.error('Erreur import articles:', err);
-            this.notificationService.showError(this.translateService.instant('articles.article-list.import.errorMessage'));
-          },
-          complete: () => {
-            this.isLoading = false;
-            this.getArticles();
-          }
-        });
-      })
-      .catch(() => {
-        // Modal dismissed
+    // Intercepter le clic sur le bouton d'import
+    const originalOnImport = modalRef.componentInstance.onImport.bind(modalRef.componentInstance);
+    modalRef.componentInstance.onImport = () => {
+      const file = modalRef.componentInstance.file;
+      if (!file) return;
+
+      modalRef.componentInstance.isUploading = true;
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      this.apiService.postData('articles/upload', formData).subscribe({
+        next: (res) => {
+          console.log('Articles uploaded successfully:', res);
+          this.notificationService.showSuccess(this.translateService.instant('articles.article-list.import.successMessage'));
+          modalRef.close();
+          this.getArticles();
+        },
+        error: (err) => {
+          console.error('Erreur import articles:', err);
+          this.notificationService.showError(this.translateService.instant('articles.article-list.import.errorMessage'));
+          modalRef.close();
+        }
       });
+    };
   }
 }

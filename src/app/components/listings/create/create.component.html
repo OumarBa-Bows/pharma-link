@@ -39,6 +39,16 @@
 
         <div class="row">
           <div class="col-md-12 mb-3">
+            <label for="endDate" class="form-label">
+              {{ 'listings.endDate' | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <input type="date" class="form-control" id="endDate" formControlName="end_date" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 mb-3">
             <label for="articleIds" class="form-label">{{ 'listings.articles' | translate }}</label>
             <div class="mb-2" *ngIf="isArticlesLoading">
               <small>{{ 'listings.loadingArticles' | translate }}</small>

@@ -275,7 +275,9 @@
     "image": "Image",
     "import": "Importer",
     "importFile": "Importer un fichier",
-    "selectedFile": "Fichier sélectionné"
+    "selectedFile": "Fichier sélectionné",
+    "uploading": "Importation en cours",
+    "pleaseWait": "Veuillez patienter, l'importation est en cours..."
   },
   "table": {
     "page": "Page",
@@ -292,9 +294,11 @@
     "listing-update": {
       "title": "Modifier un listing"
     },
+    "title": "Titre",
+    "titlePlaceholder": "Entrez le titre du listing",
     "endDate": "Date de fin",
     "namePlaceholder": "Nom du listing",
-    "descriptionPlaceholder": "Description du listing",
+    "descriptionPlaceholder": "Entrez la description du listing",
     "articles": "Articles",
     "articlesList": "Liste des articles",
     "availableQuantity": "Quantité disponible",

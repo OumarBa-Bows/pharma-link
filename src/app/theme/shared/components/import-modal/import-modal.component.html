@@ -1,22 +1,88 @@
 <div class="modal-header">
   <h5 class="modal-title">{{ title | translate }}</h5>
-  <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()"></button>
+  <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()" [disabled]="isUploading"></button>
 </div>
 <div class="modal-body">
-  @if (description) {
-    <p class="mb-2">{{ description | translate }}</p>
+  @if (!isUploading) {
+    @if (description) {
+      <p class="mb-2">{{ description | translate }}</p>
+    }
+    @if (showExtraFields) {
+      <div class="mb-3">
+        <label for="listingTitle" class="form-label">
+          {{ 'listings.title' | translate }}
+          <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          id="listingTitle"
+          class="form-control"
+          [(ngModel)]="listingTitle"
+          [placeholder]="'listings.titlePlaceholder' | translate"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="listingDescription" class="form-label">
+          {{ 'common.description' | translate }}
+          <span class="text-danger">*</span>
+        </label>
+        <textarea
+          id="listingDescription"
+          class="form-control"
+          rows="3"
+          [(ngModel)]="listingDescription"
+          [placeholder]="'listings.descriptionPlaceholder' | translate"
+          required
+        ></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="listingEndDate" class="form-label">
+          {{ 'listings.endDate' | translate }}
+          <span class="text-danger">*</span>
+        </label>
+        <input type="date" id="listingEndDate" class="form-control" [(ngModel)]="listingEndDate" required />
+      </div>
+    }
+    <div class="mb-3">
+      <label for="fileInput" class="form-label">
+        {{ 'common.importFile' | translate }}
+        <span class="text-danger">*</span>
+      </label>
+      <input type="file" id="fileInput" class="form-control" (change)="onFileChange($event)" [attr.accept]="accept" />
+    </div>
+    @if (file) {
+      <div class="mt-2">
+        <small>
+          {{ 'common.selectedFile' | translate }}:
+          <strong>{{ file.name }}</strong>
+        </small>
+      </div>
+    }
   }
-  <input type="file" class="form-control" (change)="onFileChange($event)" [attr.accept]="accept" />
-  @if (file) {
-    <div class="mt-2">
-      <small>
-        {{ 'common.selectedFile' | translate }}:
-        <strong>{{ file.name }}</strong>
-      </small>
+  @if (isUploading) {
+    <div class="upload-progress-container text-center py-4">
+      <div class="spinner-border text-primary" style="width: 4rem; height: 4rem" role="status">
+        <span class="visually-hidden">{{ 'common.uploading' | translate }}</span>
+      </div>
+      <p class="mt-3 text-muted">{{ 'common.uploading' | translate }}</p>
+      <p class="text-muted small">{{ 'common.pleaseWait' | translate }}</p>
     </div>
   }
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-secondary" (click)="onCancel()">{{ cancelLabel | translate }}</button>
-  <button type="button" class="btn btn-primary" [disabled]="!file" (click)="onImport()">{{ confirmLabel | translate }}</button>
+  <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="isUploading">
+    {{ cancelLabel | translate }}
+  </button>
+  <button
+    type="button"
+    class="btn btn-primary"
+    [disabled]="!file || isUploading || (showExtraFields && (!listingTitle || !listingDescription || !listingEndDate))"
+    (click)="onImport()"
+  >
+    @if (isUploading) {
+      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+    }
+    {{ confirmLabel | translate }}
+  </button>
 </div>
