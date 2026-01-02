@@ -16,6 +16,10 @@ const routes: Routes = [
       {
         path: 'edit/:id',
         loadComponent: () => import('./update/update.component').then((c) => c.UpdateComponent)
+      },
+      {
+        path: 'stats/:id',
+        loadComponent: () => import('./stats/stats.component').then((c) => c.StatsComponent)
       }
     ]
   }
@@ -25,4 +29,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class PharmaciesRoutingModule { }
+export class PharmaciesRoutingModule {}

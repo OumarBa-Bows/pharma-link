@@ -1,0 +1,95 @@
+<div class="row">
+  @if (isLoading) {
+    <app-spinner></app-spinner>
+  }
+  <div class="col-xl-12">
+    <button style="float: right" [routerLink]="['/pharmacy/index']" class="btn btn-danger mb-4">
+      <i class="fa fa-arrow-left"></i>
+      {{ 'buttons-action.back' | translate }}
+    </button>
+  </div>
+
+  <!-- Total Card -->
+  <div class="col-xl-4 col-md-6">
+    <app-card cardTitle="{{ 'stats.total' | translate }}" [options]="false" blockClass="sale-statistic-card">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2 class="mb-0">{{ stats?.total || 0 }}</h2>
+        </div>
+        <div class="col-auto">
+          <i class="fas fa-box fa-3x text-primary"></i>
+        </div>
+      </div>
+    </app-card>
+  </div>
+
+  <!-- Validated Card -->
+  <div class="col-xl-4 col-md-6">
+    <app-card cardTitle="{{ 'stats.validated' | translate }}" [options]="false" blockClass="sale-statistic-card">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2 class="mb-0">{{ stats?.validated || 0 }}</h2>
+        </div>
+        <div class="col-auto">
+          <i class="fas fa-check-circle fa-3x text-success"></i>
+        </div>
+      </div>
+    </app-card>
+  </div>
+
+  <!-- Pending Card -->
+  <div class="col-xl-4 col-md-6">
+    <app-card cardTitle="{{ 'stats.pending' | translate }}" [options]="false" blockClass="sale-statistic-card">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2 class="mb-0">{{ stats?.pending || 0 }}</h2>
+        </div>
+        <div class="col-auto">
+          <i class="fas fa-clock fa-3x text-warning"></i>
+        </div>
+      </div>
+    </app-card>
+  </div>
+
+  <!-- Shipped Card -->
+  <div class="col-xl-4 col-md-6">
+    <app-card cardTitle="{{ 'stats.shipped' | translate }}" [options]="false" blockClass="sale-statistic-card">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2 class="mb-0">{{ stats?.shipped || 0 }}</h2>
+        </div>
+        <div class="col-auto">
+          <i class="fas fa-shipping-fast fa-3x text-info"></i>
+        </div>
+      </div>
+    </app-card>
+  </div>
+
+  <!-- Delivered Card -->
+  <div class="col-xl-4 col-md-6">
+    <app-card cardTitle="{{ 'stats.delivered' | translate }}" [options]="false" blockClass="sale-statistic-card">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2 class="mb-0">{{ stats?.delivered || 0 }}</h2>
+        </div>
+        <div class="col-auto">
+          <i class="fas fa-check-double fa-3x text-success"></i>
+        </div>
+      </div>
+    </app-card>
+  </div>
+
+  <!-- Cancelled Card -->
+  <div class="col-xl-4 col-md-6">
+    <app-card cardTitle="{{ 'stats.cancelled' | translate }}" [options]="false" blockClass="sale-statistic-card">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2 class="mb-0">{{ stats?.cancelled || 0 }}</h2>
+        </div>
+        <div class="col-auto">
+          <i class="fas fa-times-circle fa-3x text-danger"></i>
+        </div>
+      </div>
+    </app-card>
+  </div>
+</div>

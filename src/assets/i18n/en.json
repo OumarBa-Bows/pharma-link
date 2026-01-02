@@ -10,7 +10,8 @@
     "save": "Save",
     "cancel": "Cancel",
     "back": "Back",
-    "close": "Close"
+    "close": "Close",
+    "discount": "Discount"
   },
   "users": {
     "user-list": {
@@ -123,7 +124,36 @@
     "confirmUnpublish": "Are you sure you want to unpublish this article?",
     "publishSuccess": "Article published successfully",
     "unpublishSuccess": "Article unpublished successfully",
-    "publishError": "Error changing publication status"
+    "publishError": "Error changing publication status",
+    "remise": {
+      "title": "Discount Management",
+      "createTitle": "Create Discount",
+      "editTitle": "Edit Discount",
+      "min": "Minimum quantity",
+      "max": "Maximum quantity",
+      "percent": "Percentage",
+      "minPlaceholder": "Minimum quantity",
+      "maxPlaceholder": "Maximum quantity",
+      "percentPlaceholder": "Discount percentage",
+      "minRequired": "Minimum quantity is required",
+      "maxRequired": "Maximum quantity is required",
+      "percentRequired": "Percentage is required",
+      "minValueError": "Value must be greater than or equal to 0",
+      "maxValueError": "Value must be greater than or equal to 0",
+      "percentMinError": "Percentage must be greater than or equal to 0",
+      "percentMaxError": "Percentage must be less than or equal to 100",
+      "maxLessThanMinError": "Maximum quantity must be greater than minimum quantity",
+      "addNew": "Add discount",
+      "noData": "No discounts found",
+      "confirmDelete": "Are you sure you want to delete this discount?",
+      "deleteSuccess": "Discount deleted successfully",
+      "deleteError": "Error deleting discount",
+      "createSuccess": "Discount created successfully",
+      "createError": "Error creating discount",
+      "updateSuccess": "Discount updated successfully",
+      "updateError": "Error updating discount",
+      "loadError": "Error loading discounts"
+    }
   },
 
   "table": {
@@ -339,6 +369,7 @@
     "type": "Type",
     "selectType": "Select a type",
     "pharmacy": "Client",
+    "pharmacie": "Pharmacy",
     "depot": "Depot",
     "depotPharmaceutique": "Pharmaceutical depot",
     "clinique": "Clinic",
@@ -465,5 +496,13 @@
   },
   "auth": {
     "signInError": "Login failed. Please check your credentials and try again."
+  },
+  "stats": {
+    "total": "Total",
+    "validated": "Validated",
+    "pending": "Pending",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled"
   }
 }

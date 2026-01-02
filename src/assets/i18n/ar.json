@@ -10,7 +10,8 @@
     "save": "حفظ",
     "cancel": "إلغاء",
     "back": "رجوع",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "discount": "تخفيض"
   },
   "users": {
     "user-list": {
@@ -118,7 +119,36 @@
     "confirmUnpublish": "هل أنت متأكد من رغبتك في إلغاء نشر هذا الدواء؟",
     "publishSuccess": "تم نشر الدواء بنجاح",
     "unpublishSuccess": "تم إلغاء نشر الدواء بنجاح",
-    "publishError": "خطأ في تغيير حالة النشر"
+    "publishError": "حدث خطأ أثناء تغيير حالة النشر",
+    "remise": {
+      "title": "إدارة التخفيضات",
+      "createTitle": "إنشاء تخفيض",
+      "editTitle": "تعديل التخفيض",
+      "min": "الكمية الدنيا",
+      "max": "الكمية القصوى",
+      "percent": "النسبة المئوية",
+      "minPlaceholder": "الكمية الدنيا",
+      "maxPlaceholder": "الكمية القصوى",
+      "percentPlaceholder": "نسبة التخفيض",
+      "minRequired": "الكمية الدنيا مطلوبة",
+      "maxRequired": "الكمية القصوى مطلوبة",
+      "percentRequired": "النسبة المئوية مطلوبة",
+      "minValueError": "يجب أن تكون القيمة أكبر من أو تساوي 0",
+      "maxValueError": "يجب أن تكون القيمة أكبر من أو تساوي 0",
+      "percentMinError": "يجب أن تكون النسبة أكبر من أو تساوي 0",
+      "percentMaxError": "يجب أن تكون النسبة أقل من أو تساوي 100",
+      "maxLessThanMinError": "يجب أن تكون الكمية القصوى أكبر من الكمية الدنيا",
+      "addNew": "إضافة تخفيض",
+      "noData": "لم يتم العثور على تخفيضات",
+      "confirmDelete": "هل أنت متأكد من رغبتك في حذف هذا التخفيض؟",
+      "deleteSuccess": "تم حذف التخفيض بنجاح",
+      "deleteError": "حدث خطأ أثناء حذف التخفيض",
+      "createSuccess": "تم إنشاء التخفيض بنجاح",
+      "createError": "حدث خطأ أثناء إنشاء التخفيض",
+      "updateSuccess": "تم تحديث التخفيض بنجاح",
+      "updateError": "حدث خطأ أثناء تحديث التخفيض",
+      "loadError": "حدث خطأ أثناء تحميل التخفيضات"
+    }
   },
   "table": {
     "selectAll": "تحديد الكل",
@@ -333,6 +363,7 @@
     "type": "النوع",
     "selectType": "حدد نوعًا",
     "pharmacy": "عميل",
+    "pharmacie": "صيدلية",
     "depot": "مستودع",
     "depotPharmaceutique": "مستودع صيدلاني",
     "clinique": "عيادة",
@@ -459,5 +490,13 @@
   },
   "auth": {
     "signInError": "فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد والمحاولة مرة أخرى."
+  },
+  "stats": {
+    "total": "المجموع",
+    "validated": "تم التحقق منها",
+    "pending": "قيد الانتظار",
+    "shipped": "تم الشحن",
+    "delivered": "تم التسليم",
+    "cancelled": "ملغاة"
   }
 }

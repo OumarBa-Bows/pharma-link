@@ -16,6 +16,10 @@ const routes: Routes = [
       {
         path: 'edit/:id',
         loadComponent: () => import('./update/update.component').then((c) => c.UpdateComponent)
+      },
+      {
+        path: 'remise/:id',
+        loadComponent: () => import('./remise/remise.component').then((c) => c.RemiseComponent)
       }
     ]
   }

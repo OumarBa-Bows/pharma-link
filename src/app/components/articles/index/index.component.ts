@@ -7,15 +7,13 @@ import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinne
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from 'src/app/theme/shared/components/confirmation-modal/confirmation-modal.component';
-import { ToastService } from 'src/app/services/apis/toast.service';
 import { NotificationService } from 'src/app/services/notifications/notification.service';
 import { ImportModalComponent } from 'src/app/theme/shared/components/import-modal/import-modal.component';
 import { LowStockModalComponent } from '../low-stock-modal/low-stock-modal.component';
-import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-index',
-  imports: [SharedModule, RouterModule, TranslatePipe, SpinnerComponent],
+  imports: [SharedModule, RouterModule, TranslatePipe, SpinnerComponent, NgbModule],
   templateUrl: './index.component.html',
   styleUrl: './index.component.scss'
 })
@@ -199,6 +197,10 @@ export class IndexComponent {
 
   onEdit(row: any) {
     this.router.navigateByUrl(`/articles/edit/${row['id']}`);
+  }
+
+  onDiscount(row: any) {
+    this.router.navigateByUrl(`/articles/remise/${row['id']}`);
   }
 
   onDelete(row: any) {

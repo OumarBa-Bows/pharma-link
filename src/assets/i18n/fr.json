@@ -10,7 +10,8 @@
     "save": "Enregistrer",
     "cancel": "Annuler",
     "back": "Retour",
-    "close": "Fermer"
+    "close": "Fermer",
+    "discount": "Remise"
   },
   "users": {
     "user-list": {
@@ -123,7 +124,36 @@
     "confirmUnpublish": "Êtes-vous sûr de vouloir dépublier cet article ?",
     "publishSuccess": "Article publié avec succès",
     "unpublishSuccess": "Article dépublié avec succès",
-    "publishError": "Erreur lors du changement de statut de publication"
+    "publishError": "Erreur lors du changement de statut de publication",
+    "remise": {
+      "title": "Gestion des remises",
+      "createTitle": "Créer une remise",
+      "editTitle": "Modifier la remise",
+      "min": "Quantité minimum",
+      "max": "Quantité maximum",
+      "percent": "Pourcentage",
+      "minPlaceholder": "Quantité minimum",
+      "maxPlaceholder": "Quantité maximum",
+      "percentPlaceholder": "Pourcentage de remise",
+      "minRequired": "La quantité minimum est requise",
+      "maxRequired": "La quantité maximum est requise",
+      "percentRequired": "Le pourcentage est requis",
+      "minValueError": "La valeur doit être supérieure ou égale à 0",
+      "maxValueError": "La valeur doit être supérieure ou égale à 0",
+      "percentMinError": "Le pourcentage doit être supérieur ou égal à 0",
+      "percentMaxError": "Le pourcentage doit être inférieur ou égal à 100",
+      "maxLessThanMinError": "La quantité maximum doit être supérieure à la quantité minimum",
+      "addNew": "Ajouter une remise",
+      "noData": "Aucune remise trouvée",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette remise ?",
+      "deleteSuccess": "Remise supprimée avec succès",
+      "deleteError": "Erreur lors de la suppression de la remise",
+      "createSuccess": "Remise créée avec succès",
+      "createError": "Erreur lors de la création de la remise",
+      "updateSuccess": "Remise mise à jour avec succès",
+      "updateError": "Erreur lors de la mise à jour de la remise",
+      "loadError": "Erreur lors du chargement des remises"
+    }
   },
 
   "table": {
@@ -339,6 +369,7 @@
     "type": "Type",
     "selectType": "Sélectionnez un type",
     "pharmacy": "Client",
+    "pharmacie": "Pharmacie",
     "depot": "Dépôt",
     "depotPharmaceutique": "Dépôt pharmaceutique",
     "clinique": "Clinique",
@@ -465,5 +496,13 @@
   },
   "auth": {
     "signInError": "Connexion échouée. Veuillez vérifier vos identifiants et réessayer."
+  },
+  "stats": {
+    "total": "Total",
+    "validated": "Validées",
+    "pending": "En attente",
+    "shipped": "Expédiées",
+    "delivered": "Livrées",
+    "cancelled": "Annulées"
   }
 }

@@ -69,30 +69,37 @@
                   </span>
                 </td>
                 <td>
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-outline-primary me-2"
-                    (click)="onEdit(article)"
-                    [title]="'buttons-action.edit' | translate"
-                  >
-                    <i class="feather icon-edit-2"></i>
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-outline-danger me-2"
-                    (click)="deleteArticle(article)"
-                    [title]="'buttons-action.delete' | translate"
-                  >
-                    <i class="fa fa-trash"></i>
-                  </button>
-                  <button
-                    type="button"
-                    [class]="!article.isPublished ? 'btn btn-sm btn-outline-success' : 'btn btn-sm btn-outline-secondary'"
-                    (click)="togglePublish(article)"
-                    [title]="article.isPublished ? ('articles.unpublish' | translate) : ('articles.publish' | translate)"
-                  >
-                    <i [class]="!article.isPublished ? 'fa fa-check-circle text-success' : 'fa fa-times-circle text-secondary'"></i>
-                  </button>
+                  <div ngbDropdown class="d-inline-block" container="body" placement="bottom-end">
+                    <button
+                      class="btn btn-sm btn-outline-secondary"
+                      type="button"
+                      id="dropdownMenuButton{{ article.id }}"
+                      ngbDropdownToggle
+                    >
+                      <i class="feather icon-more-vertical"></i>
+                    </button>
+                    <div ngbDropdownMenu [attr.aria-labelledby]="'dropdownMenuButton' + article.id">
+                      <button ngbDropdownItem (click)="onEdit(article)">
+                        <i class="feather icon-edit-2 me-2"></i>
+                        {{ 'buttons-action.edit' | translate }}
+                      </button>
+                      <button ngbDropdownItem (click)="togglePublish(article)">
+                        <i
+                          [class]="!article.isPublished ? 'fa fa-check-circle me-2 text-success' : 'fa fa-times-circle me-2 text-secondary'"
+                        ></i>
+                        {{ article.isPublished ? ('articles.unpublish' | translate) : ('articles.publish' | translate) }}
+                      </button>
+                      <button ngbDropdownItem (click)="onDiscount(article)">
+                        <i class="fa fa-tag me-2 text-warning"></i>
+                        {{ 'buttons-action.discount' | translate }}
+                      </button>
+                      <div class="dropdown-divider"></div>
+                      <button ngbDropdownItem (click)="deleteArticle(article)" class="text-danger">
+                        <i class="fa fa-trash me-2"></i>
+                        {{ 'buttons-action.delete' | translate }}
+                      </button>
+                    </div>
+                  </div>
                 </td>
               </tr>
             }

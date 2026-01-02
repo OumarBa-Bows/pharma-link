@@ -143,7 +143,7 @@ export class IndexComponent {
       field: 'customerType',
       type: 'enum',
       enumMap: {
-        PHARMACY: 'Pharmacie',
+        PHARMACIE: 'Pharmacie',
         DEPOT: 'Depot',
         DEPOT_PHARMACEUTIQUE: 'Dépôt pharmaceutique',
         CLINIQUE: 'Clinique',
@@ -183,7 +183,7 @@ export class IndexComponent {
         field: 'customerType',
         type: 'enum',
         enumMap: {
-          PHARMACY: this.translateService.instant('pharmacies.pharmacy'),
+          PHARMACIE: this.translateService.instant('pharmacies.pharmacie'),
           DEPOT: this.translateService.instant('pharmacies.depot'),
           DEPOT_PHARMACEUTIQUE: this.translateService.instant('pharmacies.depotPharmaceutique'),
           CLINIQUE: this.translateService.instant('pharmacies.clinique'),
@@ -272,5 +272,9 @@ export class IndexComponent {
       .catch(() => {
         // Modal dismissed
       });
+  }
+
+  onViewStats(pharmacy: any) {
+    this.router.navigateByUrl(`/pharmacy/stats/${pharmacy['id']}`);
   }
 }

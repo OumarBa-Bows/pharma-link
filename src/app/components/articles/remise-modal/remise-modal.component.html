@@ -1,0 +1,108 @@
+<div class="modal-header">
+  <h5 class="modal-title">{{ isEditMode ? ('articles.remise.editTitle' | translate) : ('articles.remise.createTitle' | translate) }}</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="remiseForm">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="min" class="form-label">
+          {{ 'articles.remise.min' | translate }}
+          <span class="text-danger">*</span>
+        </label>
+        <input
+          type="number"
+          class="form-control"
+          id="min"
+          formControlName="min"
+          [placeholder]="'articles.remise.minPlaceholder' | translate"
+          [class.is-invalid]="remiseForm.get('min')?.invalid && remiseForm.get('min')?.touched"
+        />
+        @if (remiseForm.get('min')?.invalid && remiseForm.get('min')?.touched) {
+          <div class="invalid-feedback">
+            @if (remiseForm.get('min')?.errors?.['required']) {
+              {{ 'articles.remise.minRequired' | translate }}
+            }
+            @if (remiseForm.get('min')?.errors?.['min']) {
+              {{ 'articles.remise.minValueError' | translate }}
+            }
+          </div>
+        }
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="max" class="form-label">
+          {{ 'articles.remise.max' | translate }}
+          <span class="text-danger">*</span>
+        </label>
+        <input
+          type="number"
+          class="form-control"
+          id="max"
+          formControlName="max"
+          [placeholder]="'articles.remise.maxPlaceholder' | translate"
+          [class.is-invalid]="remiseForm.get('max')?.invalid && remiseForm.get('max')?.touched"
+        />
+        @if (remiseForm.get('max')?.invalid && remiseForm.get('max')?.touched) {
+          <div class="invalid-feedback">
+            @if (remiseForm.get('max')?.errors?.['required']) {
+              {{ 'articles.remise.maxRequired' | translate }}
+            }
+            @if (remiseForm.get('max')?.errors?.['min']) {
+              {{ 'articles.remise.maxValueError' | translate }}
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 mb-3">
+        <label for="percent" class="form-label">
+          {{ 'articles.remise.percent' | translate }} (%)
+          <span class="text-danger">*</span>
+        </label>
+        <input
+          type="number"
+          class="form-control"
+          id="percent"
+          formControlName="percent"
+          [placeholder]="'articles.remise.percentPlaceholder' | translate"
+          [class.is-invalid]="remiseForm.get('percent')?.invalid && remiseForm.get('percent')?.touched"
+        />
+        @if (remiseForm.get('percent')?.invalid && remiseForm.get('percent')?.touched) {
+          <div class="invalid-feedback">
+            @if (remiseForm.get('percent')?.errors?.['required']) {
+              {{ 'articles.remise.percentRequired' | translate }}
+            }
+            @if (remiseForm.get('percent')?.errors?.['min']) {
+              {{ 'articles.remise.percentMinError' | translate }}
+            }
+            @if (remiseForm.get('percent')?.errors?.['max']) {
+              {{ 'articles.remise.percentMaxError' | translate }}
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (remiseForm.hasError('maxLessThanMin')) {
+      <div class="alert alert-danger" role="alert">
+        {{ 'articles.remise.maxLessThanMinError' | translate }}
+      </div>
+    }
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">
+    {{ 'buttons-action.cancel' | translate }}
+  </button>
+  <button type="button" class="btn btn-primary" (click)="save()" [disabled]="remiseForm.invalid || isLoading">
+    @if (isLoading) {
+      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+    }
+    {{ 'buttons-action.save' | translate }}
+  </button>
+</div>
