@@ -436,6 +436,7 @@
       "reference": "Reference",
       "referenceInvoice": "Invoice reference",
       "prixTotal": "Total price",
+      "remise": "Discount",
       "pharmacy": "Client",
       "distributor": "Distributor",
       "distributorPrincipal": "Main distributor",

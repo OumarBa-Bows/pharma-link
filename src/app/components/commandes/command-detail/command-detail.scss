@@ -417,6 +417,22 @@
       &.text-right {
         text-align: right;
       }
+
+      .discount-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+      }
+
+      .no-discount {
+        color: #adb5bd;
+        font-weight: 500;
+      }
     }
   }
 }

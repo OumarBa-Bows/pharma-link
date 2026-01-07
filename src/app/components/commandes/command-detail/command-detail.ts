@@ -125,6 +125,34 @@ export class CommandDetail implements OnInit {
     this.isCompositionVisible = !this.isCompositionVisible;
   }
 
+  getAppliedDiscount(item: any): number {
+    if (!item.article_remise || !Array.isArray(item.article_remise) || item.article_remise.length === 0) {
+      return 0;
+    }
+
+    const quantity = item.quantity;
+
+    // Trouver la remise applicable selon la quantité
+    const applicableDiscount = item.article_remise.find((remise: any) => {
+      const min = remise.min || 0;
+      const max = remise.max || Infinity;
+      return quantity >= min && quantity <= max;
+    });
+
+    return applicableDiscount ? applicableDiscount.percent : 0;
+  }
+
+  getTotalWithDiscount(item: any): number {
+    const baseTotal = item.article_price * item.quantity;
+    const discount = this.getAppliedDiscount(item);
+
+    if (discount > 0) {
+      return baseTotal * (1 - discount / 100);
+    }
+
+    return baseTotal;
+  }
+
   onEditItem(item: any): void {
     const modalRef = this.ngbModal.open(EditQuantityModalComponent, {
       size: 'md',
