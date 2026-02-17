@@ -7,7 +7,7 @@ import packageInfo from '../../package.json';
 export const environment = {
   appVersion: packageInfo.version,
   production: false,
-  apiUrl: 'http://localhost:8088/api',
+  apiUrl: 'https://api.pharma-link.org/api', //https://proxy-dev.cadorim.com/api-backend/api',
   supabaseUrl: 'https://xijniizcthuwwrmaqxtk.supabase.co',
   supabaseAnonKey:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhpam5paXpjdGh1d3dybWFxeHRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MTkwODksImV4cCI6MjA3NDE5NTA4OX0.6_CP9xSExFZtP8DKpXL5-xnCOBLUAVhVP5CL9FEC8cY',
