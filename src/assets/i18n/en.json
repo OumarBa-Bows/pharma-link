@@ -405,7 +405,14 @@
     "importTitle": "Import Clients (Excel)",
     "importDescription": "Select an Excel file (.xls, .xlsx) containing the clients to import.",
     "importSuccess": "Import completed successfully",
-    "importError": "An error occurred during import"
+    "importError": "An error occurred during import",
+    "change-password": "Change password",
+    "new-password": "New password",
+    "confirm-password": "Confirm password",
+    "password-required": "This field is required (min. 6 characters)",
+    "passwords-mismatch": "Passwords do not match",
+    "password-updated": "Password updated successfully",
+    "password-update-error": "Error updating password"
   },
   "commands": {
     "commands-list": {

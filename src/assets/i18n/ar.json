@@ -399,7 +399,14 @@
     "importTitle": "استيراد العملاء (Excel)",
     "importDescription": "حدد ملف Excel (.xls، .xlsx) يحتوي على العملاء للاستيراد.",
     "importSuccess": "تم الاستيراد بنجاح",
-    "importError": "حدث خطأ أثناء الاستيراد"
+    "importError": "حدث خطأ أثناء الاستيراد",
+    "change-password": "تغيير كلمة المرور",
+    "new-password": "كلمة المرور الجديدة",
+    "confirm-password": "تأكيد كلمة المرور",
+    "password-required": "هذا الحقل مطلوب (6 أحرف على الأقل)",
+    "passwords-mismatch": "كلمتا المرور غير متطابقتين",
+    "password-updated": "تم تحديث كلمة المرور بنجاح",
+    "password-update-error": "خطأ أثناء تحديث كلمة المرور"
   },
   "commands": {
     "commands-list": {

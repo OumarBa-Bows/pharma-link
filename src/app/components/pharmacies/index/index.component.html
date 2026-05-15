@@ -100,11 +100,18 @@
                     <i class="fa fa-edit"></i>
                   </button>
                   <button
-                    class="btn btn-sm btn-icon btn-info"
+                    class="btn btn-sm btn-icon btn-info me-2"
                     (click)="onViewStats(pharmacy)"
                     [title]="'pharmacies.view-stats' | translate"
                   >
                     <i class="fa fa-chart-bar"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-icon btn-warning"
+                    (click)="openPasswordModal(pharmacy, passwordModal)"
+                    [title]="'pharmacies.change-password' | translate"
+                  >
+                    <i class="fa fa-key"></i>
                   </button>
                 </td>
               </tr>
@@ -156,3 +163,69 @@
     </app-card>
   </div>
 </div>
+
+<!-- Modal: Change Password -->
+<ng-template #passwordModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">{{ 'pharmacies.change-password' | translate }}</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <form #passwordForm="ngForm" (ngSubmit)="updatePassword(modal)">
+      <div class="mb-3">
+        <label class="form-label">{{ 'pharmacies.new-password' | translate }}</label>
+        <div class="input-group">
+          <input
+            [type]="showNewPassword ? 'text' : 'password'"
+            class="form-control"
+            name="newPassword"
+            [(ngModel)]="newPassword"
+            required
+            minlength="6"
+            #pwdField="ngModel"
+          />
+          <button type="button" class="btn btn-outline-secondary" (click)="showNewPassword = !showNewPassword">
+            <i class="fa" [ngClass]="showNewPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+          </button>
+        </div>
+        @if (pwdField.invalid && pwdField.touched) {
+          <div class="text-danger small mt-1">{{ 'pharmacies.password-required' | translate }}</div>
+        }
+      </div>
+      <div class="mb-3">
+        <label class="form-label">{{ 'pharmacies.confirm-password' | translate }}</label>
+        <div class="input-group">
+          <input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            class="form-control"
+            name="confirmPassword"
+            [(ngModel)]="confirmPassword"
+            required
+            minlength="6"
+            #confirmField="ngModel"
+          />
+          <button type="button" class="btn btn-outline-secondary" (click)="showConfirmPassword = !showConfirmPassword">
+            <i class="fa" [ngClass]="showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+          </button>
+        </div>
+        @if (confirmField.invalid && confirmField.touched) {
+          <div class="text-danger small mt-1">{{ 'pharmacies.password-required' | translate }}</div>
+        }
+      </div>
+      @if (passwordMismatch) {
+        <div class="alert alert-danger py-2">{{ 'pharmacies.passwords-mismatch' | translate }}</div>
+      }
+      <div class="modal-footer px-0 pb-0">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">
+          {{ 'buttons-action.cancel' | translate }}
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="isUpdatingPassword">
+          @if (isUpdatingPassword) {
+            <span class="spinner-border spinner-border-sm me-1"></span>
+          }
+          {{ 'buttons-action.save' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>

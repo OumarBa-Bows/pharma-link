@@ -277,4 +277,44 @@ export class IndexComponent {
   onViewStats(pharmacy: any) {
     this.router.navigateByUrl(`/pharmacy/stats/${pharmacy['id']}`);
   }
+
+  // Password modal
+  selectedPharmacy: any = null;
+  newPassword: string = '';
+  confirmPassword: string = '';
+  passwordMismatch: boolean = false;
+  isUpdatingPassword: boolean = false;
+  showNewPassword: boolean = false;
+  showConfirmPassword: boolean = false;
+
+  openPasswordModal(pharmacy: any, content: any) {
+    this.selectedPharmacy = pharmacy;
+    this.newPassword = '';
+    this.confirmPassword = '';
+    this.passwordMismatch = false;
+    this.showNewPassword = false;
+    this.showConfirmPassword = false;
+    this.modalService.open(content, { centered: true, backdrop: 'static' });
+  }
+
+  updatePassword(modal: any) {
+    this.passwordMismatch = false;
+    if (!this.newPassword || !this.confirmPassword) return;
+    if (this.newPassword !== this.confirmPassword) {
+      this.passwordMismatch = true;
+      return;
+    }
+    this.isUpdatingPassword = true;
+    this.apiService.postData(`pharmacies/${this.selectedPharmacy.id}/update-password`, { newPassword: this.newPassword }).subscribe({
+      next: () => {
+        this.isUpdatingPassword = false;
+        this.notificationService.showSuccess(this.translateService.instant('pharmacies.password-updated'));
+        modal.close();
+      },
+      error: () => {
+        this.isUpdatingPassword = false;
+        this.notificationService.showError(this.translateService.instant('pharmacies.password-update-error'));
+      }
+    });
+  }
 }

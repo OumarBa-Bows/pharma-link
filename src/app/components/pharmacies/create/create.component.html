@@ -163,24 +163,34 @@
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="password" class="form-label">{{ 'pharmacies.password' | translate }}</label>
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              formControlName="password"
-              [placeholder]="'pharmacies.passwordPlaceholder' | translate"
-            />
+            <div class="input-group">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                class="form-control"
+                id="password"
+                formControlName="password"
+                [placeholder]="'pharmacies.passwordPlaceholder' | translate"
+              />
+              <button type="button" class="btn btn-outline-secondary" (click)="showPassword = !showPassword">
+                <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+              </button>
+            </div>
           </div>
           <div class="col-md-6 mb-3">
             <label for="confirmPassword" class="form-label">{{ 'pharmacies.confirmPassword' | translate }}</label>
-            <input
-              type="password"
-              class="form-control"
-              id="confirmPassword"
-              formControlName="confirmPassword"
-              [placeholder]="'pharmacies.confirmPasswordPlaceholder' | translate"
-              [class.is-invalid]="pharmacyForm.hasError('passwordMismatch') && pharmacyForm.get('confirmPassword')?.touched"
-            />
+            <div class="input-group">
+              <input
+                [type]="showConfirmPassword ? 'text' : 'password'"
+                class="form-control"
+                id="confirmPassword"
+                formControlName="confirmPassword"
+                [placeholder]="'pharmacies.confirmPasswordPlaceholder' | translate"
+                [class.is-invalid]="pharmacyForm.hasError('passwordMismatch') && pharmacyForm.get('confirmPassword')?.touched"
+              />
+              <button type="button" class="btn btn-outline-secondary" (click)="showConfirmPassword = !showConfirmPassword">
+                <i class="fa" [ngClass]="showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+              </button>
+            </div>
             @if (pharmacyForm.hasError('passwordMismatch') && pharmacyForm.get('confirmPassword')?.touched) {
               <div class="text-danger mt-1" style="font-size: 0.875rem">
                 {{ 'pharmacies.passwordMismatch' | translate }}

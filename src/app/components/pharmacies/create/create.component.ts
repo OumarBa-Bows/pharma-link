@@ -16,6 +16,8 @@ import { NotificationService } from 'src/app/services/notifications/notification
 export class CreateComponent {
   pharmacyForm: FormGroup;
   isLoading: boolean = false;
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
 
   constructor(
     private fb: FormBuilder,
