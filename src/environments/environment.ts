@@ -24,7 +24,7 @@ export const environment = {
   supabaseJwtSecret: 'hUtvz0/Qnc7knfHTt3r8VT/aOZeSwcWPAZiq7YQnqJnZoS+7YAvq8042Ebn7nozfAF3J9/pSYJRJGCQVp3zOuQ=='
 };
 /*
- * For easier debugging in development mode, you can import the following file
+ * For easier Debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
  *
  * This import should be commented out in production mode because it will have a negative impact
