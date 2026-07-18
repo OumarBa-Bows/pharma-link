@@ -77,6 +77,10 @@
         "description": "Sélectionnez un fichier Excel (.xls, .xlsx) contenant les articles à importer.",
         "successMessage": "Import effectué avec succès",
         "errorMessage": "Une erreur s'est produite lors de l'import"
+      },
+      "template": {
+        "downloadSuccess": "Template téléchargé avec succès",
+        "downloadError": "Erreur lors du téléchargement du template"
       }
     },
     "article-create": {
@@ -343,7 +347,11 @@
     "importTitle": "Importer des listings (Excel)",
     "importDescription": "Sélectionnez un fichier Excel (.xls, .xlsx) contenant les listings à importer.",
     "importSuccess": "Import effectué avec succès",
-    "importError": "Une erreur s'est produite lors de l'import"
+    "importError": "Une erreur s'est produite lors de l'import",
+    "template": {
+      "downloadSuccess": "Template téléchargé avec succès",
+      "downloadError": "Erreur lors du téléchargement du template"
+    }
   },
   "pharmacies": {
     "pharmacy-list": {

@@ -77,6 +77,10 @@
         "description": "اختر ملف Excel (.xls, .xlsx) يحتوي على الأدوية المراد استيرادها.",
         "successMessage": "تم الاستيراد بنجاح",
         "errorMessage": "حدث خطأ أثناء الاستيراد"
+      },
+      "template": {
+        "downloadSuccess": "تم تحميل القالب بنجاح",
+        "downloadError": "حدث خطأ أثناء تحميل القالب"
       }
     },
     "article-create": {
@@ -337,7 +341,11 @@
     "importTitle": "استيراد القوائم (Excel)",
     "importDescription": "حدد ملف Excel (.xls، .xlsx) يحتوي على القوائم للاستيراد.",
     "importSuccess": "تم الاستيراد بنجاح",
-    "importError": "حدث خطأ أثناء الاستيراد"
+    "importError": "حدث خطأ أثناء الاستيراد",
+    "template": {
+      "downloadSuccess": "تم تحميل القالب بنجاح",
+      "downloadError": "حدث خطأ أثناء تحميل القالب"
+    }
   },
   "pharmacies": {
     "pharmacy-list": {

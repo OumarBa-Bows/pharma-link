@@ -1,7 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { ApiService } from 'src/app/services/apis/api-service';
 import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -24,6 +26,8 @@ export class IndexComponent {
   pageSize = 20;
   private modalService = inject(NgbModal);
   private notificationService = inject(NotificationService);
+  private translateService = inject(TranslateService);
+  private http = inject(HttpClient);
 
   allListings: any[] = []; // Liste complète des listings
   filteredListings: any[] = []; // Liste filtrée pour l'affichage
@@ -71,8 +75,7 @@ export class IndexComponent {
 
   constructor(
     private apiService: ApiService,
-    private router: Router,
-    private translateService: TranslateService
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -196,6 +199,27 @@ export class IndexComponent {
         }
       });
     };
+  }
+
+  downloadTemplate() {
+    const templateUrl = `${environment.apiUrl}/download/template/listings`;
+    this.http.get(templateUrl, { responseType: 'blob' }).subscribe({
+      next: (blob) => {
+        const link = document.createElement('a');
+        const url = window.URL.createObjectURL(blob);
+        link.href = url;
+        link.download = 'template-listings.xlsx';
+        document.body.appendChild(link);
+        link.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+        this.notificationService.showSuccess(this.translateService.instant('listings.template.downloadSuccess'));
+      },
+      error: (err) => {
+        console.error('Erreur lors du téléchargement du template:', err);
+        this.notificationService.showError(this.translateService.instant('listings.template.downloadError'));
+      }
+    });
   }
 
   onShowDetails(row: any) {

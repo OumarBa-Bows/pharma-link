@@ -1,7 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { ApiService } from 'src/app/services/apis/api-service';
 import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -26,6 +28,7 @@ export class IndexComponent {
   private modalService = inject(NgbModal);
   private notificationService = inject(NotificationService);
   private translateService = inject(TranslateService);
+  private http = inject(HttpClient);
 
   allArticles: any[] = []; // Liste complète des articles
   filteredArticles: any[] = []; // Liste filtrée pour l'affichage
@@ -318,5 +321,26 @@ export class IndexComponent {
         }
       });
     };
+  }
+
+  downloadTemplate() {
+    const templateUrl = `${environment.apiUrl}/articles/download/template`;
+    this.http.get(templateUrl, { responseType: 'blob' }).subscribe({
+      next: (blob) => {
+        const link = document.createElement('a');
+        const url = window.URL.createObjectURL(blob);
+        link.href = url;
+        link.download = 'template.xlsx';
+        document.body.appendChild(link);
+        link.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+        this.notificationService.showSuccess(this.translateService.instant('articles.article-list.template.downloadSuccess'));
+      },
+      error: (err) => {
+        console.error('Erreur lors du téléchargement du template:', err);
+        this.notificationService.showError(this.translateService.instant('articles.article-list.template.downloadError'));
+      }
+    });
   }
 }

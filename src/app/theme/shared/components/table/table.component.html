@@ -13,6 +13,11 @@
               <i class="feather icon-upload me-1"></i>
             </button>
           }
+          @if (showDownloadTemplate) {
+            <button class="btn btn-secondary" (click)="downloadTemplate.emit()">
+              <i class="feather icon-download me-1"></i>
+            </button>
+          }
         </div>
         <div class="d-flex align-items-center gap-2">
           <input

@@ -15,7 +15,8 @@ export const environment = {
   //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhpam5paXpjdGh1d3dybWFxeHRrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1ODYxOTA4OSwiZXhwIjoyMDc0MTk1MDg5fQ.RVyBCRr94UH1X3RHr7WQrpP3MYD4k5gv_JtL9lUf8fs', // to be used server-side only
   // supabaseJwtSecret: 'Dt5uR/gID2/dzN8uTBahilUDJgzpRZWasfSBFAAAkymnYMOcfiX0T6/HjlqNuKUuf9uFgjK2Y5px5OrhvMebhg=='
 
-  apiUrl: 'https://api.pharma-link.org/api', //https://proxy-dev.cadorim.com/api-backend/api',
+  apiUrl: 'https://api.pharma-link.org/api',
+  //apiUrl: 'http://localhost:8088/api',
   supabaseUrl: 'https://fpfzseglfgjrpwdmnqij.supabase.co',
   supabaseAnonKey:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwZnpzZWdsZmdqcnB3ZG1ucWlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxODIyODMsImV4cCI6MjA5ODc1ODI4M30.TV5m_zb41nKNi9QFSzYqv4ntqY4a78qVlcPwjRxFS3A',
@@ -31,4 +32,3 @@ export const environment = {
  * on performance if an error is thrown.
  */
 // import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
- 
