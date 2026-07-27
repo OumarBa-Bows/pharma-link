@@ -44,8 +44,9 @@ export class StatsComponent implements OnInit {
     this.isLoading = true;
 
     this.apiService.getData(`pharmacies/${this.id}/command-count`).subscribe({
-      next: (data: Stats) => {
-        this.stats = data;
+      next: (data: any) => {
+        console.log('Stats data:', data);
+        this.stats = data.data.commandCount;
         this.isLoading = false;
       },
       error: (error) => {
