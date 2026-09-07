@@ -1,5 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateLoader, TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
+import type { jsPDF } from 'jspdf';
 
 export interface CommandPdfLine {
   name: string;
@@ -14,7 +16,7 @@ export interface CommandPdfLine {
 export interface CommandPdfData {
   code: string;
   date: string | Date;
-  /** Libellé du statut déjà traduit */
+  /** Statut brut renvoyé par l'API (ex. VALIDATED) ; traduit dans la langue du document. */
   status: string;
   pharmacyName: string;
   pharmacyCode: string;
@@ -22,219 +24,467 @@ export interface CommandPdfData {
   lines: CommandPdfLine[];
 }
 
+export interface CommandPdfResult {
+  generated: boolean;
+  /** Langue réellement employée dans le document. */
+  documentLang: string;
+  /** true si la langue de l'interface n'a pas pu être utilisée. */
+  languageFallback: boolean;
+}
+
 const CURRENCY = 'MRU';
-const FONT_WAIT_MS = 1500;
-const CLEANUP_FALLBACK_MS = 60000;
 
 /**
- * Génère le bon de commande en ouvrant la boîte d'impression du navigateur
- * sur un document HTML dédié (« Enregistrer en PDF »).
- * Le document est rendu dans une iframe cachée : pas de nouvel onglet,
- * donc pas de blocage par le bloqueur de pop-ups.
+ * Les polices standard du PDF (Helvetica, Courier) sont encodées en WinAnsi :
+ * elles ne portent aucun glyphe arabe. Un document en arabe sortirait illisible,
+ * on le produit donc en français.
+ */
+const PDF_SAFE_LANGS = ['fr', 'en'];
+const PDF_FALLBACK_LANG = 'fr';
+
+// A4 portrait, en millimètres.
+const PAGE_WIDTH = 210;
+const PAGE_HEIGHT = 297;
+const MARGIN_X = 14;
+const RIGHT_EDGE = PAGE_WIDTH - MARGIN_X;
+const TABLE_TOP_CONTINUED = 26;
+const TABLE_BOTTOM = 24;
+
+const COLORS = {
+  ink: [23, 23, 43],
+  inkSoft: [74, 74, 99],
+  inkMuted: [122, 122, 146],
+  rule: [226, 226, 238],
+  ruleStrong: [198, 197, 218],
+  zebra: [247, 247, 251],
+  brand: [102, 126, 234],
+  white: [255, 255, 255],
+  okText: [31, 122, 92],
+  okFill: [228, 243, 236],
+  warnText: [168, 87, 27],
+  warnFill: [251, 238, 224]
+} as const;
+
+const COLUMN_WIDTHS = { name: 62, reference: 32, quantity: 18, unitPrice: 26, discount: 18, total: 26 };
+const DISCOUNT_COLUMN = 4;
+
+type Rgb = readonly [number, number, number];
+type Translator = (key: string, params?: Record<string, unknown>) => string;
+
+interface RenderContext {
+  doc: jsPDF;
+  data: CommandPdfData;
+  issuedAt: string;
+  locale: string;
+  /** Clés relatives à commands.details.pdf */
+  t: Translator;
+  /** Clés absolues, partagées avec l'écran de détail */
+  label: Translator;
+}
+
+/**
+ * Génère le bon de commande sous forme de fichier PDF téléchargé.
+ * jsPDF est chargé à la demande : il ne pèse sur le bundle initial que
+ * lorsque l'utilisateur clique effectivement sur le bouton.
  */
 @Injectable({ providedIn: 'root' })
 export class CommandPdfService {
   private translateService = inject(TranslateService);
+  private translateLoader = inject(TranslateLoader);
+  private fallbackDictionary?: Record<string, unknown>;
 
-  /** Retourne false si l'impression n'a pas pu être lancée. */
-  print(data: CommandPdfData): boolean {
-    if (typeof document === 'undefined') {
-      return false;
+  async generate(data: CommandPdfData): Promise<CommandPdfResult> {
+    const uiLang = this.currentLang;
+    const documentLang = PDF_SAFE_LANGS.includes(uiLang) ? uiLang : PDF_FALLBACK_LANG;
+    const languageFallback = documentLang !== uiLang;
+
+    if (typeof window === 'undefined') {
+      return { generated: false, documentLang, languageFallback };
     }
 
-    const iframe = document.createElement('iframe');
-    iframe.setAttribute('aria-hidden', 'true');
-    iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;';
-    document.body.appendChild(iframe);
+    const label = await this.translatorFor(documentLang);
+    const t: Translator = (key, params) => label(`commands.details.pdf.${key}`, params);
 
-    const frameDoc = iframe.contentDocument;
-    const frameWin = iframe.contentWindow;
-    if (!frameDoc || !frameWin) {
-      iframe.remove();
-      return false;
-    }
+    const [{ jsPDF: JsPdf }, { autoTable }] = await Promise.all([import('jspdf'), import('jspdf-autotable')]);
+    const doc = new JsPdf({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true });
 
-    frameDoc.open();
-    frameDoc.write(this.buildDocument(data));
-    frameDoc.close();
-
-    let removed = false;
-    const cleanup = () => {
-      if (removed) return;
-      removed = true;
-      iframe.remove();
+    const ctx: RenderContext = {
+      doc,
+      data,
+      issuedAt: this.formatDate(new Date()),
+      locale: this.localeFor(documentLang),
+      t,
+      label
     };
 
-    frameWin.addEventListener('afterprint', cleanup);
-    // Filet de sécurité : certains navigateurs n'émettent pas afterprint dans une iframe.
-    setTimeout(cleanup, CLEANUP_FALLBACK_MS);
-
-    // Attendre les polices pour éviter d'imprimer avec la police de repli.
-    const fontsReady: Promise<unknown> = frameDoc.fonts ? frameDoc.fonts.ready : Promise.resolve();
-    Promise.race([fontsReady, new Promise((resolve) => setTimeout(resolve, FONT_WAIT_MS))]).then(() => {
-      if (removed) return;
-      frameWin.focus();
-      frameWin.print();
+    doc.setProperties({
+      title: this.documentName(ctx),
+      subject: `${t('docTitle')} ${data.code}`,
+      author: label('app-name'),
+      creator: label('app-name')
     });
 
-    return true;
+    this.drawMasthead(ctx);
+    const stripBottom = this.drawStrip(ctx);
+    const tableTop = this.drawTableHeading(ctx, stripBottom);
+
+    autoTable(doc, {
+      startY: tableTop,
+      margin: { top: TABLE_TOP_CONTINUED, left: MARGIN_X, right: MARGIN_X, bottom: TABLE_BOTTOM },
+      head: [this.tableHead(ctx)],
+      body: this.tableBody(ctx),
+      theme: 'plain',
+      styles: { font: 'helvetica', fontSize: 8, cellPadding: { top: 2, bottom: 2, left: 1.6, right: 1.6 }, textColor: [...COLORS.ink] },
+      headStyles: {
+        fontSize: 6.4,
+        fontStyle: 'bold',
+        textColor: [...COLORS.inkMuted],
+        lineColor: [...COLORS.ruleStrong],
+        lineWidth: { bottom: 0.35, top: 0, left: 0, right: 0 },
+        cellPadding: { top: 0, bottom: 1.8, left: 1.6, right: 1.6 }
+      },
+      bodyStyles: { lineColor: [...COLORS.rule], lineWidth: { bottom: 0.15, top: 0, left: 0, right: 0 } },
+      alternateRowStyles: { fillColor: [...COLORS.zebra] },
+      columnStyles: {
+        0: { cellWidth: COLUMN_WIDTHS.name, fontStyle: 'bold' },
+        1: { cellWidth: COLUMN_WIDTHS.reference, font: 'courier', fontSize: 7.5, textColor: [...COLORS.inkSoft] },
+        2: { cellWidth: COLUMN_WIDTHS.quantity, halign: 'center' },
+        3: { cellWidth: COLUMN_WIDTHS.unitPrice, halign: 'right' },
+        4: { cellWidth: COLUMN_WIDTHS.discount, halign: 'center', fontSize: 7.5 },
+        5: { cellWidth: COLUMN_WIDTHS.total, halign: 'right', fontStyle: 'bold' }
+      },
+      // Pastille orangée derrière le pourcentage de remise.
+      willDrawCell: (cell) => {
+        if (cell.section !== 'body' || cell.column.index !== DISCOUNT_COLUMN) {
+          return;
+        }
+        const text = cell.cell.text[0];
+        if (!text || text === '-') {
+          this.setTextColor(doc, COLORS.inkMuted);
+          return;
+        }
+        this.setTextColor(doc, COLORS.warnText);
+        const width = doc.getTextWidth(text) + 2.4;
+        const height = 4;
+        this.setFillColor(doc, COLORS.warnFill);
+        doc.roundedRect(
+          cell.cell.x + cell.cell.width / 2 - width / 2,
+          cell.cell.y + cell.cell.height / 2 - height / 2,
+          width,
+          height,
+          0.9,
+          0.9,
+          'F'
+        );
+      },
+      didDrawPage: (hook) => {
+        if (hook.pageNumber > 1) {
+          this.drawContinuedHeader(ctx);
+        }
+        this.drawFooter(ctx);
+      }
+    });
+
+    const tableEnd = (doc as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? tableTop;
+    this.drawTotals(ctx, tableEnd);
+    this.stampPageNumbers(ctx);
+
+    doc.save(`${this.documentName(ctx)}.pdf`);
+    return { generated: true, documentLang, languageFallback };
   }
 
-  // ---------------------------------------------------------------- rendu
+  // ------------------------------------------------------------ composition
 
-  private buildDocument(data: CommandPdfData): string {
-    const t = (key: string, params?: object) => this.translateService.instant(`commands.details.pdf.${key}`, params);
-    const label = (key: string) => this.translateService.instant(key);
+  private drawMasthead(ctx: RenderContext): void {
+    const { doc, data, t, label } = ctx;
 
-    const lang = this.translateService.getCurrentLang() || this.translateService.defaultLang || 'fr';
-    const dir = lang === 'ar' ? 'rtl' : 'ltr';
+    this.setFillColor(doc, COLORS.brand);
+    doc.roundedRect(MARGIN_X, 13, 12, 12, 2.6, 2.6, 'F');
 
-    const grossSubtotal = data.lines.reduce((sum, line) => sum + line.unitPrice * line.quantity, 0);
-    const netTotal = data.lines.reduce((sum, line) => sum + line.total, 0);
-    const discountsTotal = grossSubtotal - netTotal;
+    // Croix pharmaceutique, en blanc sur le carré de marque.
+    this.setDrawColor(doc, COLORS.white);
+    doc.setLineWidth(1.1);
+    doc.line(MARGIN_X + 6, 16.6, MARGIN_X + 6, 21.4);
+    doc.line(MARGIN_X + 3.6, 19, MARGIN_X + 8.4, 19);
 
-    const issuedAt = this.formatDate(new Date());
-    // Chrome propose le titre du document comme nom de fichier PDF.
-    const docTitle = `${t('docTitle')} ${data.code}`;
+    const textLeft = MARGIN_X + 15.5;
+    this.setTextColor(doc, COLORS.ink);
+    doc.setFont('helvetica', 'bold').setFontSize(16);
+    doc.text(label('app-name'), textLeft, 19.6);
 
-    return `<!doctype html>
-<html lang="${this.escape(lang)}" dir="${dir}">
-<head>
-<meta charset="utf-8">
-<title>${this.escape(docTitle)}</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
-<style>${this.styles()}</style>
-</head>
-<body>
-<div class="sheet">
+    this.setTextColor(doc, COLORS.inkMuted);
+    doc.setFont('helvetica', 'normal').setFontSize(6.4).setCharSpace(0.55);
+    doc.text(t('brandSub').toUpperCase(), textLeft, 24);
+    doc.setCharSpace(0);
 
-  <header class="masthead">
-    <div class="brand">
-      <span class="brand-mark">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 7v10M7 12h10"></path>
-          <rect x="3" y="3" width="18" height="18" rx="5"></rect>
-        </svg>
-      </span>
-      <span>
-        <span class="brand-name">${this.escape(label('app-name'))}</span>
-        <span class="brand-sub">${this.escape(t('brandSub'))}</span>
-      </span>
-    </div>
-    <div class="doc-id">
-      <div class="doc-type">${this.escape(t('docTitle'))}</div>
-      <div class="doc-code">${this.escape(data.code)}</div>
-      <div class="doc-date">${this.escape(t('issuedOn', { date: this.formatDate(data.date) }))}</div>
-    </div>
-  </header>
+    this.setTextColor(doc, COLORS.ink);
+    doc.setFont('helvetica', 'bold').setFontSize(10.5).setCharSpace(0.4);
+    doc.text(t('docTitle').toUpperCase(), RIGHT_EDGE, 17.6, { align: 'right' });
+    doc.setCharSpace(0);
 
-  <section class="strip">
-    <div class="strip-col">
-      <div class="block-label">${this.escape(label('commands.details.pharmacy'))}</div>
-      <div class="client-name">${this.escape(data.pharmacyName)}</div>
-      <div class="client-line">${this.escape(label('pharmacies.code'))} : ${this.escape(data.pharmacyCode)}</div>
-      <div class="client-line">${this.escape(data.pharmacyPhone)}</div>
-    </div>
-    <div class="strip-col">
-      <div class="block-label">${this.escape(t('orderBlock'))}</div>
-      <dl class="facts">
-        <dt>${this.escape(label('commands.details.status'))}</dt>
-        <dd><span class="status">${this.escape(data.status)}</span></dd>
-        <dt>${this.escape(label('commands.details.date'))}</dt>
-        <dd>${this.escape(this.formatDate(data.date))}</dd>
-        <dt>${this.escape(t('references'))}</dt>
-        <dd>${this.escape(t('articlesCount', { count: data.lines.length }))}</dd>
-        <dt>${this.escape(t('currency'))}</dt>
-        <dd>${CURRENCY}</dd>
-      </dl>
-    </div>
-  </section>
+    doc.setFont('courier', 'bold').setFontSize(15);
+    doc.text(data.code, RIGHT_EDGE, 24.2, { align: 'right' });
 
-  <div class="table-head">
-    <h2>${this.escape(label('commands.details.article.title'))}</h2>
-    <span>${this.escape(label('commands.details.nombre'))}${data.lines.length}</span>
-  </div>
+    this.setTextColor(doc, COLORS.inkMuted);
+    doc.setFont('helvetica', 'normal').setFontSize(7.5);
+    doc.text(t('issuedOn', { date: this.formatDate(data.date) }), RIGHT_EDGE, 28.6, { align: 'right' });
 
-  ${data.lines.length ? this.renderTable(data.lines) : `<p class="empty">${this.escape(label('commands.details.article.noArticle'))}</p>`}
-
-  <div class="totals-row">
-    <dl class="totals">
-      <dt>${this.escape(t('subtotal'))}</dt>
-      <dd>${this.formatAmount(grossSubtotal)}</dd>
-      <dt>${this.escape(t('discountsTotal'))}</dt>
-      <dd>${discountsTotal > 0 ? '&minus;&nbsp;' : ''}${this.formatAmount(discountsTotal)}</dd>
-      <div class="sep"></div>
-      <dt class="grand-dt">${this.escape(t('grandTotal'))}</dt>
-      <dd class="grand-dd">${this.formatAmount(netTotal)}</dd>
-    </dl>
-  </div>
-
-  <footer class="sheet-foot">
-    ${this.escape(t('footerNote', { date: issuedAt }))}<br>
-    ${this.escape(t('footerDisclaimer'))}
-  </footer>
-
-</div>
-</body>
-</html>`;
+    this.setDrawColor(doc, COLORS.ink);
+    doc.setLineWidth(0.6);
+    doc.line(MARGIN_X, 32, RIGHT_EDGE, 32);
   }
 
-  private renderTable(lines: CommandPdfLine[]): string {
-    const label = (key: string) => this.translateService.instant(key);
+  /** Bloc client / commande. Retourne l'ordonnée du bas du bloc. */
+  private drawStrip(ctx: RenderContext): number {
+    const { doc, data, t, label } = ctx;
+    const splitX = MARGIN_X + 98;
+    const rightX = splitX + 8;
+    const valueX = rightX + 26;
 
-    const rows = lines
-      .map(
-        (line) => `<tr>
-        <td class="art">${this.escape(line.name)}</td>
-        <td class="ref">${this.escape(line.reference)}</td>
-        <td class="mid">${line.quantity}</td>
-        <td class="num">${this.formatNumber(line.unitPrice)}</td>
-        <td class="mid">${line.discount > 0 ? `<span class="rem">${this.formatPercent(line.discount)}</span>` : '<span class="dash">&mdash;</span>'}</td>
-        <td class="num line-total">${this.formatNumber(line.total)}</td>
-      </tr>`
-      )
-      .join('\n');
+    this.drawLabel(doc, label('commands.details.pharmacy'), MARGIN_X, 39);
 
-    return `<table>
-    <thead>
-      <tr>
-        <th>${this.escape(label('commands.details.article.article'))}</th>
-        <th>${this.escape(label('commands.details.reference'))}</th>
-        <th class="mid">${this.escape(label('commands.details.article.quantity'))}</th>
-        <th class="num">${this.escape(label('commands.details.article.unitPrice'))}</th>
-        <th class="mid">${this.escape(label('commands.details.remise'))}</th>
-        <th class="num">${this.escape(label('commands.details.article.total'))}</th>
-      </tr>
-    </thead>
-    <tbody>
-${rows}
-    </tbody>
-  </table>`;
+    this.setTextColor(doc, COLORS.ink);
+    doc.setFont('helvetica', 'bold').setFontSize(11.5);
+    doc.text(data.pharmacyName ?? '', MARGIN_X, 45.4);
+
+    this.setTextColor(doc, COLORS.inkSoft);
+    doc.setFont('helvetica', 'normal').setFontSize(8.5);
+    doc.text(`${label('pharmacies.code')} : ${data.pharmacyCode ?? ''}`, MARGIN_X, 50.4);
+    doc.text(data.pharmacyPhone ?? '', MARGIN_X, 54.8);
+
+    this.setDrawColor(doc, COLORS.rule);
+    doc.setLineWidth(0.2);
+    doc.line(splitX, 35, splitX, 60);
+
+    this.drawLabel(doc, t('orderBlock'), rightX, 39);
+
+    // Le statut est une pastille, il est dessiné à part.
+    this.setTextColor(doc, COLORS.inkMuted);
+    doc.setFont('helvetica', 'normal').setFontSize(8.5);
+    doc.text(label('commands.details.status'), rightX, 45.4);
+    this.drawBadge(doc, label(`commands.status.${(data.status ?? '').toLowerCase()}`), valueX, 45.4, COLORS.okFill, COLORS.okText);
+
+    const facts: [string, string][] = [
+      [label('commands.details.date'), this.formatDate(data.date)],
+      [t('references'), t('articlesCount', { count: data.lines.length })],
+      [t('currency'), CURRENCY]
+    ];
+
+    facts.forEach(([term, value], index) => {
+      const y = 50.4 + index * 4.6;
+      this.setTextColor(doc, COLORS.inkMuted);
+      doc.setFont('helvetica', 'normal').setFontSize(8.5);
+      doc.text(term, rightX, y);
+      this.setTextColor(doc, COLORS.ink);
+      doc.setFont('helvetica', 'bold').setFontSize(8.5);
+      doc.text(value, valueX, y);
+    });
+
+    this.setDrawColor(doc, COLORS.rule);
+    doc.setLineWidth(0.2);
+    doc.line(MARGIN_X, 63, RIGHT_EDGE, 63);
+
+    return 63;
   }
 
-  // ---------------------------------------------------------------- format
+  private drawTableHeading(ctx: RenderContext, top: number): number {
+    const { doc, data, label } = ctx;
+    const baseline = top + 7.5;
 
-  private get locale(): string {
-    switch (this.translateService.getCurrentLang() || this.translateService.defaultLang) {
-      case 'ar':
-        return 'ar-MA'; // chiffres latins, séparateurs maghrébins
-      case 'en':
-        return 'en-US';
-      default:
-        return 'fr-FR';
+    this.setTextColor(doc, COLORS.ink);
+    doc.setFont('helvetica', 'bold').setFontSize(9.5).setCharSpace(0.35);
+    doc.text(label('commands.details.article.title').toUpperCase(), MARGIN_X, baseline);
+    doc.setCharSpace(0);
+
+    this.setTextColor(doc, COLORS.inkMuted);
+    doc.setFont('helvetica', 'normal').setFontSize(8);
+    doc.text(`${label('commands.details.nombre')}${data.lines.length}`, RIGHT_EDGE, baseline, { align: 'right' });
+
+    return baseline + 3.5;
+  }
+
+  private tableHead({ label }: RenderContext): string[] {
+    return [
+      label('commands.details.article.article').toUpperCase(),
+      label('commands.details.reference').toUpperCase(),
+      label('commands.details.article.quantity').toUpperCase(),
+      label('commands.details.article.unitPrice').toUpperCase(),
+      label('commands.details.remise').toUpperCase(),
+      label('commands.details.article.total').toUpperCase()
+    ];
+  }
+
+  private tableBody(ctx: RenderContext): string[][] {
+    return ctx.data.lines.map((line) => [
+      line.name ?? '',
+      line.reference ?? '',
+      String(line.quantity),
+      this.formatNumber(line.unitPrice, ctx.locale),
+      line.discount > 0 ? this.formatPercent(line.discount, ctx.locale) : '-',
+      this.formatNumber(line.total, ctx.locale)
+    ]);
+  }
+
+  private drawTotals(ctx: RenderContext, tableEnd: number): void {
+    const { doc, data, t } = ctx;
+
+    const gross = data.lines.reduce((sum, line) => sum + line.unitPrice * line.quantity, 0);
+    const net = data.lines.reduce((sum, line) => sum + line.total, 0);
+    const discounts = gross - net;
+
+    const blockHeight = 24;
+    let top = tableEnd + 8;
+    if (top + blockHeight > PAGE_HEIGHT - TABLE_BOTTOM) {
+      doc.addPage();
+      this.drawContinuedHeader(ctx);
+      this.drawFooter(ctx);
+      top = TABLE_TOP_CONTINUED;
+    }
+
+    const labelX = RIGHT_EDGE - 74;
+
+    doc.setFont('helvetica', 'normal').setFontSize(8.8);
+    this.setTextColor(doc, COLORS.inkSoft);
+    doc.text(t('subtotal'), labelX, top);
+    doc.text(t('discountsTotal'), labelX, top + 5.2);
+
+    this.setTextColor(doc, COLORS.ink);
+    doc.text(this.formatAmount(gross, ctx.locale), RIGHT_EDGE, top, { align: 'right' });
+    doc.text(`${discounts > 0 ? '- ' : ''}${this.formatAmount(discounts, ctx.locale)}`, RIGHT_EDGE, top + 5.2, { align: 'right' });
+
+    this.setDrawColor(doc, COLORS.ink);
+    doc.setLineWidth(0.35);
+    doc.line(labelX, top + 8.6, RIGHT_EDGE, top + 8.6);
+
+    doc.setFont('helvetica', 'bold').setFontSize(10);
+    doc.text(t('grandTotal'), labelX, top + 15.2);
+    doc.setFontSize(13);
+    doc.text(this.formatAmount(net, ctx.locale), RIGHT_EDGE, top + 15.6, { align: 'right' });
+  }
+
+  private drawContinuedHeader({ doc, data, t }: RenderContext): void {
+    this.setTextColor(doc, COLORS.inkMuted);
+    doc.setFont('helvetica', 'bold').setFontSize(8);
+    doc.text(`${t('docTitle')} — ${data.code}`, MARGIN_X, 16);
+
+    this.setDrawColor(doc, COLORS.rule);
+    doc.setLineWidth(0.2);
+    doc.line(MARGIN_X, 19, RIGHT_EDGE, 19);
+  }
+
+  private drawFooter({ doc, t, issuedAt }: RenderContext): void {
+    const top = PAGE_HEIGHT - 17;
+
+    this.setDrawColor(doc, COLORS.rule);
+    doc.setLineWidth(0.2);
+    doc.line(MARGIN_X, top, RIGHT_EDGE, top);
+
+    this.setTextColor(doc, COLORS.inkMuted);
+    doc.setFont('helvetica', 'normal').setFontSize(6.6);
+    doc.text(t('footerNote', { date: issuedAt }), MARGIN_X, top + 4);
+    doc.text(t('footerDisclaimer'), MARGIN_X, top + 7.2);
+  }
+
+  /** Le nombre total de pages n'est connu qu'une fois le tableau paginé. */
+  private stampPageNumbers({ doc, t }: RenderContext): void {
+    const total = doc.getNumberOfPages();
+    for (let page = 1; page <= total; page++) {
+      doc.setPage(page);
+      this.setTextColor(doc, COLORS.inkMuted);
+      doc.setFont('helvetica', 'normal').setFontSize(6.6);
+      doc.text(t('page', { current: page, total }), RIGHT_EDGE, PAGE_HEIGHT - 13, { align: 'right' });
     }
   }
 
-  private formatNumber(value: number): string {
-    return new Intl.NumberFormat(this.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+  // ------------------------------------------------------------- primitives
+
+  private drawLabel(doc: jsPDF, text: string, x: number, y: number): void {
+    this.setTextColor(doc, COLORS.inkMuted);
+    doc.setFont('helvetica', 'normal').setFontSize(6.4).setCharSpace(0.55);
+    doc.text(text.toUpperCase(), x, y);
+    doc.setCharSpace(0);
   }
 
-  private formatAmount(value: number): string {
-    return `${this.formatNumber(value)}&nbsp;${CURRENCY}`;
+  private drawBadge(doc: jsPDF, text: string, x: number, baseline: number, fill: Rgb, color: Rgb): void {
+    doc.setFont('helvetica', 'bold').setFontSize(8);
+    const width = doc.getTextWidth(text) + 4;
+    this.setFillColor(doc, fill);
+    doc.roundedRect(x, baseline - 3.2, width, 4.6, 0.9, 0.9, 'F');
+    this.setTextColor(doc, color);
+    doc.text(text, x + 2, baseline);
   }
 
-  private formatPercent(value: number): string {
-    return new Intl.NumberFormat(this.locale, { style: 'percent', maximumFractionDigits: 2 }).format(value / 100);
+  private setTextColor(doc: jsPDF, [r, g, b]: Rgb): void {
+    doc.setTextColor(r, g, b);
+  }
+
+  private setFillColor(doc: jsPDF, [r, g, b]: Rgb): void {
+    doc.setFillColor(r, g, b);
+  }
+
+  private setDrawColor(doc: jsPDF, [r, g, b]: Rgb): void {
+    doc.setDrawColor(r, g, b);
+  }
+
+  // ---------------------------------------------------------------- i18n
+
+  private get currentLang(): string {
+    return this.translateService.getCurrentLang() || this.translateService.defaultLang || PDF_FALLBACK_LANG;
+  }
+
+  /**
+   * TranslateService.instant ne lit que la langue courante. Quand le document
+   * doit sortir dans une autre langue, on charge son dictionnaire directement.
+   */
+  private async translatorFor(documentLang: string): Promise<Translator> {
+    if (documentLang === this.currentLang) {
+      return (key, params) => this.translateService.instant(key, params);
+    }
+
+    if (!this.fallbackDictionary) {
+      this.fallbackDictionary = (await firstValueFrom(this.translateLoader.getTranslation(documentLang))) as Record<string, unknown>;
+    }
+
+    const dictionary = this.fallbackDictionary;
+    return (key, params) => {
+      const value = key.split('.').reduce<unknown>((node, part) => (node as Record<string, unknown>)?.[part], dictionary);
+      if (typeof value !== 'string') {
+        return key;
+      }
+      return params ? value.replace(/{{\s*(\w+)\s*}}/g, (match, name) => (name in params ? String(params[name]) : match)) : value;
+    };
+  }
+
+  private documentName(ctx: RenderContext): string {
+    // Caractères interdits dans un nom de fichier sous Windows et macOS.
+    return `${ctx.t('docTitle')} ${ctx.data.code}`.replace(/[\\/:*?"<>|]/g, '-').trim();
+  }
+
+  // -------------------------------------------------------------- formats
+
+  private localeFor(documentLang: string): string {
+    return documentLang === 'en' ? 'en-US' : 'fr-FR';
+  }
+
+  /**
+   * Les polices standard du PDF sont encodées en WinAnsi : elles ignorent
+   * l'espace fine insécable qu'Intl utilise comme séparateur de milliers en
+   * français, ainsi que le signe moins typographique. On les ramène en ASCII.
+   */
+  private toWinAnsi(value: string): string {
+    return value.replace(/[  ]/g, ' ').replace(/−/g, '-');
+  }
+
+  private formatNumber(value: number, locale: string): string {
+    return this.toWinAnsi(new Intl.NumberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value));
+  }
+
+  private formatAmount(value: number, locale: string): string {
+    return `${this.formatNumber(value, locale)} ${CURRENCY}`;
+  }
+
+  private formatPercent(value: number, locale: string): string {
+    return this.toWinAnsi(new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 2 }).format(value / 100));
   }
 
   /** Même format que l'écran de détail : dd/MM/yyyy HH:mm */
@@ -245,152 +495,5 @@ ${rows}
     }
     const pad = (n: number) => String(n).padStart(2, '0');
     return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
-  }
-
-  private escape(value: unknown): string {
-    if (value === null || value === undefined) {
-      return '';
-    }
-    return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-
-  private styles(): string {
-    return `
-    @page { size: A4; margin: 14mm 14mm 12mm; }
-
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #ffffff;
-      color: #17172b;
-      font-family: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-      font-size: 10.5pt;
-      line-height: 1.45;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-    }
-
-    .sheet { display: flow-root; }
-
-    .masthead {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 24px;
-      padding-bottom: 14px;
-      border-bottom: 2px solid #17172b;
-    }
-
-    .brand { display: flex; align-items: center; gap: 10px; }
-
-    .brand-mark {
-      width: 34px; height: 34px; flex: none;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #ffffff;
-      display: inline-flex; align-items: center; justify-content: center;
-    }
-
-    .brand-name { display: block; font-size: 15pt; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
-    .brand-sub {
-      display: block; margin-top: 2px;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 7pt; letter-spacing: 0.14em; text-transform: uppercase; color: #7a7a92;
-    }
-
-    .doc-id { text-align: end; }
-    .doc-type { font-size: 11.5pt; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
-    .doc-code { font-family: 'IBM Plex Mono', monospace; font-size: 15pt; font-weight: 600; margin-top: 2px; }
-    .doc-date { font-size: 8.5pt; color: #7a7a92; margin-top: 2px; font-variant-numeric: tabular-nums; }
-
-    .strip {
-      display: flex;
-      border-bottom: 1px solid #e2e2ee;
-    }
-    .strip-col { flex: 1; padding: 16px 0; }
-    .strip-col + .strip-col { padding-inline-start: 24px; border-inline-start: 1px solid #e2e2ee; }
-
-    .block-label {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 7pt; letter-spacing: 0.14em; text-transform: uppercase; color: #7a7a92;
-      margin-bottom: 6px;
-    }
-
-    .client-name { font-size: 11.5pt; font-weight: 600; letter-spacing: -0.01em; }
-    .client-line { font-size: 9pt; color: #4a4a63; margin-top: 2px; font-variant-numeric: tabular-nums; }
-
-    .facts { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; font-size: 9pt; }
-    .facts dt { color: #7a7a92; }
-    .facts dd { margin: 0; font-weight: 500; font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; }
-
-    .status {
-      display: inline-block;
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 8pt; font-weight: 600;
-      padding: 1px 7px; border-radius: 3px;
-      background: #e4f3ec; color: #1f7a5c;
-    }
-
-    .table-head { display: flex; align-items: baseline; justify-content: space-between; margin: 20px 0 8px; }
-    .table-head h2 { margin: 0; font-size: 10pt; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
-    .table-head span { font-size: 8.5pt; color: #7a7a92; font-variant-numeric: tabular-nums; }
-
-    table { width: 100%; border-collapse: collapse; }
-    thead { display: table-header-group; }
-    tr { break-inside: avoid; page-break-inside: avoid; }
-
-    thead th {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 6.5pt; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #7a7a92;
-      text-align: start; padding: 0 6px 6px; border-bottom: 1px solid #c6c5da; white-space: nowrap;
-    }
-    tbody td { padding: 7px 6px; border-bottom: 1px solid #e2e2ee; vertical-align: top; font-size: 9pt; }
-    tbody tr:nth-child(even) td { background: #f7f7fb; }
-    thead th:first-child, tbody td:first-child { padding-inline-start: 0; }
-    thead th:last-child, tbody td:last-child { padding-inline-end: 0; }
-
-    .num { text-align: end; font-variant-numeric: tabular-nums; font-family: 'IBM Plex Mono', monospace; }
-    .mid { text-align: center; font-variant-numeric: tabular-nums; font-family: 'IBM Plex Mono', monospace; }
-    .art { font-weight: 500; }
-    .ref { font-family: 'IBM Plex Mono', monospace; font-size: 8.5pt; color: #4a4a63; }
-    .line-total { font-weight: 600; }
-    .dash { color: #7a7a92; }
-
-    .rem {
-      display: inline-block;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 8pt; font-weight: 500;
-      padding: 0 5px; border-radius: 3px;
-      background: #fbeee0; color: #a8571b;
-    }
-
-    .empty {
-      margin: 18px 0;
-      padding: 20px;
-      border: 1px dashed #c6c5da;
-      text-align: center;
-      color: #7a7a92;
-      font-size: 9.5pt;
-    }
-
-    .totals-row { display: flex; justify-content: flex-end; margin-top: 18px; break-inside: avoid; page-break-inside: avoid; }
-    .totals { width: 74mm; display: grid; grid-template-columns: 1fr auto; gap: 7px 20px; margin: 0; font-size: 9.5pt; }
-    .totals dt { color: #4a4a63; }
-    .totals dd { margin: 0; text-align: end; font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; }
-    .totals .sep { grid-column: 1 / -1; height: 1px; background: #17172b; margin-top: 2px; }
-    .totals .grand-dt { font-size: 10.5pt; font-weight: 600; color: #17172b; align-self: center; }
-    .totals .grand-dd { font-size: 13pt; font-weight: 600; }
-
-    .sheet-foot {
-      margin-top: 26px;
-      padding-top: 12px;
-      border-top: 1px solid #e2e2ee;
-      font-size: 7.5pt;
-      color: #7a7a92;
-      line-height: 1.5;
-    }
-    `;
   }
 }

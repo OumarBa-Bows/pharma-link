@@ -473,7 +473,9 @@
         "grandTotal": "المبلغ المستحق",
         "footerNote": "تم إنشاء هذا المستند تلقائياً من PharmaLink بتاريخ {{date}}.",
         "footerDisclaimer": "لا يتطلب توقيعاً — يعكس هذا السند حالة الطلب في تاريخ إصداره.",
-        "printError": "تعذّر فتح نافذة الطباعة ❌"
+        "page": "صفحة {{current}} / {{total}}",
+        "languageNotice": "تم إنشاء ملف PDF بالفرنسية: الخطوط القياسية لملفات PDF لا تدعم الحروف العربية.",
+        "generateError": "تعذّر إنشاء ملف PDF ❌"
       },
       "article": {
         "title": "الأدوية",

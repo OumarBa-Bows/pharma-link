@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "allowedCommonJsDependencies": ["apexcharts"],
+            "allowedCommonJsDependencies": ["apexcharts", "html2canvas"],
             "outputPath": "dist/datta-able-free-angular-admin-template/browser",
             "index": "src/index.html",
             "main": "src/main.ts",

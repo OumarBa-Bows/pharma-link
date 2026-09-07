@@ -24,6 +24,7 @@ export class CommandDetail implements OnInit {
   command: any;
   isCompositionVisible = false;
   isLoading = false;
+  isGeneratingPdf = false;
   private sortedComposition: any[] = [];
   private ngbModal = inject(NgbModal);
   private commandId: number;
@@ -127,8 +128,8 @@ export class CommandDetail implements OnInit {
     this.isCompositionVisible = !this.isCompositionVisible;
   }
 
-  generatePdf(): void {
-    if (!this.command) {
+  async generatePdf(): Promise<void> {
+    if (!this.command || this.isGeneratingPdf) {
       return;
     }
 
@@ -141,18 +142,28 @@ export class CommandDetail implements OnInit {
       total: this.getTotalWithDiscount(item)
     }));
 
-    const started = this.commandPdfService.print({
-      code: this.command.code,
-      date: this.command.date,
-      status: this.getStatusLabel(this.command.status),
-      pharmacyName: this.command.pharmacy_name,
-      pharmacyCode: this.command.pharmacy_code,
-      pharmacyPhone: this.command.pharmacy_phone,
-      lines
-    });
+    this.isGeneratingPdf = true;
+    try {
+      const result = await this.commandPdfService.generate({
+        code: this.command.code,
+        date: this.command.date,
+        status: this.command.status,
+        pharmacyName: this.command.pharmacy_name,
+        pharmacyCode: this.command.pharmacy_code,
+        pharmacyPhone: this.command.pharmacy_phone,
+        lines
+      });
 
-    if (!started) {
-      this.notificationService.showError(this.translateService.instant('commands.details.pdf.printError'));
+      if (!result.generated) {
+        this.notificationService.showError(this.translateService.instant('commands.details.pdf.generateError'));
+      } else if (result.languageFallback) {
+        this.notificationService.showInfo(this.translateService.instant('commands.details.pdf.languageNotice'));
+      }
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      this.notificationService.showError(this.translateService.instant('commands.details.pdf.generateError'));
+    } finally {
+      this.isGeneratingPdf = false;
     }
   }
 

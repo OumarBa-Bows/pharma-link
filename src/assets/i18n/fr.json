@@ -479,7 +479,9 @@
         "grandTotal": "Total à payer",
         "footerNote": "Document généré automatiquement depuis PharmaLink le {{date}}.",
         "footerDisclaimer": "Aucune signature n'est requise — ce bon reflète l'état de la commande à la date d'émission.",
-        "printError": "Impossible d'ouvrir la fenêtre d'impression ❌"
+        "page": "Page {{current}} / {{total}}",
+        "languageNotice": "PDF généré en français : les polices PDF standard ne couvrent pas l’écriture arabe.",
+        "generateError": "Impossible de générer le PDF ❌"
       },
       "article": {
         "title": "Articles",
