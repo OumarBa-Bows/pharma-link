@@ -459,6 +459,22 @@
       "voirMoins": "عرض أقل",
       "lowStockTooltip": "تنبيه مخزون: منتجات تحتاج إلى إعادة تموين (الكمية المتاحة \u2264 20 وحدة)",
       "lowStockLabel": "مخزون حرج",
+      "pdf": {
+        "button": "إنشاء ملف PDF",
+        "docTitle": "سند طلب",
+        "brandSub": "توزيع الأدوية",
+        "issuedOn": "صدر بتاريخ {{date}}",
+        "orderBlock": "الطلب",
+        "references": "المراجع",
+        "articlesCount": "{{count}} دواء",
+        "currency": "العملة",
+        "subtotal": "المجموع قبل الخصم",
+        "discountsTotal": "مجموع الخصومات",
+        "grandTotal": "المبلغ المستحق",
+        "footerNote": "تم إنشاء هذا المستند تلقائياً من PharmaLink بتاريخ {{date}}.",
+        "footerDisclaimer": "لا يتطلب توقيعاً — يعكس هذا السند حالة الطلب في تاريخ إصداره.",
+        "printError": "تعذّر فتح نافذة الطباعة ❌"
+      },
       "article": {
         "title": "الأدوية",
         "article": "الأدوية",

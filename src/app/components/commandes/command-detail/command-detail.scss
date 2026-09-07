@@ -478,6 +478,22 @@
       transform: translateY(-2px);
     }
   }
+
+  &.btn-pdf {
+    background: white;
+    color: #667eea;
+    border: 2px solid rgba(102, 126, 234, 0.35);
+
+    &:hover {
+      background: rgba(102, 126, 234, 0.08);
+      border-color: #667eea;
+      transform: translateY(-2px);
+    }
+
+    svg {
+      flex: none;
+    }
+  }
 }
 
 .empty-state,

@@ -465,6 +465,22 @@
       "voirMoins": "Voir moins",
       "lowStockTooltip": "Alerte stock : Articles nécessitant un réapprovisionnement (quantité disponible \u2264 20 unités)",
       "lowStockLabel": "Stock critique",
+      "pdf": {
+        "button": "Générer le PDF",
+        "docTitle": "Bon de commande",
+        "brandSub": "Distribution pharmaceutique",
+        "issuedOn": "Émis le {{date}}",
+        "orderBlock": "Commande",
+        "references": "Références",
+        "articlesCount": "{{count}} articles",
+        "currency": "Devise",
+        "subtotal": "Sous-total brut",
+        "discountsTotal": "Total des remises",
+        "grandTotal": "Total à payer",
+        "footerNote": "Document généré automatiquement depuis PharmaLink le {{date}}.",
+        "footerDisclaimer": "Aucune signature n'est requise — ce bon reflète l'état de la commande à la date d'émission.",
+        "printError": "Impossible d'ouvrir la fenêtre d'impression ❌"
+      },
       "article": {
         "title": "Articles",
         "article": "Article",

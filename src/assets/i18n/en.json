@@ -465,6 +465,22 @@
       "voirMoins": "Show less",
       "lowStockTooltip": "Stock Alert: Items requiring replenishment (available quantity \u2264 20 units)",
       "lowStockLabel": "Critical Stock",
+      "pdf": {
+        "button": "Generate PDF",
+        "docTitle": "Purchase order",
+        "brandSub": "Pharmaceutical distribution",
+        "issuedOn": "Issued on {{date}}",
+        "orderBlock": "Order",
+        "references": "References",
+        "articlesCount": "{{count}} articles",
+        "currency": "Currency",
+        "subtotal": "Gross subtotal",
+        "discountsTotal": "Total discounts",
+        "grandTotal": "Amount due",
+        "footerNote": "Document generated automatically from PharmaLink on {{date}}.",
+        "footerDisclaimer": "No signature required — this order reflects its state at the time of issue.",
+        "printError": "Unable to open the print window ❌"
+      },
       "article": {
         "title": "Articles",
         "article": "Article",

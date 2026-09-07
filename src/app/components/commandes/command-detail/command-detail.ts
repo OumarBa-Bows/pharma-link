@@ -10,6 +10,7 @@ import { NotificationService } from '../../../services/notifications/notificatio
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ConfirmationModalComponent } from 'src/app/theme/shared/components/confirmation-modal/confirmation-modal.component';
 import { EditQuantityModalComponent } from '../edit-quantity-modal/edit-quantity-modal.component';
+import { CommandPdfLine, CommandPdfService } from '../../../services/pdf/command-pdf.service';
 
 @Component({
   selector: 'app-command-detail',
@@ -29,6 +30,7 @@ export class CommandDetail implements OnInit {
   private commandService = inject(CommandService);
   private notificationService = inject(NotificationService);
   private translateService = inject(TranslateService);
+  private commandPdfService = inject(CommandPdfService);
 
   constructor(
     private router: Router,
@@ -123,6 +125,35 @@ export class CommandDetail implements OnInit {
 
   toggleComposition(): void {
     this.isCompositionVisible = !this.isCompositionVisible;
+  }
+
+  generatePdf(): void {
+    if (!this.command) {
+      return;
+    }
+
+    const lines: CommandPdfLine[] = this.getSortedComposition().map((item) => ({
+      name: item.article_name,
+      reference: item.article_reference,
+      quantity: item.quantity,
+      unitPrice: item.article_price,
+      discount: this.getAppliedDiscount(item),
+      total: this.getTotalWithDiscount(item)
+    }));
+
+    const started = this.commandPdfService.print({
+      code: this.command.code,
+      date: this.command.date,
+      status: this.getStatusLabel(this.command.status),
+      pharmacyName: this.command.pharmacy_name,
+      pharmacyCode: this.command.pharmacy_code,
+      pharmacyPhone: this.command.pharmacy_phone,
+      lines
+    });
+
+    if (!started) {
+      this.notificationService.showError(this.translateService.instant('commands.details.pdf.printError'));
+    }
   }
 
   getAppliedDiscount(item: any): number {
