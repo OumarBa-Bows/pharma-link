@@ -202,7 +202,7 @@ export class IndexComponent {
   }
 
   downloadTemplate() {
-    const templateUrl = `${environment.apiUrl}/download/template/listings`;
+    const templateUrl = `${environment.apiUrl}/listings/download/template`;
     this.http.get(templateUrl, { responseType: 'blob' }).subscribe({
       next: (blob) => {
         const link = document.createElement('a');

@@ -50,6 +50,11 @@ const RIGHT_EDGE = PAGE_WIDTH - MARGIN_X;
 const TABLE_TOP_CONTINUED = 26;
 const TABLE_BOTTOM = 24;
 
+const LOGO_URL = 'assets/images/gkdis.jpeg';
+// Image d'origine en 360 × 114 px : la largeur suit la hauteur pour garder le ratio.
+const LOGO_HEIGHT = 16;
+const LOGO_WIDTH = LOGO_HEIGHT * (360 / 114);
+
 const COLORS = {
   ink: [23, 23, 43],
   inkSoft: [74, 74, 99],
@@ -76,6 +81,8 @@ interface RenderContext {
   data: CommandPdfData;
   issuedAt: string;
   locale: string;
+  /** Logo en data URL ; absent si le chargement a échoué. */
+  logo?: string;
   /** Clés relatives à commands.details.pdf */
   t: Translator;
   /** Clés absolues, partagées avec l'écran de détail */
@@ -92,6 +99,7 @@ export class CommandPdfService {
   private translateService = inject(TranslateService);
   private translateLoader = inject(TranslateLoader);
   private fallbackDictionary?: Record<string, unknown>;
+  private logoDataUrl?: string;
 
   async generate(data: CommandPdfData): Promise<CommandPdfResult> {
     const uiLang = this.currentLang;
@@ -105,7 +113,7 @@ export class CommandPdfService {
     const label = await this.translatorFor(documentLang);
     const t: Translator = (key, params) => label(`commands.details.pdf.${key}`, params);
 
-    const [{ jsPDF: JsPdf }, { autoTable }] = await Promise.all([import('jspdf'), import('jspdf-autotable')]);
+    const [{ jsPDF: JsPdf }, { autoTable }, logo] = await Promise.all([import('jspdf'), import('jspdf-autotable'), this.loadLogo()]);
     const doc = new JsPdf({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true });
 
     const ctx: RenderContext = {
@@ -113,6 +121,7 @@ export class CommandPdfService {
       data,
       issuedAt: this.formatDate(new Date()),
       locale: this.localeFor(documentLang),
+      logo,
       t,
       label
     };
@@ -196,8 +205,33 @@ export class CommandPdfService {
   // ------------------------------------------------------------ composition
 
   private drawMasthead(ctx: RenderContext): void {
-    const { doc, data, t, label } = ctx;
+    const { doc, data, t } = ctx;
 
+    if (ctx.logo) {
+      doc.addImage(ctx.logo, 'JPEG', MARGIN_X, 13, LOGO_WIDTH, LOGO_HEIGHT);
+    } else {
+      this.drawBrandMark(ctx);
+    }
+
+    this.setTextColor(doc, COLORS.ink);
+    doc.setFont('helvetica', 'bold').setFontSize(10.5).setCharSpace(0.4);
+    doc.text(t('docTitle').toUpperCase(), RIGHT_EDGE, 17.6, { align: 'right' });
+    doc.setCharSpace(0);
+
+    doc.setFont('courier', 'bold').setFontSize(15);
+    doc.text(data.code, RIGHT_EDGE, 24.2, { align: 'right' });
+
+    this.setTextColor(doc, COLORS.inkMuted);
+    doc.setFont('helvetica', 'normal').setFontSize(7.5);
+    doc.text(t('issuedOn', { date: this.formatDate(data.date) }), RIGHT_EDGE, 28.6, { align: 'right' });
+
+    this.setDrawColor(doc, COLORS.ink);
+    doc.setLineWidth(0.6);
+    doc.line(MARGIN_X, 32, RIGHT_EDGE, 32);
+  }
+
+  /** Monogramme et nom de l'application, utilisés quand le logo n'a pas pu être chargé. */
+  private drawBrandMark({ doc, t, label }: RenderContext): void {
     this.setFillColor(doc, COLORS.brand);
     doc.roundedRect(MARGIN_X, 13, 12, 12, 2.6, 2.6, 'F');
 
@@ -216,22 +250,30 @@ export class CommandPdfService {
     doc.setFont('helvetica', 'normal').setFontSize(6.4).setCharSpace(0.55);
     doc.text(t('brandSub').toUpperCase(), textLeft, 24);
     doc.setCharSpace(0);
+  }
 
-    this.setTextColor(doc, COLORS.ink);
-    doc.setFont('helvetica', 'bold').setFontSize(10.5).setCharSpace(0.4);
-    doc.text(t('docTitle').toUpperCase(), RIGHT_EDGE, 17.6, { align: 'right' });
-    doc.setCharSpace(0);
-
-    doc.setFont('courier', 'bold').setFontSize(15);
-    doc.text(data.code, RIGHT_EDGE, 24.2, { align: 'right' });
-
-    this.setTextColor(doc, COLORS.inkMuted);
-    doc.setFont('helvetica', 'normal').setFontSize(7.5);
-    doc.text(t('issuedOn', { date: this.formatDate(data.date) }), RIGHT_EDGE, 28.6, { align: 'right' });
-
-    this.setDrawColor(doc, COLORS.ink);
-    doc.setLineWidth(0.6);
-    doc.line(MARGIN_X, 32, RIGHT_EDGE, 32);
+  /** Charge le logo en data URL une seule fois ; undefined en cas d'échec pour ne pas bloquer le PDF. */
+  private async loadLogo(): Promise<string | undefined> {
+    if (this.logoDataUrl) {
+      return this.logoDataUrl;
+    }
+    try {
+      const response = await fetch(new URL(LOGO_URL, document.baseURI).href);
+      if (!response.ok) {
+        return undefined;
+      }
+      const blob = await response.blob();
+      this.logoDataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(blob);
+      });
+      return this.logoDataUrl;
+    } catch (error) {
+      console.warn('Logo PDF indisponible, en-tête sans logo :', error);
+      return undefined;
+    }
   }
 
   /** Bloc client / commande. Retourne l'ordonnée du bas du bloc. */

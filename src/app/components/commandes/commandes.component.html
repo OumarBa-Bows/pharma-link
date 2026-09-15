@@ -65,14 +65,14 @@
             </tr>
           </thead>
           <tbody>
-            @if (paginatedCommands.length === 0) {
+            @if (commands.length === 0) {
               <tr>
                 <td [attr.colspan]="columns.length + 1" class="text-center py-4">
                   {{ 'common.no-data' | translate }}
                 </td>
               </tr>
             }
-            @for (command of paginatedCommands; track command.id) {
+            @for (command of commands; track command.id) {
               <tr>
                 @for (column of columns; track column.field) {
                   <td>
@@ -115,7 +115,7 @@
       </div>
 
       <!-- Pagination -->
-      @if (displayedCommands.length > 0) {
+      @if (totalItems > 0) {
         <div class="pagination-wrapper">
           <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center mb-0">
@@ -149,7 +149,7 @@
             </ul>
           </nav>
           <div class="text-center text-muted mt-3" style="font-size: 0.95rem">
-            Page {{ currentPage }} / {{ totalPages }} ({{ displayedCommands.length }}
+            Page {{ currentPage }} / {{ totalPages }} ({{ totalItems }}
             {{ 'commands.commands-list.title' | translate | lowercase }})
           </div>
         </div>

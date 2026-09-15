@@ -10,7 +10,7 @@
       <div class="card-header-custom">
         <div class="table-header-wrapper">
           <h2 class="table-title">{{ 'articles.article-list.title' | translate }}</h2>
-          @if (getLowStockCount() > 0) {
+          @if (lowStockCount > 0) {
             <span
               class="low-stock-badge"
               [title]="'commands.details.lowStockTooltip' | translate"
@@ -19,7 +19,7 @@
             >
               <span class="badge-label">{{ 'commands.details.lowStockLabel' | translate }}</span>
               <i class="feather icon-alert-triangle"></i>
-              {{ getLowStockCount() }}
+              {{ lowStockCount }}
             </span>
           }
         </div>
@@ -44,7 +44,7 @@
             [placeholder]="'common.search' | translate"
             (input)="onSearch($any($event.target).value)"
           />
-          <div class="text-muted small">{{ 'table.total' | translate }}: {{ displayedArticles.length }}</div>
+          <div class="text-muted small">{{ 'table.total' | translate }}: {{ totalItems }}</div>
         </div>
       </div>
 
@@ -59,7 +59,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (article of pagedArticles; track article.id) {
+            @for (article of articles; track article.id) {
               <tr [class.low-stock]="article.availableQuantity <= 20">
                 <td>{{ article.name }}</td>
                 <td>{{ article.reference }}</td>
@@ -144,7 +144,7 @@
             </ul>
           </nav>
           <div class="pagination-info text-muted small text-center mt-2">
-            {{ 'table.page' | translate }} {{ currentPage }} / {{ totalPages }} ({{ displayedArticles.length }}
+            {{ 'table.page' | translate }} {{ currentPage }} / {{ totalPages }} ({{ totalItems }}
             {{ 'articles.article-list.title' | translate | lowercase }})
           </div>
         </div>

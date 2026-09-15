@@ -7,7 +7,7 @@ import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinne
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateCommand } from './create-command/create-command';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-commandes',
@@ -28,22 +28,13 @@ export class CommandesComponent implements OnInit {
   pageSize = 20;
   pagesToShow = 5;
   selectedStatus: string = 'ALL';
-  allCommands: any[] = []; // Liste complète des commandes
-  filteredCommands: any[] = []; // Liste filtrée pour l'affichage
-
-  get displayedCommands() {
-    return this.filteredCommands.length > 0 || this.search || this.selectedStatus !== 'ALL' ? this.filteredCommands : this.allCommands;
-  }
-
-  get totalPages(): number {
-    return Math.ceil(this.displayedCommands.length / this.pageSize);
-  }
-
-  get paginatedCommands(): any[] {
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    return this.displayedCommands.slice(start, end);
-  }
+  commands: any[] = []; // Page courante renvoyée par le serveur
+  totalItems = 0;
+  totalPages = 0;
+  statusCounts: Record<string, number> = {};
+  private searchSubject = new Subject<string>();
+  private commandsSubscription: Subscription;
+  private searchSubscription: Subscription;
 
   get pages(): number[] {
     const half = Math.floor(this.pagesToShow / 2);
@@ -62,8 +53,9 @@ export class CommandesComponent implements OnInit {
   }
 
   goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
+    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
       this.currentPage = page;
+      this.getCommands();
     }
   }
 
@@ -88,70 +80,24 @@ export class CommandesComponent implements OnInit {
     { header: this.translateService.instant('pharmacies.code'), field: 'pharmacyCode' },
     { header: this.translateService.instant('commands.columns.pharmacy'), field: 'pharmacy' }
   ];
-  commandData: Command[] = [];
   isLoading: boolean;
   langSubscription: Subscription;
 
   onSelectionChange($event: any[]) {}
 
   onSearch(searchTerm: any) {
-    // Réinitialiser la pagination lors de la recherche
-    this.currentPage = 1;
-
-    // Si la recherche est vide, afficher toutes les commandes
-    if (!searchTerm || searchTerm.length === 0) {
-      this.search = '';
-      this.applyFilters();
-      return;
-    }
-
-    this.search = searchTerm.toLowerCase();
-    this.applyFilters();
-
-    console.log(`[onSearch] Recherche: "${searchTerm}", Résultats: ${this.filteredCommands.length}/${this.allCommands.length}`);
+    this.searchSubject.next((searchTerm || '').trim());
   }
 
   filterByStatus(status: string) {
+    if (status === this.selectedStatus) return;
     this.selectedStatus = status;
     this.currentPage = 1;
-    this.applyFilters();
-  }
-
-  applyFilters() {
-    let filtered = [...this.allCommands];
-
-    // Filtrer par statut
-    if (this.selectedStatus !== 'ALL') {
-      filtered = filtered.filter((command) => command.status === this.selectedStatus);
-    }
-
-    // Filtrer par recherche
-    if (this.search) {
-      filtered = filtered.filter((command) => {
-        const code = command.code?.toLowerCase() || '';
-        const status = command.status?.toLowerCase() || '';
-        const totalPrice = command.totalprice?.toString() || '';
-        const pharmacy = command.pharmacy?.toLowerCase() || '';
-        const date = command.date?.toString() || '';
-
-        return (
-          code.includes(this.search) ||
-          status.includes(this.search) ||
-          totalPrice.includes(this.search) ||
-          pharmacy.includes(this.search) ||
-          date.includes(this.search)
-        );
-      });
-    }
-
-    this.filteredCommands = filtered;
+    this.getCommands();
   }
 
   getStatusCount(status: string): number {
-    if (status === 'ALL') {
-      return this.allCommands.length;
-    }
-    return this.allCommands.filter((command) => command.status === status).length;
+    return this.statusCounts[status] ?? 0;
   }
 
   editCommand(command: Command) {
@@ -168,21 +114,41 @@ export class CommandesComponent implements OnInit {
   }
   deleteCommand($event: any) {}
 
-  getCommandByDistributor(distributorId: number) {
+  getCommands() {
     this.isLoading = true;
-    this.commandService.getCommandByDistributor(distributorId).subscribe((value) => {
-      this.allCommands = value.data.commandes;
-      this.filteredCommands = [...this.allCommands];
-      this.commandData = this.displayedCommands; // Pour le template
-      console.log('commandData');
-      console.log(this.commandData);
-      this.isLoading = false;
+    // Annuler la requête précédente pour ne pas afficher une réponse obsolète
+    this.commandsSubscription?.unsubscribe();
+
+    const params: any = { page: this.currentPage, limit: this.pageSize };
+    if (this.search) params.search = this.search;
+    if (this.selectedStatus !== 'ALL') params.status = this.selectedStatus;
+
+    this.commandsSubscription = this.commandService.getPaginated(params).subscribe({
+      next: (response) => {
+        const { commandes, total, totalPages, statusCounts } = response.data;
+        this.commands = commandes;
+        this.totalItems = total;
+        this.totalPages = totalPages;
+        this.statusCounts = statusCounts;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching commands:', error);
+        this.isLoading = false;
+      }
     });
   }
 
   ngOnInit(): void {
-    this.getCommandByDistributor(1);
+    this.getCommands();
     this.updateColumns();
+
+    // Recherche côté serveur, déclenchée après 300ms sans frappe
+    this.searchSubscription = this.searchSubject.pipe(debounceTime(300), distinctUntilChanged()).subscribe((term) => {
+      this.search = term;
+      this.currentPage = 1;
+      this.getCommands();
+    });
     this.langSubscription = this.translateService.onLangChange.subscribe(() => {
       this.updateColumns();
     });
@@ -214,6 +180,8 @@ export class CommandesComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.langSubscription?.unsubscribe();
+    this.searchSubscription?.unsubscribe();
+    this.commandsSubscription?.unsubscribe();
   }
 
   showDetails(command: any) {

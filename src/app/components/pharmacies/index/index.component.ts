@@ -1,7 +1,7 @@
 import { Component, inject, Type } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
 import { ApiService } from 'src/app/services/apis/api-service';
 import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -17,32 +17,17 @@ import { ImportModalComponent } from 'src/app/theme/shared/components/import-mod
 })
 export class IndexComponent {
   search = '';
-  page = 1;
   pageSize = 20;
   currentPage = 1;
   pagesToShow = 5;
   selectedStatus: string = 'ALL';
+  totalItems = 0;
+  totalPages = 0;
+  statusCounts: Record<string, number> = {};
   private modalService = inject(NgbModal);
   private notificationService = inject(NotificationService);
-
-  allPharmacies: any[] = []; // Liste complète des pharmacies
-  filteredPharmacies: any[] = []; // Liste filtrée pour l'affichage
-
-  get displayedPharmacies() {
-    return this.filteredPharmacies.length > 0 || this.search || this.selectedStatus !== 'ALL'
-      ? this.filteredPharmacies
-      : this.allPharmacies;
-  }
-
-  get totalPages(): number {
-    return Math.ceil(this.displayedPharmacies.length / this.pageSize);
-  }
-
-  get paginatedPharmacies(): any[] {
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    return this.displayedPharmacies.slice(start, end);
-  }
+  private searchSubject = new Subject<string>();
+  searchSubscription: Subscription;
 
   get pages(): number[] {
     const half = Math.floor(this.pagesToShow / 2);
@@ -61,8 +46,9 @@ export class IndexComponent {
   }
 
   goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
+    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
       this.currentPage = page;
+      this.getPharmacies();
     }
   }
 
@@ -71,67 +57,22 @@ export class IndexComponent {
   }
 
   onSearch(searchTerm: any) {
-    // Réinitialiser la pagination lors de la recherche
-    this.currentPage = 1;
-
-    // Si la recherche est vide, afficher toutes les pharmacies
-    if (!searchTerm || searchTerm.length === 0) {
-      this.search = '';
-      this.applyFilters();
-      return;
-    }
-
-    this.search = searchTerm.toLowerCase();
-    this.applyFilters();
-
-    console.log(`[onSearch] Recherche: "${searchTerm}", Résultats: ${this.filteredPharmacies.length}/${this.allPharmacies.length}`);
+    this.searchSubject.next((searchTerm || '').trim());
   }
 
   filterByStatus(status: string) {
+    if (status === this.selectedStatus) return;
     this.selectedStatus = status;
     this.currentPage = 1;
-    this.applyFilters();
-  }
-
-  applyFilters() {
-    let filtered = [...this.allPharmacies];
-
-    // Filtrer par statut
-    if (this.selectedStatus !== 'ALL') {
-      filtered = filtered.filter((pharmacy) => pharmacy.state === this.selectedStatus);
-    }
-
-    // Filtrer par recherche
-    if (this.search) {
-      filtered = filtered.filter((pharmacy) => {
-        const name = pharmacy.name?.toLowerCase() || '';
-        const phone = pharmacy.phone?.toLowerCase() || '';
-        const address = pharmacy.address?.toLowerCase() || '';
-        const customerType = pharmacy.customerType?.toLowerCase() || '';
-        const state = pharmacy.state?.toLowerCase() || '';
-
-        return (
-          name.includes(this.search) ||
-          phone.includes(this.search) ||
-          address.includes(this.search) ||
-          customerType.includes(this.search) ||
-          state.includes(this.search)
-        );
-      });
-    }
-
-    this.filteredPharmacies = filtered;
+    this.getPharmacies();
   }
 
   getStatusCount(status: string): number {
-    if (status === 'ALL') {
-      return this.allPharmacies.length;
-    }
-    return this.allPharmacies.filter((pharmacy) => pharmacy.state === status).length;
+    return this.statusCounts[status] ?? 0;
   }
 
   isLoading: boolean = false;
-  pharmacies: any[] = []; // Propriété utilisée par le template pour afficher
+  pharmacies: any[] = []; // Page courante renvoyée par le serveur
 
   columns = [
     { header: 'Date de création', field: 'createdAt', type: 'date', format: 'dd/MM/yyyy' },
@@ -167,6 +108,14 @@ export class IndexComponent {
   ngOnInit() {
     this.getPharmacies();
     this.updateColumns();
+
+    // Recherche côté serveur, déclenchée après 300ms sans frappe
+    this.searchSubscription = this.searchSubject.pipe(debounceTime(300), distinctUntilChanged()).subscribe((term) => {
+      this.search = term;
+      this.currentPage = 1;
+      this.getPharmacies();
+    });
+
     this.langSubscription = this.translateService.onLangChange.subscribe(() => {
       this.updateColumns();
     });
@@ -211,12 +160,20 @@ export class IndexComponent {
 
   getPharmacies() {
     this.isLoading = true;
-    this.newSubscription = this.apiService.getData(`pharmacies?page=${this.page}&pageSize=${this.pageSize}`).subscribe({
+    // Annuler la requête précédente pour ne pas afficher une réponse obsolète
+    this.newSubscription?.unsubscribe();
+
+    const params: any = { page: this.currentPage, limit: this.pageSize };
+    if (this.search) params.search = this.search;
+    if (this.selectedStatus !== 'ALL') params.status = this.selectedStatus;
+
+    this.newSubscription = this.apiService.getData('pharmacies/paginated/limit', { params }).subscribe({
       next: (response: any) => {
-        console.log('Pharmacies fetched successfully:', response);
-        this.allPharmacies = response.data.pharmacies;
-        this.filteredPharmacies = [...this.allPharmacies];
-        this.pharmacies = this.displayedPharmacies; // Pour le template
+        const { pharmacies, total, totalPages, statusCounts } = response.data;
+        this.pharmacies = pharmacies;
+        this.totalItems = total;
+        this.totalPages = totalPages;
+        this.statusCounts = statusCounts;
         this.isLoading = false;
       },
       error: (error) => {
@@ -233,6 +190,7 @@ export class IndexComponent {
   ngOnDestroy() {
     this.newSubscription?.unsubscribe();
     this.langSubscription?.unsubscribe();
+    this.searchSubscription?.unsubscribe();
   }
 
   importArticle(event: any) {

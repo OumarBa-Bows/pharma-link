@@ -17,6 +17,10 @@ export class CommandService {
     return this.httpClient.post<any>(`${this.ressource}` + 'commands/get/by-distributor', data);
   }
 
+  getPaginated(params: { page: number; limit: number; search?: string; status?: string }): Observable<any> {
+    return this.httpClient.get<any>(`${this.ressource}` + 'commands/paginated', { params });
+  }
+
   getById(id: number): Observable<any> {
     return from(this.supabase.from('command_view').select('*').eq('id', id).single()).pipe(
       map((response) => ({

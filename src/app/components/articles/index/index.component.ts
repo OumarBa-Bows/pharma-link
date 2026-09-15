@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ApiService } from 'src/app/services/apis/api-service';
 import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
@@ -21,51 +21,28 @@ import { LowStockModalComponent } from '../low-stock-modal/low-stock-modal.compo
 })
 export class IndexComponent {
   search = '';
-  page = 1;
   pageSize = 20;
   currentPage = 1;
   pagesToShow = 5;
+  totalItems = 0;
+  totalPages = 0;
+  lowStockCount = 0;
   private modalService = inject(NgbModal);
   private notificationService = inject(NotificationService);
   private translateService = inject(TranslateService);
   private http = inject(HttpClient);
-
-  allArticles: any[] = []; // Liste complète des articles
-  filteredArticles: any[] = []; // Liste filtrée pour l'affichage
+  private searchSubject = new Subject<string>();
 
   onAddNew() {
     this.router.navigateByUrl('/articles/create');
   }
 
   onSearch(searchTerm: any) {
-    // Si la recherche est vide, afficher tous les articles
-    if (!searchTerm || searchTerm.length === 0) {
-      this.search = '';
-      this.filteredArticles = [...this.allArticles];
-      return;
-    }
-
-    this.search = searchTerm.toLowerCase();
-
-    // Filtrer les articles par nom, catégorie, prix et référence
-    this.filteredArticles = this.allArticles.filter((article) => {
-      const name = article.name?.toLowerCase() || '';
-      const category = article.category?.toLowerCase() || '';
-      const reference = article.reference?.toLowerCase() || '';
-      const price = article.price?.toString() || '';
-
-      return name.includes(this.search) || category.includes(this.search) || reference.includes(this.search) || price.includes(this.search);
-    });
-
-    console.log(`[onSearch] Recherche: "${searchTerm}", Résultats: ${this.filteredArticles.length}/${this.allArticles.length}`);
+    this.searchSubject.next((searchTerm || '').trim());
   }
 
   isLoading: boolean = false;
-  articles: any[] = []; // Propriété utilisée par le template pour afficher
-
-  get displayedArticles() {
-    return this.filteredArticles.length > 0 || this.search ? this.filteredArticles : this.allArticles;
-  }
+  articles: any[] = []; // Page courante renvoyée par le serveur
 
   columns = [
     //{ header: 'Image', field: 'imageLink', img: false },
@@ -91,6 +68,7 @@ export class IndexComponent {
 
   newSubscription: Subscription;
   langSubscription: Subscription;
+  searchSubscription: Subscription;
 
   constructor(
     private apiService: ApiService,
@@ -100,6 +78,13 @@ export class IndexComponent {
   ngOnInit() {
     this.getArticles();
     this.updateColumns();
+
+    // Recherche côté serveur, déclenchée après 300ms sans frappe
+    this.searchSubscription = this.searchSubject.pipe(debounceTime(300), distinctUntilChanged()).subscribe((term) => {
+      this.search = term;
+      this.currentPage = 1;
+      this.getArticles();
+    });
 
     // S'abonner aux changements de langue
     this.langSubscription = this.translateService.onLangChange.subscribe(() => {
@@ -135,28 +120,26 @@ export class IndexComponent {
     console.log('Lignes sélectionnées :', rows);
   }
 
-  getLowStockCount(): number {
-    return this.displayedArticles.filter((article) => article.availableQuantity <= 20).length;
-  }
-
   openLowStockModal() {
-    const lowStockArticles = this.displayedArticles.filter((article) => article.availableQuantity <= 20);
-    const modalRef = this.modalService.open(LowStockModalComponent, {
-      size: 'lg',
-      centered: true,
-      backdrop: 'static'
+    const params: any = { page: 1, limit: 100, lowStock: true };
+    if (this.search) params.search = this.search;
+
+    this.isLoading = true;
+    this.apiService.getData('articles/paginated/limit', { params }).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        const modalRef = this.modalService.open(LowStockModalComponent, {
+          size: 'lg',
+          centered: true,
+          backdrop: 'static'
+        });
+        modalRef.componentInstance.lowStockArticles = response.data.articles;
+      },
+      error: (error) => {
+        console.error('Error fetching low stock articles:', error);
+        this.isLoading = false;
+      }
     });
-    modalRef.componentInstance.lowStockArticles = lowStockArticles;
-  }
-
-  get totalPages(): number {
-    return Math.ceil(this.displayedArticles.length / this.pageSize);
-  }
-
-  get pagedArticles() {
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    return this.displayedArticles.slice(start, end);
   }
 
   get pages(): number[] {
@@ -176,19 +159,36 @@ export class IndexComponent {
   }
 
   goToPage(page: number) {
-    if (page >= 1 && page <= this.totalPages) {
+    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
       this.currentPage = page;
+      this.getArticles();
     }
   }
 
   getArticles() {
     this.isLoading = true;
-    this.newSubscription = this.apiService.getData(`articles?page=${this.page}&pageSize=${this.pageSize}`).subscribe({
+    // Annuler la requête précédente pour ne pas afficher une réponse obsolète
+    this.newSubscription?.unsubscribe();
+
+    const params: any = { page: this.currentPage, limit: this.pageSize };
+    if (this.search) params.search = this.search;
+
+    this.newSubscription = this.apiService.getData('articles/paginated/limit', { params }).subscribe({
       next: (response: any) => {
-        console.log('Articles fetched successfully:', response);
-        this.allArticles = response.data.articles;
-        this.filteredArticles = [...this.allArticles];
-        this.articles = this.displayedArticles; // Pour le template
+        console.log('Fetched articles response:', response);
+        const { articles, total, totalPages, lowStockCount } = response.data;
+
+        // La page courante peut ne plus exister (ex : suppression du dernier article de la page)
+        if (this.currentPage > 1 && this.currentPage > totalPages) {
+          this.currentPage = Math.max(totalPages, 1);
+          this.getArticles();
+          return;
+        }
+
+        this.articles = articles;
+        this.totalItems = total;
+        this.totalPages = totalPages;
+        this.lowStockCount = lowStockCount;
         this.isLoading = false;
       },
       error: (error) => {
@@ -229,6 +229,9 @@ export class IndexComponent {
     }
     if (this.langSubscription) {
       this.langSubscription.unsubscribe();
+    }
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
     }
   }
 
