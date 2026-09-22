@@ -55,15 +55,15 @@ export class UpdateComponent implements OnInit {
       console.log(this.listingForm.value);
       this.listingForm.disable();
       this.isLoading = true;
-      this.apiService.postData('listings', this.listingForm.value).subscribe({
+      this.apiService.postData(`listings/update/${this.listingId}`, this.listingForm.value).subscribe({
         next: (response) => {
-          console.log('listing créé :', response);
+          console.log('listing mis à jour :', response);
           this.isLoading = false;
           this.listingForm.enable();
           this.listingForm.reset();
         },
         error: (error) => {
-          console.error('Erreur lors de la création de listing :', error);
+          console.error('Erreur lors de la mise à jour du listing :', error);
           this.isLoading = false;
           this.listingForm.enable();
         },
@@ -148,12 +148,13 @@ export class UpdateComponent implements OnInit {
 
   listingFormPatchValue() {
     const details = Array.isArray(this.listing?.listingDetails) ? this.listing.listingDetails : [];
-    const selectedIds = details.map((d: any) => d.articleId).filter((id: any) => !!id);
+    const selectedIds = Array.from(new Set(details.map((d: any) => d.articleId).filter((id: any) => !!id)));
     this.listingForm.patchValue({
       id: this.listing?.id || '',
       name: this.listing?.name || '',
       description: this.listing?.description || '',
-      end_date: this.listing?.end_date || '',
+      // <input type="date"> attend le format YYYY-MM-DD
+      end_date: this.listing?.end_date ? String(this.listing.end_date).slice(0, 10) : '',
       articleIds: selectedIds
     });
   }
